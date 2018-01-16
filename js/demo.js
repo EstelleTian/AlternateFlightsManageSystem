@@ -141,6 +141,276 @@ var Demo = function () {
             pETA:'10/18:49',
             depPart:'',
             commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828043',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
         },
     ];
 
@@ -155,6 +425,14 @@ var Demo = function () {
         var min = time.substring(10, 12);
         var str = year + '-' + mon + '-' + date + ' ' + hour + ":" + min;
         return str;
+    };
+
+    var resizeContainer = function () {
+        var c = $('.result-panel', $canvas);
+        console.log(c.outerHeight());
+        /*$(window).resize(function () {
+            console.log(c.outerHeight());
+        })*/
     };
 
     /**
@@ -231,28 +509,14 @@ var Demo = function () {
 
             }
         });
-        /*$('#' + tableId).jqGrid('navGrid', '#' + pagerId, {
-            add: false,
-            edit: false,
-            view: false,
-            del: false,
-            search: false,
-            refresh: false
-        });*/
-
-        $(window).resize(function () {
-            // $('#' + tableId).jqGrid('setFrozenColumns');
-            resizeToFitContainer(tableId);
-        })
     };
 
 
     var fireData = function () {
+        resizeToFitContainer(tableId);
         //数据填充
         $('#' + tableId).jqGrid('setGridParam', {datatype: 'local', data: result}).trigger('reloadGrid')
         $('#' + tableId).jqGrid('setFrozenColumns');
-        //尺寸计算表格适配内容大小
-        resizeToFitContainer(tableId);
     };
     var Inquire = function () {
       $('.inquire', $canvas).on('click',function () {
@@ -271,9 +535,21 @@ var Demo = function () {
 
 
 
+    var resetHeight = function(){
+        var c = $('.result-panel', $canvas);
+        var h = c.outerHeight();
+        console.log(h);
+        $('.result-panel', $canvas).height(h);
+    };
+
     return {
        init : function () {
            Inquire();
+           $(window).resize(function () {
+               // resetHeight();
+               // $('#' + tableId).jqGrid('setFrozenColumns');
+               resizeToFitContainer(tableId);
+           })
            // toggleRange();
        }
     }

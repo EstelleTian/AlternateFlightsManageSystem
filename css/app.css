@@ -179,7 +179,7 @@ ul, li {
     flex: 1 0 auto;
     flex-direction: column;
 }
-.panel-body .form-panel, .panel-body .condition-panel, .panel-body .total-panel, .panel-body .result-panel {
+.panel-body .form-panel, .panel-body .condition-panel, .panel-body .total-panel{
     display: flex;
     justify-content: center;
     width: 100%;
@@ -234,6 +234,9 @@ ul, li {
     flex-direction: column;
     flex:1 0 auto;
     justify-content: flex-start;
+    height: 90%;
+    /*position: relative;*/
+    /*overflow: auto;*/
 }
 
 #arr-canvas {
@@ -241,6 +244,15 @@ ul, li {
     height: 100%;
     width: 100%;
 
+}
+
+.summary-list {
+    display: flex;
+
+}
+.table-panel {
+    display: flex;
+    flex: 1 0 auto;
 }
 
 @media (max-width: 768px) {

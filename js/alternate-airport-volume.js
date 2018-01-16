@@ -292,6 +292,7 @@ var alternateAirport = function () {
       cmTemplate: {
         align: 'center',
         resize: false,
+        cellattr:setTableColor,
         width: 155
       },
       pager: pagerId,
@@ -334,13 +335,6 @@ var alternateAirport = function () {
   function dataStyleConvert(data, colName) {
     //合计可用列样式配置
     if (colName == 'point') {
-      $.each(data,function (i,e) {
-        $.each(e,function (index,ele) {
-            if(parseInt(ele) == 0){
-              e[index + '_style'] = 'background:#dbc3be,color:gray'
-            }
-        })
-      })
       $.each(data, function (i, e) {
         if (parseInt(e.point) > 3) {
           e[colName + '_style'] = 'background:#fff;color:#000'

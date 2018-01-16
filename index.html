@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>乌鲁木齐机场返航备降系统</title>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="stylesheet" href="plugins/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="plugins/bootstrap-validator/dist/css/bootstrapValidator.css">
+    <link href="css/login.css" rel="stylesheet" type="text/css">
+</head>
+<body class="login" mycollectionplug="bind">
+    <div class="login_m">
+        <div class="login_logo">
+            <h1>乌鲁木齐机场返航备降系统</h1>
+        </div>
+        <form class="login_boder form-horizontal" role="form" data-toggle="validator" id="data_form">
+            <div class="login_padding" id="login_model">
+                <div class="form-group user row">
+                    <lable class="control-label col-md-3">用户名:</lable>
+                    <div class="col-md-9 no_padding">
+                        <input type="text" name="username" class="form-control" id="inputName" placeholder="请输入用户名">
+                    </div>
+                </div>
+                <div class="form-group pwd row">
+                    <lable class="control-label col-md-3">密 &nbsp 码:</lable>
+                    <div class="col-md-9 no_padding">
+                        <input type="password" name="password" class="form-control " id="inputPassword" placeholder="请输入密码">
+                    </div>
+                </div>
+                <p class="error_tip"></p>
+                <div class="form-group rem_sub row">
+                    <button type="button" name="submit" class="btn btn-primary sub_button" id="addAdminForm">
+                        <a href="home.html">登录</a></button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="plugins/jquery/js/jquery.min.js"></script>
+    <script type="text/javascript" src="plugins/bootstrap-validator/dist/js/bootstrapValidator.js"></script>
+    <script src="plugins/jquery/js/jquery-custom-util.js"></script>
+    <script type="text/javascript" src="js/login.js"></script>
+</body>
+</html>

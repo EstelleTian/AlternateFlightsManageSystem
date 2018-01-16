@@ -1,0 +1,157 @@
+/*重定义整体模态框尺寸*/
+
+.modal-dialog{
+    margin-top: 50px;
+    width: 300px;
+    min-width: 300px;
+    margin-left : auto;
+    margin-right : auto;
+}
+.modal-dialog.modal-sm{
+    margin-top: 50px;
+    width: 300px;
+    min-width: 300px;
+    margin-left : auto;
+    margin-right : auto;
+}
+
+
+.modal .modal-content {
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+    border: 0;
+}
+.md-shadow-z-3, .modal .modal-content {
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+.modal .modal-header {
+    border-bottom: 1px solid #EFEFEF;
+}
+.modal .modal-header .close {
+    margin-top: 0px !important;
+}
+.modal .modal-body {
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+    border: 0;
+}
+.modal .modal-footer {
+    border: 0 !important;
+}
+
+.modal-sm .modal-header .modal-title{
+    font-size: 14px;
+}
+.modal-sm .modal-header .dialog-title-icon{
+    font-size: 16px;
+}
+.modal-sm .modal-header,.modal-sm .modal-body{
+    padding-bottom: 5px;
+}
+/*header尺寸*/
+.modal-title{
+    font-size: 18px;
+}
+/*字体图标尺寸*/
+.dialog-title-icon{
+    font-size: 20px;
+    padding-right: 7px;
+    position: relative;
+    top: 3px;
+}
+/*字体图标颜色*/
+.c_5cb85c{
+    color: #5cb85c;
+}
+.c_f0ad4e{
+    color: #f0ad4e;
+}
+.c_d9534f{
+    color: #d9534f;
+}
+.c_5bc0de{
+    color: #5bc0de;
+}
+/*重定义底部按钮大小*/
+.modal-footer button{
+    margin-right: 0.5em;
+}
+.modal-footer button:last-child{
+    margin-right: 0;
+}
+
+/*全局button去掉默认样式*/
+button.btn{
+    outline: none!important;
+}
+
+/* button 样式*/
+.atfm-btn {
+    border-width: 0;
+    padding: 6px 14px;
+    font-size: 15px;
+    outline: none !important;
+    background-image: none !important;
+    filter: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    text-shadow: none;
+    min-width: 70px;
+}
+.atfm-btn.atfm-btn-sm{
+    min-width: 55px;
+    font-size: 14px;
+    padding: 4px 12px;
+}
+.atfm-btn-default {
+    color: #333333;
+    background-color: #E5E5E5;
+}
+.atfm-btn-default:hover, .atfm-btn-default:focus, .atfm-btn-default:active {
+    color: #333333;
+    background-color: lightgray;
+}
+.atfm-btn-red {
+    color: #FFFFFF;
+    background-color: #E26A6A;
+}
+.atfm-btn-red:hover, .atfm-btn-red:focus, .atfm-btn-red:active {
+    color: #FFFFFF;
+    background-color: #dc4c4c;
+}
+.atfm-btn-blue {
+    color: #FFFFFF;
+    background-color: #578ebe;
+}
+.atfm-btn-blue:hover, .atfm-btn-blue:focus, .atfm-btn-blue:active {
+    color: #FFFFFF;
+    background-color: #437cae;
+}
+.atfm-btn-green {
+    color: #FFFFFF;
+    background-color: #26a69a;
+}
+.atfm-btn-green:hover, .atfm-btn-green:focus, .atfm-btn-green:active {
+    color: #FFFFFF;
+    background-color: #1f897f;
+}
+.atfm-btn-yellow {
+    color: #FFFFFF;
+    background-color: #f3c200;
+}
+.atfm-btn-yellow:hover, .atfm-btn-yellow:focus, .atfm-btn-yellow:active {
+    color: #FFFFFF;
+    background-color: #cfa500;
+}
+.modal-close-btn{
+    float: right;
+    top: -15px;
+    color: #aaa;
+}

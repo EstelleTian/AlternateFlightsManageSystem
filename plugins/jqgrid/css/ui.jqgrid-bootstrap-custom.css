@@ -1,0 +1,48 @@
+@CHARSET "UTF-8";
+
+/* bootstrap 覆盖  （表格标题居中）*/
+.ui-jqgrid-htable th {
+	text-align: center;
+}
+
+
+/* grid table advace search 覆盖*/
+.ui-jqdialog .ui-resizable-handle {
+	/* position : relative;*/
+	display: none;
+} 
+
+/* Pager*/
+.ui-jqgrid .ui-jqgrid-pager,
+.ui-jqgrid .ui-jqgrid-toppager{ 
+	padding : 0;
+}
+
+/*search-toolbar*/
+.ui-jqgrid tr.ui-search-toolbar td > input { 
+	height : 24px;
+}
+
+/*grid表格的border*/
+.ui-jqgrid {
+	border : 0;
+}
+
+/*gird表格的check位置*/
+.ui-jqgrid td input {
+	margin : auto;
+}
+
+/**
+ * 表格内容字体
+ */
+.ui-jqgrid .ui-jqgrid-bdiv table {
+	font-size: 14px;
+}
+
+/**
+ * 表格title字体
+ */
+.ui-jqgrid .ui-jqgrid-hdiv table {
+	font-size: 12px;
+}

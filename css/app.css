@@ -189,11 +189,12 @@ ul, li {
     border-bottom: 1px solid #dddddd;
     flex-wrap: wrap;
 }
-.panel-body .form-panel .form-item {
+.panel-body .form-panel .form-item, .panel-body .condition-panel li {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
     /*flex:1 0 auto;*/
-    width: 12rem;
+    /*width: 12rem;*/
     margin-bottom: 1rem;
     padding: 0 1rem;
 }
@@ -217,17 +218,32 @@ ul, li {
     display: inline-block;
     max-width: 100%;
     margin-bottom: 5px;
+    margin-right: 1rem;
     font-weight: normal;
     color: #333333;
+}
+.panel-body .form-panel .form-control {
+    width: 70%;
+}
+.panel-body .form-panel select {
+    height: 2.4rem;
 }
 
 .panel-body .result-panel {
     display: flex;
     flex-direction: column;
     flex:1 0 auto;
+    justify-content: flex-start;
 }
 
-@media (max-width: 550px) {
+#arr-canvas {
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+}
+
+@media (max-width: 768px) {
     .menu-bar ul{
         flex-direction: column;
         width: 100%;

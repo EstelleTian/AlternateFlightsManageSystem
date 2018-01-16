@@ -46,41 +46,59 @@
         </ul>
     </div>
     <div class="main-area">
-        <section class=" active">
+        <!--模块1-->
+        <section class="arr active">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="poster">进港计划</div>
-                    <div class="time">2018-01-12 11:30</div>
+                    <div class="time"></div>
                 </div>
                 <div class="panel-body">
                     <!-- 表单面板-->
                     <ul class="form-panel" >
                         <li class="form-item">
-                            <label class="title">起始日期</label>
-                            <input type="text" class="input-sm form-control datepicker-input" name="start" readonly>
+                            <label class="title">范围</label>
+                            <!--<input type="text" class="input-sm form-control datepicker-input">-->
+                            <select class="range">
+                                <option >进港未落地</option>
+                                <option >进港未起飞</option>
+                                <option >进港取消</option>
+                                <option selected>进港全部</option>
+                            </select>
                         </li>
                         <li class="form-item">
-                            <label class="title">截止日期</label>
-                            <input type="text" class="input-sm form-control datepicker-input" name="end" readonly>
+                            <label class="title">关键字</label>
+                            <input type="text" class="input-sm form-control key">
                         </li>
 
                         <li class="form-item one-child">
-                            <button class="atfm-btn atfm-btn-blue data-statistics ladda-button" data-style="zoom-out">
-                                <span class="ladda-label">统计</span>
+                            <button class="atfm-btn atfm-btn-blue ladda-button inquire" data-style="zoom-out">
+                                <span class="ladda-label">查询</span>
                             </button>
                         </li>
-                        <li class="form-item error-item">
+                        <!--<li class="form-item error-item">
                             <div class="error-content"></div>
-                        </li>
+                        </li>-->
 
                     </ul>
-                    <ul class="condition-panel"></ul>
-                    <ul class="total-panel"></ul>
-                    <div class="result-panel"></div>
+                    <!-- 查询条件显示-->
+                    <ul class="condition-panel hidden">
+                        <li class="form-item">
+                            当前查询条件:
+                        </li>
+                        <li class="form-item range"></li>
+                        <li class="form-item key"></li>
+                    </ul>
+                    <!-- 数据可视化区(图表,表格)-->
+                    <div class="result-panel">
+                        <table id="arr-table"></table>
+                        <div id="arr-table-pager"></div>
+                    </div>
                 </div>
             </div>
         </section>
-        <section class=" ">
+        <!--模块2-->
+        <section class="dep ">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="poster">备降计划</div>
@@ -91,6 +109,7 @@
                 </div>
             </div>
         </section>
+        <!--模块3-->
         <section class=" ">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -102,6 +121,7 @@
                 </div>
             </div>
         </section>
+        <!--模块4-->
         <section class="">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -142,6 +162,7 @@
 <script src="plugins/ladda/js/ladda.js" type="text/javascript" ></script>
 <script src="js/data-basic.js"></script>
 <script src="js/layout-event.js"></script>
+<script src="js/demo.js"></script>
 <!--<script src="js/accuracy-of-track-prediction.js"></script>-->
 <!--<script src="js/alternate-airport-volume.js"></script>-->
 

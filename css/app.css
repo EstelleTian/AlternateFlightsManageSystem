@@ -166,14 +166,14 @@ ul, li {
     flex: 1 0 auto;
     font-size: 1.4rem;
 }
-.main-area .section-statistics .panel, .main-area .section-inquire .panel {
+.main-area section .panel {
     margin-bottom: 0;
     width: 100%;
     display: flex;
     flex-direction: column;
     flex: 1 0 auto;
 }
-.main-area .section-statistics .panel-body, .main-area .section-inquire .panel-body {
+.main-area section .panel-body{
     width: 100%;
     display: flex;
     flex: 1 0 auto;

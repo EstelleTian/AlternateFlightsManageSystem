@@ -60,11 +60,12 @@ var PredictionData = function () {
 
   var initNavTabEvent = function () {
     //导航栏
-    var tabPage = [$('.fly_time'), $('.ter_time'), $('.precision_show')]
+    var tabPage = [$('.fly_time'), $('.ter_time'),$('.fly_in_show'),$('.out_show'),$('.content_show')]
     var nav = $('#nav');
     $('.nav li', nav).on('click', function () {
       // 更新当前nav索引
       stateIndex = $(this).index();
+      tabToggle(stateIndex, tabPage)
     });
     //航段飞行时间误差统计导航点击事件
     $('.nav_monitor').on('click', function () {
@@ -73,7 +74,6 @@ var PredictionData = function () {
       $('li', nav).removeClass('active');
       $(this).addClass('active');
       //切换模块
-      tabToggle(stateIndex, tabPage)
       tableDataConfigs.resizeToFitContainer(tableObject.flyTableObj)
       // clearData(tableObject);
       // hideConditions()
@@ -103,6 +103,8 @@ var PredictionData = function () {
       tabToggle(stateIndex, tabPage)
       tableDataConfigs.resizeToFitContainer(tableObject.preTableObj)
     })
+
+
     //航段飞行起飞机场点击事件状态绑定
     initAirportState($('.fly_time .dep'), $('.fly_time .arr'))
     //终端区起飞机场点击事件状态绑定

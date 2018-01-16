@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>航迹预测精度统计</title>
+    <title>乌鲁木齐机场返航备降系统</title>
     <link rel="shortcut icon" href="favicon.ico"/>
     <link rel="stylesheet" href="plugins/bootstrap/dist/css/normalize.css">
     <link rel="stylesheet" href="plugins/bootstrap/dist/css/bootstrap.min.css">
@@ -23,7 +23,7 @@
             <div class="row clearfix">
                 <div class="col-md-6 ">
                     <div>
-                        <a href="javascript:;" class="navbar-brand">航迹预测精度统计</a>
+                        <a href="javascript:;" class="navbar-brand">乌鲁木齐机场返航备降系统</a>
                     </div>
                 </div>
                 <div class="pull-right user-info">
@@ -53,17 +53,27 @@
 
                             <a href="javascript:;">
                                 <span class="glyphicon glyphicon-stats"></span>
-                                航段飞行时间误差统计</a>
+                                进港计划</a>
                         </li>
                         <li class="nav-history-data-statistics">
                             <a href="javascript:;">
                                 <span class="glyphicon glyphicon-stats"></span>
-                                终端区航路点过点时间统计</a>
+                                备降计划</a>
                         </li>
                         <li class="precision-data-statistics">
                             <a href="javascript:;">
                                 <i class="glyphicon glyphicon-stats" aria-hidden="true"></i>
-                                航班航路点预测精度展示</a>
+                                疆内飞越</a>
+                        </li>
+                        <li class="precision-data-statistics">
+                            <a href="javascript:;">
+                                <i class="glyphicon glyphicon-stats" aria-hidden="true"></i>
+                                出港计划</a>
+                        </li>
+                        <li class="precision-data-statistics">
+                            <a href="javascript:;">
+                                <i class="glyphicon glyphicon-stats" aria-hidden="true"></i>
+                                备降场容量</a>
                         </li>
                     </ul>
                     <!--<p class="data_time"></p>-->
@@ -72,12 +82,12 @@
         </div>
     </nav>
     <div class="container content-container">
-        <!--公共样式-->
+        <!--进港计划-->
         <div class="row active fly_time" id="home">
             <div class="col-md-12">
                 <div class="box round">
                     <h2 class="history-data-title">
-                        <span class="header_name">航段飞行时间误差统计</span>
+                        <span class="header_name">进港计划</span>
                         <span class="generate-time pull-right">
                         </span>
                     </h2>
@@ -154,11 +164,12 @@
 
             </div>
         </div>
+        <!--备降计划-->
         <div class="row  ter_time hide">
             <div class="col-md-12">
                 <div class="box round">
                     <h2 class="history-data-title">
-                        <span class="header_name">终端区航路点过点时间统计</span>
+                        <span class="header_name">备降计划</span>
                         <span class="generate-time pull-right">
                         </span>
                     </h2>
@@ -239,11 +250,134 @@
 
             </div>
         </div>
-        <div class="row  precision_show hide" >
+        <!--疆内飞越-->
+        <div class="row  fly_in_show hide" >
             <div class="col-md-12">
                 <div class="box round">
                     <h2 class="history-data-title">
-                        <span class="header_name">航班航路点预测精度展示</span>
+                        <span class="header_name">疆内飞越</span>
+                        <span class="generate-time pull-right">
+                        </span>
+                    </h2>
+                    <div class="form-wrap">
+                        <div class="row">
+                            <div class="col-xs-6 col-md-3">
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <span class="cy-pad-hor-s">查询日期 : </span>
+                                    </div>
+                                    <div class="input-daterange input-group">
+                                        <input type="text" class="form-control  start-date-input" name="start"  />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <span class="cy-pad-hor-s">航班号：</span>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control pre_airport_Name flight_name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-2">
+                                <button class="atfm-btn atfm-btn-blue loading-data pre-data-btn ladda-button" data-style="zoom-out">查询</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="charts-wrap">
+                        <div class="conditions ">
+                            <div class="col-md-12">
+                                <h5 class="conditions-content hidden">
+                                    <span class="conditions-tip">当前统计条件:</span>
+                                    <span class="conditions-start-data">20171222</span>
+                                    <span class="conditions-subtype">subtype</span>
+                                </h5>
+                            </div>
+                        </div>
+                        <div class=" alert-row">
+                            <div class="col-md-12 alert-container"></div>
+                        </div>
+                        <h3 class="no-datas-tip">暂无数据</h3>
+                        <div class="echart-row">
+                            <div class="top_table h100">
+                                <table id="precision_flight_grid_table"></table>
+                                <div id="pre-datas-pager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--出港计划-->
+        <div class="row  out_show hide" >
+            <div class="col-md-12">
+                <div class="box round">
+                    <h2 class="history-data-title">
+                        <span class="header_name">出港计划</span>
+                        <span class="generate-time pull-right">
+                        </span>
+                    </h2>
+                    <div class="form-wrap">
+                        <div class="row">
+                            <div class="col-xs-6 col-md-3">
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <span class="cy-pad-hor-s">查询日期 : </span>
+                                    </div>
+                                    <div class="input-daterange input-group">
+                                        <input type="text" class="form-control  start-date-input" name="start"  />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-3">
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <span class="cy-pad-hor-s">航班号：</span>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control pre_airport_Name flight_name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-md-2">
+                                <button class="atfm-btn atfm-btn-blue loading-data pre-data-btn ladda-button" data-style="zoom-out">查询</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="charts-wrap">
+                        <div class="conditions ">
+                            <div class="col-md-12">
+                                <h5 class="conditions-content hidden">
+                                    <span class="conditions-tip">当前统计条件:</span>
+                                    <span class="conditions-start-data">20171222</span>
+                                    <span class="conditions-subtype">subtype</span>
+                                </h5>
+                            </div>
+                        </div>
+                        <div class=" alert-row">
+                            <div class="col-md-12 alert-container"></div>
+                        </div>
+                        <h3 class="no-datas-tip">暂无数据</h3>
+                        <div class="echart-row">
+                            <div class="top_table h100">
+                                <table id="precision_flight_grid_table"></table>
+                                <div id="pre-datas-pager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--备降机场容量-->
+        <div class="row  content_show hide" >
+            <div class="col-md-12">
+                <div class="box round">
+                    <h2 class="history-data-title">
+                        <span class="header_name">备降场容量</span>
                         <span class="generate-time pull-right">
                         </span>
                     </h2>

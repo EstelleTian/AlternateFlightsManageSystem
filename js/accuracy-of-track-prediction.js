@@ -943,7 +943,8 @@ var PredictionData = function () {
       initComponent();
       // 初始化事件绑定
       initEvent();
-    }
+    },
+    initGridTable:initGridTable
   }
 }();
 

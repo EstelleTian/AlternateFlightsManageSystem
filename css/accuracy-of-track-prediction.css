@@ -307,6 +307,9 @@
 .hide{
     display: block;
 }
+.total_count{
+    font-size: 15px;
+}
 .ui-th-ltr, .ui-jqgrid .ui-jqgrid-htable th.ui-th-ltr {
     border: 1px solid #ddd !important;
 }

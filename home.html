@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="plugins/ladda/css/ladda.css">
     <!--<link rel="stylesheet" href="css/main.css">-->
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/alternate-airport.css">
     <link rel="stylesheet" href="css/accuracy-of-track-prediction.css">
 </head>
 
@@ -40,7 +41,7 @@
             <li class="inquire">
                 <a href="javascript:;" >出港计划</a>
             </li>
-            <li class="inquire">
+            <li class="inquire alternate-airport">
                 <a href="javascript:;" >备降场容量</a>
             </li>
         </ul>
@@ -139,8 +140,35 @@
                     <div class="poster">备降场容量</div>
                     <div class="time">2018-01-12 12:45</div>
                 </div>
+                <ul class="sub_title" >
+                    <span class="total_count">合计可用(不含敦煌):</span>
+                    <span class="total_count">26</span>
+                </ul>
                 <div class="panel-body">
-                    Panel content
+                    <div class="result-panel">
+                        <table id="alernate_flight_grid_table" class="alernate_flight_grid_table" ></table>
+                        <div id="ale-datas-pager"></div>
+                        <div class="h200 des">
+                            <p>
+                                <span>占用DE类停机位:</span>
+                                <span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325</span>
+                            </p>
+                            <p>
+                                <span>占用C1类停机位:</span>
+                                <span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325</span>
+                            </p>
+                            <p>
+                                <span>占用C2类停机位:</span>
+                                <span>B747,B767,IL76,A322,A253,D225</span>
+                            </p>
+                            <p>
+                                <span>占用DE类停机位:</span>
+                                <span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325,E535,E982,Q552,R325</span>
+                            </p>
+                            <p>说明:初始化是只需修改个机场当前容量即可,默认为设计容量,职位零或不可用时不用填,其余值开始备降后自动计算</p>
+                            <p>合计可用:为该机场所有可用停机位之和,小于等于3显示红色</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

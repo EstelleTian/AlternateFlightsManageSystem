@@ -274,15 +274,11 @@
 .h100{
     height:100%;
 }
-.jqgrow td:nth-of-type(2){
-    color: #1B548D;
-    cursor: pointer;
-    text-decoration: underline;
+.h200{
+    height: 200px;
 }
-.detail .jqgrow td:nth-of-type(2){
-    cursor: default;
-    text-decoration: none;
-    color: #000;
+.alernate_flight_grid_table{
+    padding: 0;
 }
 .datepicker .table-condensed td {
     padding: 0.45rem 0.9rem;

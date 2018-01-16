@@ -1,13 +1,35 @@
 /**
  * Created by caowei on 2018/1/16.
  */
-var tabPage = [$('.fly_time'), $('.ter_time'),$('.fly_in_show'),$('.out_show'),$('.content_show')]
-var nav = $('#nav');
-$('.nav li', nav).on('click', function () {
-  // 更新当前nav索引
-  var stateIndex = $(this).index();
-  tabToggle(stateIndex, tabPage)
-  if($('.content_show') ){
+var alternateAirport = function () {
+  /**
+   * 导航事件
+   * */
+  var initNavTabEvent = function () {
+    //导航栏
+    var tabPage = [$('.fly_time'), $('.ter_time'),$('.fly_in_show'),$('.out_show'),$('.content_show')]
+    var nav = $('#nav');
+    $('.nav li', nav).on('click', function () {
+      // 更新当前nav索引
+      stateIndex = $(this).index();
+      tabToggle(stateIndex, tabPage)
+    });
+  }
+  /*
+   * tab页状态切换
+   * */
+  var tabToggle = function (tabIndex, tabPage) {
+    $.each(tabPage, function (i, e) {
+      if (i == tabIndex) {
+        e.removeClass('hide')
+        e.addClass('show');
+      } else {
+        e.removeClass('show')
+        e.addClass('hide');
+      }
+    })
+  }
+  $('.alternate-airport').on('click', function () {
     var tableConfig = {
       colName: ['备降场','合计可用', 'C2当前容量', 'C2占用', 'C2可用','C1当前容量', 'C1占用', 'C1可用','DE当前容量', 'DE占用', 'DE可用','机位备注' ],
       colTitle: {
@@ -185,20 +207,62 @@ $('.nav li', nav).on('click', function () {
         depAvgDis:'ZLJQ4',
       }]
     }
-    PredictionData.initGridTable(tableConfig,'alernate_flight_grid_table','ale-datas-pager')
-  }
-});
-/*
- * tab页状态切换
- * */
-var tabToggle = function (tabIndex, tabPage) {
-  $.each(tabPage, function (i, e) {
-    if (i == tabIndex) {
-      e.removeClass('hide')
-      e.addClass('show');
-    } else {
-      e.removeClass('show')
-      e.addClass('hide');
+    $.jgrid.gridUnload('alernate_flight_grid_table');
+    initGridTable(tableConfig,'alernate_flight_grid_table','ale-datas-pager')
+  });
+  /**
+   *@method initGridTable 初始化页面主表
+   * @param config 对应表格配置
+   * @param tableId 表格的tableId
+   * @param pagerId 表格统计条数的pagerId
+   */
+  var initGridTable = function (config, tableId, pagerId) {
+    var table = $('#' + tableId).jqGrid({
+      styleUI: 'Bootstrap',
+      datatype: 'local',
+      rownumbers: true,
+      height: "auto",
+      shrinkToFit: false,
+      cmTemplate: {
+        align: 'center',
+        width: 100,
+        resize: false
+      },
+      pager: pagerId,
+      pgbuttons: false,
+      pginput: false,
+      colNames: config.colName,
+      colModel: config.colModel,
+      rowNum: 999999, // 一页显示多少条
+      // sortname: 'time', // 初始化的时候排序的字段
+      // sortorder: 'asc', //排序方式,可选desc,asc
+      viewrecords: true,
+      loadComplete: function (xhr) {
+        var colTitle = config.colTitle;
+        $.each(colTitle, function (i, e) {
+          $('#' + tableId).jqGrid('setLabel', i, '', [], {title: e});
+        })
+      }
+    })
+    //数据填充
+    $('#' + tableId).jqGrid('setGridParam', {datatype: 'local', data: config.data}).trigger('reloadGrid')
+    $('#' + tableId).jqGrid('navGrid', '#' + pagerId, {
+      add: false,
+      edit: false,
+      view: false,
+      del: false,
+      search: false,
+      refresh: false
+    });
+
+    $('#' + tableId).jqGrid('setFrozenColumns')
+  };
+  return{
+    init:function () {
+      initNavTabEvent();
     }
-  })
-}
+  }
+}();
+$(document).ready(function () {
+  alternateAirport.init();
+});

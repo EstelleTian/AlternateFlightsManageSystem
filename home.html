@@ -70,7 +70,7 @@
                                 <i class="glyphicon glyphicon-stats" aria-hidden="true"></i>
                                 出港计划</a>
                         </li>
-                        <li class="precision-data-statistics">
+                        <li class="alternate-airport">
                             <a href="javascript:;">
                                 <i class="glyphicon glyphicon-stats" aria-hidden="true"></i>
                                 备降场容量</a>
@@ -373,8 +373,7 @@
             </div>
         </div>
         <!--备降机场容量-->
-        <div class="row  content_show hide" >
-            <div class="col-md-12">
+        <div class="row  content_show hide col-md-12" >
                 <div class="box round">
                     <h2 class="history-data-title">
                         <span class="header_name">备降场容量</span>
@@ -395,15 +394,16 @@
                     </div>
                     <div class="charts-wrap">
                         <div class="echart-row">
-                            <div class="top_table h100">
+                            <div class="top_table h80">
                                 <table id="alernate_flight_grid_table"></table>
                                 <div id="ale-datas-pager"></div>
+                            </div>
+                            <div class="h20">
+
                             </div>
                         </div>
                     </div>
                 </div>
-
-            </div>
         </div>
     </div>
 </div>
@@ -420,7 +420,7 @@
 <script src="plugins/ladda/js/spin.min.js" type="text/javascript" ></script>
 <script src="plugins/ladda/js/ladda.js" type="text/javascript" ></script>
 <script src="js/data-basic.js"></script>
-<script src="js/accuracy-of-track-prediction.js"></script>
+<!--<script src="js/accuracy-of-track-prediction.js"></script>-->
 <script src="js/alternate-airport-volume.js"></script>
 
 </body>

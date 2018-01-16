@@ -29,26 +29,26 @@
     </div>
     <div class="menu-bar">
         <ul>
-            <li class="monitor active">
+            <li class=" active">
                 <a href="javascript:;" class="">进港计划</a>
             </li>
-            <li class="statistics">
+            <li class="">
                 <a href="javascript:;" >备降计划</a>
             </li>
-            <li class="inquire">
+            <li class="">
                 <a href="javascript:;" >疆内飞越</a>
             </li>
-            <li class="inquire">
+            <li class="">
                 <a href="javascript:;" >出港计划</a>
             </li>
-            <li class="inquire alternate-airport">
+            <li class=" alternate-airport">
                 <a href="javascript:;" >备降场容量</a>
             </li>
         </ul>
     </div>
     <div class="main-area">
         <!--模块1-->
-        <section class="arr active">
+        <section class="arr-plan active">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="poster">进港计划</div>
@@ -99,38 +99,159 @@
             </div>
         </section>
         <!--模块2-->
-        <section class="dep ">
+        <section class="pre-landing-plan ">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="poster">备降计划</div>
-                    <div class="time">2018-01-12 12:45</div>
+                    <div class="time"></div>
                 </div>
                 <div class="panel-body">
-                    Panel content
+                    <!-- 表单面板-->
+                    <ul class="form-panel" >
+                        <li class="form-item">
+                            <label class="title">范围</label>
+                            <!--<input type="text" class="input-sm form-control datepicker-input">-->
+                            <select class="range">
+                                <option >ZWSH</option>
+                                <option >ZWAT</option>
+                                <option >ZWAK</option>
+                                <option selected>ALL</option>
+                            </select>
+                        </li>
+                        <li class="form-item">
+                            <label class="title">关键字</label>
+                            <input type="text" class="input-sm form-control key">
+                        </li>
+
+                        <li class="form-item one-child">
+                            <button class="atfm-btn atfm-btn-blue ladda-button inquire" data-style="zoom-out">
+                                <span class="ladda-label">查询</span>
+                            </button>
+                        </li>
+                        <li class="form-item one-child">
+                            <button class="atfm-btn atfm-btn-blue ladda-button history-inquire" data-style="zoom-out">
+                                <span class="ladda-label">查询历史</span>
+                            </button>
+                        </li>
+                        <!--<li class="form-item error-item">
+                            <div class="error-content"></div>
+                        </li>-->
+
+                    </ul>
+                    <!-- 查询条件显示-->
+                    <ul class="condition-panel hidden">
+                        <li class="form-item">
+                            当前查询条件:
+                        </li>
+                        <li class="form-item range"></li>
+                        <li class="form-item key"></li>
+                    </ul>
+                    <!-- 数据可视化区(图表,表格)-->
+                    <div class="result-panel">
+                        <table id="pre-table"></table>
+                        <div id="pre-table-pager"></div>
+                    </div>
                 </div>
             </div>
         </section>
         <!--模块3-->
-        <section class=" ">
+        <section class="area-fly ">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="poster">疆内飞越</div>
-                    <div class="time">2018-01-12 12:45</div>
+                    <div class="time"></div>
                 </div>
                 <div class="panel-body">
-                    Panel content
+                    <!-- 表单面板-->
+                    <ul class="form-panel" >
+                        <li class="form-item">
+                            <label class="title">范围</label>
+                            <!--<input type="text" class="input-sm form-control datepicker-input">-->
+                            <select class="range">
+                                <option >飞越落地</option>
+                                <option >飞越未起飞</option>
+                                <option selected>飞越全部</option>
+                            </select>
+                        </li>
+                        <li class="form-item">
+                            <label class="title">关键字</label>
+                            <input type="text" class="input-sm form-control key">
+                        </li>
+
+                        <li class="form-item one-child">
+                            <button class="atfm-btn atfm-btn-blue ladda-button inquire" data-style="zoom-out">
+                                <span class="ladda-label">查询</span>
+                            </button>
+                        </li>
+                        <!--<li class="form-item error-item">
+                            <div class="error-content"></div>
+                        </li>-->
+
+                    </ul>
+                    <!-- 查询条件显示-->
+                    <ul class="condition-panel hidden">
+                        <li class="form-item">
+                            当前查询条件:
+                        </li>
+                        <li class="form-item range"></li>
+                        <li class="form-item key"></li>
+                    </ul>
+                    <!-- 数据可视化区(图表,表格)-->
+                    <div class="result-panel">
+                        <table id="area-table"></table>
+                        <div id="area-table-pager"></div>
+                    </div>
                 </div>
             </div>
         </section>
         <!--模块4-->
-        <section class="">
+        <section class="dep-plan">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="poster">出港计划</div>
-                    <div class="time">2018-01-12 12:45</div>
+                    <div class="time"></div>
                 </div>
                 <div class="panel-body">
-                    Panel content
+                    <!-- 表单面板-->
+                    <ul class="form-panel" >
+                        <li class="form-item">
+                            <label class="title">范围</label>
+                            <!--<input type="text" class="input-sm form-control datepicker-input">-->
+                            <select class="range">
+                                <!--<option ></option>
+                                <option ></option>
+                                <option ></option>-->
+                                <option selected>疆出未落地</option>
+                            </select>
+                        </li>
+                        <li class="form-item">
+                            <label class="title">关键字</label>
+                            <input type="text" class="input-sm form-control key">
+                        </li>
+
+                        <li class="form-item one-child">
+                            <button class="atfm-btn atfm-btn-blue ladda-button inquire" data-style="zoom-out">
+                                <span class="ladda-label">查询</span>
+                            </button>
+                        </li>
+                        <!--<li class="form-item error-item">
+                            <div class="error-content"></div>
+                        </li>-->
+
+                    </ul>
+                    <!-- 查询条件显示-->
+                    <ul class="condition-panel hidden">
+                        <li class="form-item">
+                            当前查询条件:
+                        </li>
+                        <li class="form-item range"></li>
+                        <li class="form-item key"></li>
+                    </ul>
+                    <!-- 数据可视化区(图表,表格)-->
+                    <div class="result-panel">
+                        <table id="dep-table"></table>
+                        <div id="dep-table-pager"></div>
+                    </div>
                 </div>
             </div>
         </section>

@@ -133,11 +133,13 @@ ul, li {
     position: absolute;
     padding-right: 0.8rem;
     visibility: hidden;
+    z-index: -1;
 }
 .main-area section.active {
     display: flex;
     flex-direction: column;
     visibility: visible;
+    z-index: 9;
 }
 .main-area section.section-monitor {
     overflow: hidden;
@@ -181,17 +183,31 @@ ul, li {
     flex: 1 0 auto;
     flex-direction: column;
 }
-.panel-body .form-panel, .panel-body .condition-panel, .panel-body .total-panel{
+.panel-body .form-panel, .panel-body .condition-panel, .panel-body .total-panel, .history-data .condition-panel{
     display: flex;
     justify-content: center;
     width: 100%;
     min-height: 5rem;
 }
-.panel-body .form-panel {
+.panel-body .form-panel, .history-data .form-panel {
     border-bottom: 1px solid #dddddd;
     flex-wrap: wrap;
 }
-.panel-body .form-panel .form-item, .panel-body .condition-panel li {
+.history-data .form-panel {
+    display: flex;
+    justify-content: center;
+
+}
+.history-data .form-panel .form-control{
+   width: 50%;
+}
+.history-data .form-panel  label {
+    margin-right: 1rem;
+}
+.form-control[readonly] {
+    background: #FFFFFF;
+}
+.panel-body .form-panel .form-item, .panel-body .condition-panel li, .history-data .form-panel .form-item, .history-data .condition-panel li {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -204,9 +220,7 @@ ul, li {
     width: 100%;
     align-items: center;
 }
-.panel-body .form-panel .form-item .form-control[readonly]{
-    background: #FFFFFF;
-}
+
 .panel-body .form-panel .form-item .error-content {
     width: 50%;
     line-height: 2rem;
@@ -241,11 +255,8 @@ ul, li {
     /*overflow: auto;*/
 }
 
-#arr-canvas {
-    position: relative;
-    height: 100%;
-    width: 100%;
-
+.history-data .result-panel {
+    height: 40rem;
 }
 
 .summary-list {

@@ -3,9 +3,13 @@
  */
 
 var Demo = function () {
-
-    var $canvas = $('.arr');
+    var modulClass = ['arr-plan','pre-landing-plan','area-fly','dep-plan'];
+    var tableIDs = ['arr-table','pre-table','area-table','dep-table'];
+    var pagerIDs = ['arr-table-pager','pre-table-pager','area-table-pager','dep-table-pager'];
+    var $canvas = null;
     var table = null;
+    var index = 0;
+
     var tableId = 'arr-table';
     var pagerId = 'arr-table-pager';
 
@@ -96,8 +100,8 @@ var Demo = function () {
         },
         {
             pid:'2828059',
-            alterPart:'',
-            status:'',
+            alterPart:'ZWTL',
+            status:'备降',
             flightID:'CSN6920',
             flightNum:'B1736',
             flightType:'B738',
@@ -142,9 +146,204 @@ var Demo = function () {
             depPart:'',
             commont:''
         },{
-            pid:'2828043',
+            pid:'2828044',
             alterPart:'',
             status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828045',
+            alterPart:'ZWTK',
+            status:'备降',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828046',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'28270123',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'28263351',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2829108',
+            alterPart:'ZWKM',
+            status:'备降',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2827777',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828001',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2825005',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2827114',
+            alterPart:'ZWSH',
+            status:'备降',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2821222',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2826333',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2820200',
+            alterPart:'',
+            status:'',
+            flightID:'CSN6926',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZUUU',
+            pETD:'10/15:15',
+            dyETD:'10/15:15',
+            ATD:'10/15:24',
+            pETA:'10/18:49',
+            depPart:'',
+            commont:''
+        },{
+            pid:'2828888',
+            alterPart:'ZWYN',
+            status:'备降',
             flightID:'CSN6926',
             flightNum:'B5762',
             flightType:'B738',
@@ -172,7 +371,7 @@ var Demo = function () {
             depPart:'',
             commont:''
         },{
-            pid:'2828043',
+            pid:'2822222',
             alterPart:'',
             status:'',
             flightID:'CSN6926',
@@ -187,7 +386,7 @@ var Demo = function () {
             depPart:'',
             commont:''
         },{
-            pid:'2828043',
+            pid:'2824444',
             alterPart:'',
             status:'',
             flightID:'CSN6926',
@@ -202,205 +401,10 @@ var Demo = function () {
             depPart:'',
             commont:''
         },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
-            flightNum:'B5762',
-            flightType:'B738',
-            task:'S',
-            arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
-            depPart:'',
-            commont:''
-        },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
-            flightNum:'B5762',
-            flightType:'B738',
-            task:'S',
-            arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
-            depPart:'',
-            commont:''
-        },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
-            flightNum:'B5762',
-            flightType:'B738',
-            task:'S',
-            arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
-            depPart:'',
-            commont:''
-        },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
-            flightNum:'B5762',
-            flightType:'B738',
-            task:'S',
-            arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
-            depPart:'',
-            commont:''
-        },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
-            flightNum:'B5762',
-            flightType:'B738',
-            task:'S',
-            arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
-            depPart:'',
-            commont:''
-        },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
-            flightNum:'B5762',
-            flightType:'B738',
-            task:'S',
-            arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
-            depPart:'',
-            commont:''
-        },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
-            flightNum:'B5762',
-            flightType:'B738',
-            task:'S',
-            arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
-            depPart:'',
-            commont:''
-        },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
-            flightNum:'B5762',
-            flightType:'B738',
-            task:'S',
-            arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
-            depPart:'',
-            commont:''
-        },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
-            flightNum:'B5762',
-            flightType:'B738',
-            task:'S',
-            arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
-            depPart:'',
-            commont:''
-        },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
-            flightNum:'B5762',
-            flightType:'B738',
-            task:'S',
-            arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
-            depPart:'',
-            commont:''
-        },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
-            flightNum:'B5762',
-            flightType:'B738',
-            task:'S',
-            arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
-            depPart:'',
-            commont:''
-        },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
-            flightNum:'B5762',
-            flightType:'B738',
-            task:'S',
-            arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
-            depPart:'',
-            commont:''
-        },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
-            flightNum:'B5762',
-            flightType:'B738',
-            task:'S',
-            arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
-            depPart:'',
-            commont:''
-        },{
-            pid:'2828043',
-            alterPart:'',
-            status:'',
-            flightID:'CSN6926',
+            pid:'2820000',
+            alterPart:'ZWKC',
+            status:'备降',
+            flightID:'CXS6666',
             flightNum:'B5762',
             flightType:'B738',
             task:'S',
@@ -427,13 +431,6 @@ var Demo = function () {
         return str;
     };
 
-    var resizeContainer = function () {
-        var c = $('.result-panel', $canvas);
-        console.log(c.outerHeight());
-        /*$(window).resize(function () {
-            console.log(c.outerHeight());
-        })*/
-    };
 
     /**
      * 调整表格大小以适应所在容器
@@ -469,7 +466,7 @@ var Demo = function () {
         var key = $('.form-panel .key', $canvas).val();
         $('.condition-panel .range', $canvas).html(range).attr('title','范围:'+ range);
         $('.condition-panel .key', $canvas).html(key).attr('title','关键字:'+ key);
-        $('.condition-panel').removeClass('hidden');
+        $('.condition-panel',$canvas).removeClass('hidden');
     };
 
 
@@ -514,43 +511,76 @@ var Demo = function () {
 
     var fireData = function () {
         resizeToFitContainer(tableId);
+        var arr = [];
+        result.map(function (itme, i) {
+            if(i %(index+3) == 1){
+                var obj = {}
+                for(var i in itme){
+                    obj[i] = itme[i];
+                }
+                arr.push(obj);
+            }
+        })
         //数据填充
-        $('#' + tableId).jqGrid('setGridParam', {datatype: 'local', data: result}).trigger('reloadGrid')
+        $('#' + tableId).jqGrid('setGridParam', {datatype: 'local', data: arr}).trigger('reloadGrid')
         $('#' + tableId).jqGrid('setFrozenColumns');
     };
-    var Inquire = function () {
-      $('.inquire', $canvas).on('click',function () {
-          updateTime();
-          updateCondition();
-          initTable();
-          fireData();
-      });
+    var initInquire = function () {
+      $('.inquire', $canvas).off('click',inquireData).on('click',inquireData);
+      $('.history-inquire',$canvas).off('click',historyInquire).on('click',historyInquire);
     };
 
-    var toggleRange = function () {
-        $('.form-panel .range').on('change',function () {
-            console.log($(this).val());
+    var inquireData = function () {
+        updateTime();
+        updateCondition();
+        initTable();
+        fireData();
+    };
+
+    var inquireHistoryData = function(){
+        
+    };
+
+    var historyInquire = function () {
+        createModal();
+        inquireHistoryData();
+    };
+
+    var createModal = function () {
+        var str = '<div class="history-data"><ul class="form-panel" ><li class="form-item"><label>开始日期</label><input type="text" class="start-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><label>结束日期</label><input type="text" class="end-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><button class="atfm-btn atfm-btn-blue ladda-button history-inquire-btn" data-style="zoom-out"> <span class="ladda-label">查询</span> </button></li></ul> <ul class="condition-panel hidden"> <li class="form-item"> 当前查询条件: </li> <li class="form-item range"></li>  </ul><div class="result-panel"> <table id="history-table"></table> <div id="history-table-pager"></div> </div></div>';
+        var options = {
+            title: '查询历史',
+            content: str,
+            status: 1, /* 1:正常 2:警告 3:危险 不填:默认情况*/ width: 1000,
+            mtop : 200,
+            showCancelBtn: false,
+            isIcon : false
+        };
+        BootstrapDialogFactory.dialog(options);
+    };
+
+    var initComment = function () {
+        index = $('.main-area section.active').index();
+        $canvas = $('.'+modulClass[index]);
+        tableId = tableIDs[index];
+        pagerId = pagerIDs[index];
+        initInquire();
+    };
+
+    var initEvent = function(){
+        $('.menu-bar li').on('click',function () {
+            initComment();
         });
-    }
-
-
-
-    var resetHeight = function(){
-        var c = $('.result-panel', $canvas);
-        var h = c.outerHeight();
-        console.log(h);
-        $('.result-panel', $canvas).height(h);
     };
 
     return {
        init : function () {
-           Inquire();
+           initComment();
+           initEvent();
+
            $(window).resize(function () {
-               // resetHeight();
-               // $('#' + tableId).jqGrid('setFrozenColumns');
                resizeToFitContainer(tableId);
            })
-           // toggleRange();
        }
     }
 }();

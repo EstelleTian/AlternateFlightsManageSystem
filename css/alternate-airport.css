@@ -1,0 +1,10 @@
+.content_show {
+  height: 80%;
+}
+.content_show .box {
+  display: flex;
+  flex-direction: column;
+}
+.content_show .echart-row {
+  flex: 1 ;
+}

@@ -67,48 +67,6 @@ var PredictionData = function () {
       stateIndex = $(this).index();
       tabToggle(stateIndex, tabPage)
     });
-    //航段飞行时间误差统计导航点击事件
-    $('.nav_monitor').on('click', function () {
-      $(".no-datas-tip").hide();
-      clearAlert()
-      $('li', nav).removeClass('active');
-      $(this).addClass('active');
-      //切换模块
-      tableDataConfigs.resizeToFitContainer(tableObject.flyTableObj)
-      // clearData(tableObject);
-      // hideConditions()
-    });
-    // 终端区航路点过点时间统计导航点击事件
-    $('.nav-history-data-statistics').on('click', function () {
-      $(".no-datas-tip").hide();
-      clearAlert()
-      //修改标题文字
-      $('li', nav).removeClass('active');
-      $(this).addClass('active');
-      //模块切换
-      tabToggle(stateIndex, tabPage)
-      tableDataConfigs.resizeToFitContainer(tableObject.terTableObjTop)
-      tableDataConfigs.resizeToFitContainer(tableObject.terTableObjDown)
-      // clearData(tableObject)
-      // hideConditions()
-    });
-    //航班航路点预测精度展示
-    $('.precision-data-statistics').on('click', function () {
-      $(".no-datas-tip").hide();
-      clearAlert()
-      //修改标题文字
-      $('li', nav).removeClass('active');
-      $(this).addClass('active');
-      //模块切换
-      tabToggle(stateIndex, tabPage)
-      tableDataConfigs.resizeToFitContainer(tableObject.preTableObj)
-    })
-
-
-    //航段飞行起飞机场点击事件状态绑定
-    initAirportState($('.fly_time .dep'), $('.fly_time .arr'))
-    //终端区起飞机场点击事件状态绑定
-    initAirportState($('.ter_time .dep'), $('.ter_time .arr'))
   }
   /*
    * tab页状态切换
@@ -407,49 +365,49 @@ var PredictionData = function () {
           $('#' + tableId).jqGrid('setLabel', i, '', [], {title: e});
         })
       },
-      onCellSelect: function (rowid, index, contents, event) {
-        var colModel = table.jqGrid('getGridParam')['colModel'];
-        var colName = colModel[index].name;
-        if (colName == 'flyDepPointType' || colName == 'depAirport') {
-          //模态框设置
-          var option = {
-            title: contents + '航班详情',
-            content: '<div class="detail"><table id="' + rowid + 'table" class="detail_table"></table><div id="' + rowid + 'detail_pager"></div></div>',
-            width: 1280,
-            height: 960,
-            isIcon: false,
-            showCancelBtn: false,
-            mtop: 180
-          }
-          //初始化模态框
-          BootstrapDialogFactory.dialog(option);
-          //初始化航段飞行时间误差统计详情表格
-          if (!$('.ter_time').is(':visible')) {
-            var textParam = table.jqGrid('getGridParam')['data'][rowid-1].allName
-            tableDataConfigs.flyDetailDataConfig.data = tableDataConfigs.flyData.infoMap[textParam];
-            initGridTableDetail(tableDataConfigs.flyDetailDataConfig, rowid + 'table', rowid + 'detail_pager')
-          } else {
-            //初始化终端区航路点过点时间统计详情表格
-            var textParam = table.jqGrid('getGridParam')['data'][rowid-1].allName
-            tableDataConfigs.terminalDetailDataConfig.data = tableDataConfigs.terData.infoMap[textParam];
-            initGridTableDetail(tableDataConfigs.terminalDetailDataConfig, rowid + 'table', rowid + 'detail_pager')
-          }
-        }
-        if (colName == 'flightInOId') {
-          var option = {
-            title: contents + '航班详情',
-            content: '<div class="detail"><table id="' + rowid + 'table" class="detail_table"></table><div id="' + rowid + 'detail_pager"></div></div>',
-            width: 1280,
-            height: 960,
-            isIcon: false,
-            showCancelBtn: false,
-            mtop: 180
-          }
-          //初始化模态框
-          BootstrapDialogFactory.dialog(option);
-          flightDetailSearch(contents, rowid);
-        }
-      }
+      // onCellSelect: function (rowid, index, contents, event) {
+      //   var colModel = table.jqGrid('getGridParam')['colModel'];
+      //   var colName = colModel[index].name;
+      //   if (colName == 'flyDepPointType' || colName == 'depAirport') {
+      //     //模态框设置
+      //     var option = {
+      //       title: contents + '航班详情',
+      //       content: '<div class="detail"><table id="' + rowid + 'table" class="detail_table"></table><div id="' + rowid + 'detail_pager"></div></div>',
+      //       width: 1280,
+      //       height: 960,
+      //       isIcon: false,
+      //       showCancelBtn: false,
+      //       mtop: 180
+      //     }
+      //     //初始化模态框
+      //     BootstrapDialogFactory.dialog(option);
+      //     //初始化航段飞行时间误差统计详情表格
+      //     if (!$('.ter_time').is(':visible')) {
+      //       var textParam = table.jqGrid('getGridParam')['data'][rowid-1].allName
+      //       tableDataConfigs.flyDetailDataConfig.data = tableDataConfigs.flyData.infoMap[textParam];
+      //       initGridTableDetail(tableDataConfigs.flyDetailDataConfig, rowid + 'table', rowid + 'detail_pager')
+      //     } else {
+      //       //初始化终端区航路点过点时间统计详情表格
+      //       var textParam = table.jqGrid('getGridParam')['data'][rowid-1].allName
+      //       tableDataConfigs.terminalDetailDataConfig.data = tableDataConfigs.terData.infoMap[textParam];
+      //       initGridTableDetail(tableDataConfigs.terminalDetailDataConfig, rowid + 'table', rowid + 'detail_pager')
+      //     }
+      //   }
+      //   if (colName == 'flightInOId') {
+      //     var option = {
+      //       title: contents + '航班详情',
+      //       content: '<div class="detail"><table id="' + rowid + 'table" class="detail_table"></table><div id="' + rowid + 'detail_pager"></div></div>',
+      //       width: 1280,
+      //       height: 960,
+      //       isIcon: false,
+      //       showCancelBtn: false,
+      //       mtop: 180
+      //     }
+      //     //初始化模态框
+      //     BootstrapDialogFactory.dialog(option);
+      //     flightDetailSearch(contents, rowid);
+      //   }
+      // }
     })
     //数据填充
     $('#' + tableId).jqGrid('setGridParam', {datatype: 'local', data: config.data}).trigger('reloadGrid')

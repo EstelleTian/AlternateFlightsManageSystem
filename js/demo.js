@@ -630,11 +630,11 @@ var Demo = function () {
             datatype: 'local',
             rownumbers: true,
             height: "auto",
-            shrinkToFit: false,
+            shrinkToFit: true,
             cmTemplate: {
                 align: 'center',
-                width: 100,
-                resize: false
+                // width: 100,
+                resize: true
             },
             pager: pagerId,
             pgbuttons: false,

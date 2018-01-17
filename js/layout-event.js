@@ -25,10 +25,19 @@ var layoutEvent = function () {
             $('.main-area section').eq(index).addClass('active');
         });
     };
+    /**
+     * 用户登出事件
+     * */
+    var logout = function () {
+        $('.logout button').on('click',function () {
+            window.location.href = 'index.html';
+        });
+    }
 
     return {
         init : function () {
             menu();
+            logout();
         }
     }
 }();

@@ -816,7 +816,10 @@ var Demo = function () {
     };
 
     var updateHistoryTime = function(){
-
+        var $canvas = $('.history-data');
+        var time = formateTime($.getFullTime( new Date()));
+        // $('.time', $canvas).text(' 数据生成时间: '+time);
+        $('.time', $canvas).text(time).attr('title','数据生成时间: '+ time);
     };
     var updateHistoryCondition = function(){
         var $canvas = $('.history-data');
@@ -887,7 +890,7 @@ var Demo = function () {
     };
 
     var createModal = function () {
-        var str = '<div class="history-data"><ul class="form-panel" ><li class="form-item"><label>开始日期</label><input type="text" class="start-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><label>结束日期</label><input type="text" class="end-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><button class="atfm-btn atfm-btn-blue ladda-button history-inquire-btn" data-style="zoom-out"> <span class="ladda-label">查询</span> </button></li></ul> <ul class="condition-panel hidden"> <li class="form-item"> 当前查询条件: </li> <li class="form-item range"></li>  </ul><div class="result-panel"> <table id="history-table"></table> <div id="history-table-pager"></div> </div></div>';
+        var str = '<div class="history-data"><ul class="form-panel" ><li class="form-item"><label>开始日期</label><input type="text" class="start-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><label>结束日期</label><input type="text" class="end-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><button class="atfm-btn atfm-btn-blue ladda-button history-inquire-btn" data-style="zoom-out"> <span class="ladda-label">查询</span> </button></li></ul> <ul class="condition-panel hidden"> <li class="form-item"> 当前查询条件: </li> <li class="form-item range"></li><li class="form-item"> 数据生成时间: </li>  <li class="form-item time"> </ul><div class="result-panel"> <table id="history-table"></table> <div id="history-table-pager"></div> </div></div>';
         var options = {
             title: '查询历史',
             content: str,

@@ -273,6 +273,58 @@ ul, li {
     height: 100%;
 }
 
+.table>tbody>tr.success>td.selected-cell {
+    background: #39f;
+    box-shadow: 0 0 10px 0px #222;
+}
+
+.grid-table-collaborate-container ,.grid-table-collaborate-container li > ul{
+    text-align: left;
+    height: auto;
+    padding-bottom: 0;
+    border: solid 2px #3399FF;
+    position: absolute;
+    z-index: 3;
+    background-color: white;
+    box-shadow: 0 0 10px 0px #222;
+    border-radius: 5px;
+    width: 15rem;
+}
+.grid-table-collaborate-container  li {
+    position: relative;
+    padding: 5px;
+}
+.grid-table-collaborate-container li > a {
+    display: block;
+    padding: 4px 3rem;
+    clear: both;
+    /*font-weight: 400;*/
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+.grid-table-collaborate-container li > a:hover {
+    background: #f5f5f5;
+}
+.grid-table-collaborate-container li  .glyphicon {
+    color: #999999;
+    font-size: 1.2rem;
+}
+.grid-table-collaborate-container li>ul {
+    display: none;
+    background: #FFFFFF;
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    left: 14.2rem;
+}
+.grid-table-collaborate-container li:hover>ul {
+    display: block;
+
+}
+
 @media (max-width: 768px) {
     .menu-bar ul{
         flex-direction: column;

@@ -633,7 +633,7 @@ var Demo = function () {
             shrinkToFit: false,
             cmTemplate: {
                 align: 'center',
-                width: 150,
+                width: 100,
                 resize: false
             },
             pager: pagerId,
@@ -653,10 +653,72 @@ var Demo = function () {
             },
             onCellSelect: function (rowid, index, contents, event) {
 
-            }
+            },
+            // 绑定右键单击事件
+            onRightClickRow: function (rowid, iRow, iCol, e) {
+                // 当前行数据
+                var rowData = table.jqGrid().getRowData(rowid);
+                // 获取触发事件的单元格对象
+                var cellObj = $(e.target);
+                var opt = {
+                    rowid : rowid,
+                    iRow : iRow,
+                    iCol : iCol,
+                    table : table,
+                    tableId : tableId,
+                    rowData : rowData,
+                    cellObj : cellObj
+                }
+
+                onRightClickRow(opt)
+            },
+
         });
     };
 
+
+    var onRightClickRow = function (opt) {
+
+        // 清除协调窗口
+         clearCollaborateContainer(opt);
+       /* // 当前行数据
+        var rowData = table.jqGrid().getRowData(rowid);
+        $('.selected-cell').removeClass('selected-cell');
+        // 获取单元格colModel对象
+        var colModel = table.jqGrid('getGridParam')['colModel'][iCol];
+        // 获取触发事件的单元格对象
+        var cellObj = $(e.target);*!/*/
+        // 记录当前选中的单元格对象
+        opt.cellObj.addClass('selected-cell');
+
+        //进港
+        if(modulClass[index] == 'arr-plan' ){
+            collaborateARR(opt);
+        }
+
+
+    };
+    var clearCollaborateContainer = function (opt) {
+        $('.selected-cell').removeClass('selected-cell');
+        $('.grid-table-collaborate-container').remove();
+    }
+
+    // 进港协调窗口
+    var collaborateARR = function (opt) {
+        // 获取协调DOM元素
+        var collaboratorDom = $(CollaborateDom.ARR);
+        $('#gbox_' + opt.tableId).append(collaboratorDom);
+        // 定位协调DOM
+        collaboratorDom.position({
+            of: opt.cellObj,
+            my: 'left top',
+            at: 'right top'
+        });
+        collaboratorDom.on('click',function (e) {
+           clearCollaborateContainer(opt);
+        });
+
+    };
 
     var fireData = function () {
         resizeToFitContainer(tableId);
@@ -737,7 +799,7 @@ var Demo = function () {
             shrinkToFit: false,
             cmTemplate: {
                 align: 'center',
-                width: 150,
+                width: 100,
                 resize: false
             },
             pager: pagerId,
@@ -805,6 +867,20 @@ var Demo = function () {
         $canvas = $('.'+modulClass[index]);
         tableId = tableIDs[index];
         pagerId = pagerIDs[index];
+        // 绑定Canvas事件，屏蔽表格区域内浏览器右键菜单
+        $canvas.bind('mouseenter', function () {
+            document.oncontextmenu = function () {
+                return false;
+            };
+        }).bind('mouseleave', function () {
+            document.oncontextmenu = function () {
+                return false;
+            };
+        }).bind('mouseover', function () {
+            document.oncontextmenu = function () {
+                return false;
+            };
+        });
         initInquire();
     };
 

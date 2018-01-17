@@ -703,7 +703,7 @@ var Demo = function () {
 
 
     };
-    var clearCollaborateContainer = function (opt) {
+    var clearCollaborateContainer = function () {
         $('.selected-cell').removeClass('selected-cell');
         $('.grid-table-collaborate-container').remove();
     }
@@ -928,6 +928,13 @@ var Demo = function () {
         $('.menu-bar li').on('click',function () {
             initComment();
         });
+        $('.main-area section').on('click',function () {
+            if($('.grid-table-collaborate-container').length > 0){
+                clearCollaborateContainer();
+            }
+        })
+
+
     };
 
     return {

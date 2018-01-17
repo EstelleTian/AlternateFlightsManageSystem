@@ -3,7 +3,7 @@
  */
 
 var Demo = function () {
-    var modulClass = ['arr-plan','pre-landing-plan','area-fly','dep-plan'];
+    var moduleClass = ['arr-plan','pre-landing-plan','area-fly','dep-plan'];
     var tableIDs = ['arr-table','pre-table','area-table','dep-table'];
     var pagerIDs = ['arr-table-pager','pre-table-pager','area-table-pager','dep-table-pager'];
     var $canvas = null;
@@ -690,10 +690,15 @@ var Demo = function () {
         var cellObj = $(e.target);*!/*/
         // 记录当前选中的单元格对象
         opt.cellObj.addClass('selected-cell');
+        var currentModulee = moduleClass[index];
 
         //进港
-        if(modulClass[index] == 'arr-plan' ){
+        if(currentModulee == 'arr-plan' ){
             collaborateARR(opt);
+        }else if(currentModulee == 'pre-landing-plan'){
+            collaboratePRE(opt);
+        }else if(currentModulee == 'dep-plan' ){
+            collaborateDEP(opt);
         }
 
 
@@ -707,6 +712,38 @@ var Demo = function () {
     var collaborateARR = function (opt) {
         // 获取协调DOM元素
         var collaboratorDom = $(CollaborateDom.ARR);
+        $('#gbox_' + opt.tableId).append(collaboratorDom);
+        // 定位协调DOM
+        collaboratorDom.position({
+            of: opt.cellObj,
+            my: 'left top',
+            at: 'right top'
+        });
+        collaboratorDom.on('click',function (e) {
+           clearCollaborateContainer(opt);
+        });
+
+    };
+    // 备降协调窗口
+    var collaboratePRE = function (opt) {
+        // 获取协调DOM元素
+        var collaboratorDom = $(CollaborateDom.PRE);
+        $('#gbox_' + opt.tableId).append(collaboratorDom);
+        // 定位协调DOM
+        collaboratorDom.position({
+            of: opt.cellObj,
+            my: 'left top',
+            at: 'right top'
+        });
+        collaboratorDom.on('click',function (e) {
+           clearCollaborateContainer(opt);
+        });
+
+    };
+    // 出港协调窗口
+    var collaborateDEP = function (opt) {
+        // 获取协调DOM元素
+        var collaboratorDom = $(CollaborateDom.DEP);
         $('#gbox_' + opt.tableId).append(collaboratorDom);
         // 定位协调DOM
         collaboratorDom.position({
@@ -864,7 +901,7 @@ var Demo = function () {
 
     var initComment = function () {
         index = $('.main-area section.active').index();
-        $canvas = $('.'+modulClass[index]);
+        $canvas = $('.'+moduleClass[index]);
         tableId = tableIDs[index];
         pagerId = pagerIDs[index];
         // 绑定Canvas事件，屏蔽表格区域内浏览器右键菜单

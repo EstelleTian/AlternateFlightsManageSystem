@@ -24,7 +24,6 @@ var alternateAirport = function () {
               colModel: [{
                   name: 'flyDepPointType',
                   index: 'flyDepPointType',
-                  width: 120,
                   frozen: true
               },{
                   name: 'point',
@@ -264,12 +263,12 @@ var alternateAirport = function () {
       datatype: 'local',
       rownumbers: true,
       height: "auto",
-      shrinkToFit: false,
+      shrinkToFit: true,
       cmTemplate: {
         align: 'center',
         resize: false,
         cellattr:setTableColor,
-        width: 155
+        // width: 155
       },
       pager: pagerId,
       pgbuttons: false,

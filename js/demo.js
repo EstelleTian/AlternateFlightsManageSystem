@@ -611,7 +611,7 @@ var Demo = function () {
 
 
     var updateCondition = function () {
-        var range = $('.form-panel .range', $canvas).val();
+        var range = $('.form-panel .dropdown-toggle', $canvas).text();
         var key = $('.form-panel .key', $canvas).val();
         $('.condition-panel .range', $canvas).html(range).attr('title','范围:'+ range);
         $('.condition-panel .key', $canvas).html(key).attr('title','关键字:'+ key);
@@ -932,7 +932,15 @@ var Demo = function () {
             if($('.grid-table-collaborate-container').length > 0){
                 clearCollaborateContainer();
             }
+        });
+        $('.form-panel .dropdown-menu a').on('click',function () {
+            var $that = $(this);
+            var $btn = $that.parent().parent().prev();
+            var val = $that.attr('data-val');
+            var valCN = $that.html();
+            $btn.html( valCN +'<span class="caret"></span>');
         })
+
 
 
     };

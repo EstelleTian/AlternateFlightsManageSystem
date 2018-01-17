@@ -59,13 +59,22 @@
                     <ul class="form-panel" >
                         <li class="form-item">
                             <label class="title">范围</label>
-                            <!--<input type="text" class="input-sm form-control datepicker-input">-->
-                            <select class="range">
-                                <option >进港未落地</option>
-                                <option >进港未起飞</option>
-                                <option >进港取消</option>
-                                <option selected>进港全部</option>
-                            </select>
+                            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        进港全部
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                        <!--<li><a href="javascript:;">无</a></li>-->
+                                        <li><a href="javascript:;">进港未落地</a></li>
+                                        <li><a href="javascript:;">进港未起飞</a></li>
+                                        <li><a href="javascript:;">进港取消</a></li>
+                                        <li><a href="javascript:;">进港全部</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
                         </li>
                         <li class="form-item">
                             <label class="title">关键字</label>
@@ -110,13 +119,20 @@
                     <ul class="form-panel" >
                         <li class="form-item">
                             <label class="title">范围</label>
-                            <!--<input type="text" class="input-sm form-control datepicker-input">-->
-                            <select class="range">
-                                <option >ZWSH</option>
-                                <option >ZWAT</option>
-                                <option >ZWAK</option>
-                                <option selected>ALL</option>
-                            </select>
+                            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        ALL
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                        <li><a href="javascript:;">ZWSH</a></li>
+                                        <li><a href="javascript:;">ZWAT</a></li>
+                                        <li><a href="javascript:;">ZWAK</a></li>
+                                        <li><a href="javascript:;">ALL</a></li>
+                                    </ul>
+                                </div>
+                            </div>
                         </li>
                         <li class="form-item">
                             <label class="title">关键字</label>
@@ -133,10 +149,6 @@
                                 <span class="ladda-label">查询历史</span>
                             </button>
                         </li>
-                        <!--<li class="form-item error-item">
-                            <div class="error-content"></div>
-                        </li>-->
-
                     </ul>
                     <!-- 查询条件显示-->
                     <ul class="condition-panel hidden">
@@ -166,12 +178,20 @@
                     <ul class="form-panel" >
                         <li class="form-item">
                             <label class="title">范围</label>
-                            <!--<input type="text" class="input-sm form-control datepicker-input">-->
-                            <select class="range">
-                                <option >飞越落地</option>
-                                <option >飞越未起飞</option>
-                                <option selected>飞越全部</option>
-                            </select>
+                            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        飞越全部
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                        <li><a href="javascript:;">飞越落地</a></li>
+                                        <li><a href="javascript:;">飞越未起飞</a></li>
+                                        <li><a href="javascript:;">飞越全部</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
                         </li>
                         <li class="form-item">
                             <label class="title">关键字</label>
@@ -216,13 +236,18 @@
                     <ul class="form-panel" >
                         <li class="form-item">
                             <label class="title">范围</label>
-                            <!--<input type="text" class="input-sm form-control datepicker-input">-->
-                            <select class="range">
-                                <!--<option ></option>
-                                <option ></option>
-                                <option ></option>-->
-                                <option selected>疆出未落地</option>
-                            </select>
+                            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        疆出未落地
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+
+                                        <li><a href="javascript:;">疆出未落地</a></li>
+                                    </ul>
+                                </div>
+                            </div>
                         </li>
                         <li class="form-item">
                             <label class="title">关键字</label>

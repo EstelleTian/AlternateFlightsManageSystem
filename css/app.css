@@ -80,7 +80,7 @@ ul, li {
     align-items: center;
     margin: 1rem 2.5rem 0 1.8rem;
     min-height: 3rem;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     background: url(../img/nav-repeat2.jpg) repeat-x #305b7b !important;
 
 }
@@ -183,11 +183,12 @@ ul, li {
     flex: 1 0 auto;
     flex-direction: column;
 }
-.panel-body .form-panel, .panel-body .condition-panel, .panel-body .total-panel, .history-data .condition-panel{
+.panel-body .form-panel, .panel-body .condition-panel, .panel-body .total-panel, .history-data .condition-panel, .history-data .form-panel{
     display: flex;
     justify-content: center;
     width: 100%;
     min-height: 5rem;
+    font-size: 1.5rem;
 }
 .panel-body .form-panel, .history-data .form-panel {
     border-bottom: 1px solid #dddddd;
@@ -282,7 +283,7 @@ ul, li {
     text-align: left;
     height: auto;
     padding-bottom: 0;
-    border: solid 2px #3399FF;
+    /*border: solid 2px #3399FF;*/
     position: absolute;
     z-index: 3;
     background-color: white;

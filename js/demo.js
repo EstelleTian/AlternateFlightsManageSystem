@@ -3,7 +3,7 @@
  */
 
 var Demo = function () {
-    var modulClass = ['arr-plan','pre-landing-plan','area-fly','dep-plan'];
+    var moduleClass = ['arr-plan','pre-landing-plan','area-fly','dep-plan'];
     var tableIDs = ['arr-table','pre-table','area-table','dep-table'];
     var pagerIDs = ['arr-table-pager','pre-table-pager','area-table-pager','dep-table-pager'];
     var $canvas = null;
@@ -630,11 +630,11 @@ var Demo = function () {
             datatype: 'local',
             rownumbers: true,
             height: "auto",
-            shrinkToFit: false,
+            shrinkToFit: true,
             cmTemplate: {
                 align: 'center',
-                width: 100,
-                resize: false
+                // width: 100,
+                resize: true
             },
             pager: pagerId,
             pgbuttons: false,
@@ -690,10 +690,15 @@ var Demo = function () {
         var cellObj = $(e.target);*!/*/
         // 记录当前选中的单元格对象
         opt.cellObj.addClass('selected-cell');
+        var currentModulee = moduleClass[index];
 
         //进港
-        if(modulClass[index] == 'arr-plan' ){
+        if(currentModulee == 'arr-plan' ){
             collaborateARR(opt);
+        }else if(currentModulee == 'pre-landing-plan'){
+            collaboratePRE(opt);
+        }else if(currentModulee == 'dep-plan' ){
+            collaborateDEP(opt);
         }
 
 
@@ -707,6 +712,38 @@ var Demo = function () {
     var collaborateARR = function (opt) {
         // 获取协调DOM元素
         var collaboratorDom = $(CollaborateDom.ARR);
+        $('#gbox_' + opt.tableId).append(collaboratorDom);
+        // 定位协调DOM
+        collaboratorDom.position({
+            of: opt.cellObj,
+            my: 'left top',
+            at: 'right top'
+        });
+        collaboratorDom.on('click',function (e) {
+           clearCollaborateContainer(opt);
+        });
+
+    };
+    // 备降协调窗口
+    var collaboratePRE = function (opt) {
+        // 获取协调DOM元素
+        var collaboratorDom = $(CollaborateDom.PRE);
+        $('#gbox_' + opt.tableId).append(collaboratorDom);
+        // 定位协调DOM
+        collaboratorDom.position({
+            of: opt.cellObj,
+            my: 'left top',
+            at: 'right top'
+        });
+        collaboratorDom.on('click',function (e) {
+           clearCollaborateContainer(opt);
+        });
+
+    };
+    // 出港协调窗口
+    var collaborateDEP = function (opt) {
+        // 获取协调DOM元素
+        var collaboratorDom = $(CollaborateDom.DEP);
         $('#gbox_' + opt.tableId).append(collaboratorDom);
         // 定位协调DOM
         collaboratorDom.position({
@@ -779,7 +816,10 @@ var Demo = function () {
     };
 
     var updateHistoryTime = function(){
-
+        var $canvas = $('.history-data');
+        var time = formateTime($.getFullTime( new Date()));
+        // $('.time', $canvas).text(' 数据生成时间: '+time);
+        $('.time', $canvas).text(time).attr('title','数据生成时间: '+ time);
     };
     var updateHistoryCondition = function(){
         var $canvas = $('.history-data');
@@ -850,7 +890,7 @@ var Demo = function () {
     };
 
     var createModal = function () {
-        var str = '<div class="history-data"><ul class="form-panel" ><li class="form-item"><label>开始日期</label><input type="text" class="start-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><label>结束日期</label><input type="text" class="end-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><button class="atfm-btn atfm-btn-blue ladda-button history-inquire-btn" data-style="zoom-out"> <span class="ladda-label">查询</span> </button></li></ul> <ul class="condition-panel hidden"> <li class="form-item"> 当前查询条件: </li> <li class="form-item range"></li>  </ul><div class="result-panel"> <table id="history-table"></table> <div id="history-table-pager"></div> </div></div>';
+        var str = '<div class="history-data"><ul class="form-panel" ><li class="form-item"><label>开始日期</label><input type="text" class="start-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><label>结束日期</label><input type="text" class="end-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><button class="atfm-btn atfm-btn-blue ladda-button history-inquire-btn" data-style="zoom-out"> <span class="ladda-label">查询</span> </button></li></ul> <ul class="condition-panel hidden"> <li class="form-item"> 当前查询条件: </li> <li class="form-item range"></li><li class="form-item"> 数据生成时间: </li>  <li class="form-item time"> </ul><div class="result-panel"> <table id="history-table"></table> <div id="history-table-pager"></div> </div></div>';
         var options = {
             title: '查询历史',
             content: str,
@@ -864,7 +904,7 @@ var Demo = function () {
 
     var initComment = function () {
         index = $('.main-area section.active').index();
-        $canvas = $('.'+modulClass[index]);
+        $canvas = $('.'+moduleClass[index]);
         tableId = tableIDs[index];
         pagerId = pagerIDs[index];
         // 绑定Canvas事件，屏蔽表格区域内浏览器右键菜单

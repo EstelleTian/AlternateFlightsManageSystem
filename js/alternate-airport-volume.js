@@ -23,8 +23,7 @@ var alternateAirport = function () {
               },
               colModel: [{
                   name: 'flyDepPointType',
-                  index: 'flyDepPointType',
-                  frozen: true
+                  index: 'flyDepPointType'
               },{
                   name: 'point',
                   index: 'point',

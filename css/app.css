@@ -235,7 +235,7 @@ ul, li {
     max-width: 100%;
     margin-bottom: 5px;
     margin-right: 1rem;
-    font-weight: normal;
+    /*font-weight: normal;*/
     color: #333333;
 }
 .panel-body .form-panel .form-control {

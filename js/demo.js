@@ -80,7 +80,7 @@ var Demo = function () {
                 index: 'commont'
             }]
     };
-
+    // 模拟数据
     var result = [
         {
             pid:'2827657',
@@ -139,10 +139,10 @@ var Demo = function () {
             flightType:'B738',
             task:'S',
             arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
+            pETD:'10/15:20',
+            dyETD:'10/15:20',
+            ATD:'10/15:36',
+            pETA:'10/17:14',
             depPart:'',
             commont:''
         },{
@@ -154,10 +154,10 @@ var Demo = function () {
             flightType:'B738',
             task:'S',
             arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
+            pETD:'10/16:15',
+            dyETD:'10/16:15',
+            ATD:'10/16:24',
+            pETA:'10/18:53',
             depPart:'',
             commont:''
         },{
@@ -169,10 +169,10 @@ var Demo = function () {
             flightType:'B738',
             task:'S',
             arrPart:'ZUUU',
-            pETD:'10/15:15',
-            dyETD:'10/15:15',
-            ATD:'10/15:24',
-            pETA:'10/18:49',
+            pETD:'10/19:11',
+            dyETD:'10/19:11',
+            ATD:'10/19:23',
+            pETA:'10/19:59',
             depPart:'',
             commont:''
         },{
@@ -418,6 +418,155 @@ var Demo = function () {
         },
     ];
 
+    //
+    var preTableConfig = {
+        colName: ['计划批号', '航班号', '机号','机型', '机型分类','占用机位','任务', '起飞机场','计划ETD', '动态ETD', 'ATD','计划ETA','降落机场','备降场', '状态','备注' ],
+        colTitle: {
+            pid:'计划批号',
+            flightID:'航班号',
+            flightNum:'机号',
+            flightType:'机型',
+            flightTypeGroup: '机型分类',
+            occupationSeat: '占用机位',
+            task:'任务',
+            arrPart:'起飞机场',
+            pETD:'计划ETD',
+            dyETD:'动态ETD',
+            ATD:'ATD',
+            pETA:'计划ETA',
+            depPart:'降落机场',
+            alterPart:'备降场',
+            status:'状态',
+            commont:'备注'
+        },
+        colModel: [
+            {
+                name: 'pid',
+                index: 'pid',
+                width:120,
+                frozen:true
+            }, {
+                name: 'flightID',
+                index: 'flightID',
+                width:120,
+                frozen:true
+            },{
+                name: 'flightNum',
+                index: 'flightNum'
+            },  {
+                name: 'flightType',
+                index: 'flightType'
+            },{
+                name: 'flightTypeGroup',
+                index: 'flightTypeGroup'
+            }, {
+                name: 'occupationSeat',
+                index: 'occupationSeat'
+            }, {
+                name: 'task',
+                index: 'task'
+            }, {
+                name: 'arrPart',
+                index: 'arrPart'
+            }, {
+                name: 'pETD',
+                index: 'pETD'
+            }, {
+                name: 'dyETD',
+                index: 'dyETD'
+            }, {
+                name: 'ATD',
+                index: 'ATD'
+            }, {
+                name: 'pETA',
+                index: 'pETA'
+            }, {
+                name: 'depPart',
+                index: 'depPart'
+            },  {
+                name: 'alterPart',
+                index: 'alterPart',
+            }, {
+                name: 'status',
+                index: 'status'
+            }, {
+                name: 'commont',
+                index: 'commont'
+            }]
+    };
+    // 备降模拟数据
+    var preData = [
+        {
+            pid:'2813033',
+            flightTypeGroup: 'C2',
+            occupationSeat: 'C1',
+            flightID:'CSN6973',
+            flightNum:'B5762',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZWKL',
+            pETD:'03/09:20',
+            dyETD:'03/09:20',
+            ATD:'03/09:25',
+            pETA:'03/10:00',
+            depPart:'ZWWW',
+            alterPart:'',
+            status:'备降',
+            commont:''
+        },{
+            pid:'2813545',
+            flightTypeGroup: 'C2',
+            occupationSeat: 'C2',
+            flightID:'CSN6069',
+            flightNum:'B1782',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZLLL',
+            pETD:'03/14:30',
+            dyETD:'03/14:30',
+            ATD:'03/14:55',
+            pETA:'03/17:10',
+            depPart:'ZWWW',
+            alterPart:'ZWTL',
+            status:'备降',
+            commont:''
+        },{
+            pid:'2813329',
+            flightTypeGroup: 'C2',
+            occupationSeat: '',
+            flightID:'DKH1083',
+            flightNum:'B8236',
+            flightType:'A320',
+            task:'S',
+            arrPart:'ZSSS',
+            pETD:'03/12:20',
+            dyETD:'03/12:20',
+            ATD:'10/12:34',
+            pETA:'03/17:50',
+            depPart:'ZWWW',
+            alterPart:'ZWTL',
+            status:'备降',
+            commont:''
+        },{
+            pid:'2813461',
+            flightTypeGroup: 'C2',
+            occupationSeat: '',
+            flightID:'CHH7145',
+            flightNum:'B5620',
+            flightType:'B738',
+            task:'S',
+            arrPart:'ZBAA',
+            pETD:'03/13:50',
+            dyETD:'03/13:50',
+            ATD:'03/14:07',
+            pETA:'03/18:10',
+            depPart:'ZWWW',
+            alterPart:'ZWKM',
+            status:'备降',
+            commont:''
+        }
+    ];
+
     /**
      * 数据生成时间格式化
      * */
@@ -537,12 +686,104 @@ var Demo = function () {
         fireData();
     };
 
+    var initDatePicker = function () {
+        $('#bootstrap-modal-dialog-body .form-item .form-control').datepicker({
+            language: 'zh-CN',
+            // showOnFocus: false, //是否在获取焦点时显示面板 true显示 false不显示 默认true
+            autoclose: true, //选择日期后自动关闭面板
+            // clearBtn: true, //是否显示清空按钮
+            //todayHighlight: true,
+            // startDate: '0d', //可选日期的开始日期 0d:当前 -1d:当前的前1天, +1d:当前的后1天
+            endDate: '-1d', //可选日期最后日期
+            keepEmptyValues: true,
+            // forceParse: true,
+            //格式化
+            format: 'yyyymmdd',
+        });
+        var now = $.getFullTime(new Date()).substring(0, 8);
+        var preDay =$.addStringTime(now + '0000', 3600 * 1000 * 24 * -1);
+        $('#bootstrap-modal-dialog-body .form-item .form-control').datepicker('setDate', $.parseFullTime(preDay));
+    }
+
     var inquireHistoryData = function(){
-        
+
+        $('.history-inquire-btn').on('click',function () {
+            updateHistoryTime();
+            updateHistoryCondition();
+            initHistoryTable();
+            fireHistoryData();
+        });
+
     };
+
+    var updateHistoryTime = function(){
+
+    };
+    var updateHistoryCondition = function(){
+        var $canvas = $('.history-data');
+        var start = $('.start-date').val();
+        var end = $('.end-date').val();
+        $('.condition-panel .range', $canvas).html(start+' - ' + end).attr('title','起止日期: '+ start+' - ' + end);
+        $('.condition-panel',$canvas).removeClass('hidden');
+    };
+    var initHistoryTable = function(){
+        var tableId = 'history-table';
+        var pagerId = 'history-table-pager';
+        var table = $('#' + tableId).jqGrid({
+            styleUI: 'Bootstrap',
+            datatype: 'local',
+            rownumbers: true,
+            height: "auto",
+            shrinkToFit: false,
+            cmTemplate: {
+                align: 'center',
+                width: 150,
+                resize: false
+            },
+            pager: pagerId,
+            pgbuttons: false,
+            pginput: false,
+            colNames: preTableConfig.colName,
+            colModel: preTableConfig.colModel,
+            rowNum: 999999, // 一页显示多少条
+            // sortname: 'time', // 初始化的时候排序的字段
+            // sortorder: 'asc', //排序方式,可选desc,asc
+            viewrecords: true,
+            loadComplete: function (xhr) {
+                var colTitle = tableConfig.colTitle;
+                $.each(colTitle, function (i, e) {
+                    $('#' + tableId).jqGrid('setLabel', i, '', [], {title: e});
+                })
+            },
+            onCellSelect: function (rowid, index, contents, event) {
+
+            }
+        });
+    };
+    var fireHistoryData = function(){
+        var tableId = 'history-table';
+        resizeToFitContainer(tableId);
+        /*var arr = [];
+        var index = 1;
+        result.map(function (itme, i) {
+            if(i %(index+3) == 1){
+                var obj = {}
+                for(var i in itme){
+                    obj[i] = itme[i];
+                }
+                arr.push(obj);
+            }
+        })*/
+        //数据填充
+        $('#' + tableId).jqGrid('setGridParam', {datatype: 'local', data: preData}).trigger('reloadGrid')
+        $('#' + tableId).jqGrid('setFrozenColumns');
+    };
+
+
 
     var historyInquire = function () {
         createModal();
+        initDatePicker();
         inquireHistoryData();
     };
 

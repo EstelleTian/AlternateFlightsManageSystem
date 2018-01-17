@@ -642,7 +642,7 @@ var Demo = function () {
             colNames: tableConfig.colName,
             colModel: tableConfig.colModel,
             rowNum: 999999, // 一页显示多少条
-            // sortname: 'time', // 初始化的时候排序的字段
+            sortname: 'pid', // 初始化的时候排序的字段
             // sortorder: 'asc', //排序方式,可选desc,asc
             viewrecords: true,
             loadComplete: function (xhr) {
@@ -848,7 +848,7 @@ var Demo = function () {
             colNames: preTableConfig.colName,
             colModel: preTableConfig.colModel,
             rowNum: 999999, // 一页显示多少条
-            // sortname: 'time', // 初始化的时候排序的字段
+            sortname: 'pid', // 初始化的时候排序的字段
             // sortorder: 'asc', //排序方式,可选desc,asc
             viewrecords: true,
             loadComplete: function (xhr) {

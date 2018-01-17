@@ -314,9 +314,9 @@ var alternateAirport = function () {
         if (parseInt(e.point) > 3) {
           e[colName + '_style'] = 'background:#fff;color:#000'
         } else if (parseInt(e.point) <= 3 && parseInt(data.point) != 0) {
-          e[colName + '_style'] = 'background:red;color:#fff'
+          e[colName + '_style'] = 'background:#fb4f39;color:#fff'
         } else if (parseInt(e.point) == 0) {
-          e[colName + '_style'] = 'background:red;color:#000'
+          e[colName + '_style'] = 'background:#fb4f39;color:#000'
         }
       })
     }

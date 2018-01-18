@@ -29,7 +29,9 @@ var alternateAirport = function () {
                   index: 'point',
               },{
                   name: 'rdepAvgTime',
-                  index: 'rdepAvgTime'
+                  index: 'rdepAvgTime',
+                editable:true,
+                editrules:{number:true}
               }, {
                   name: 'rdepMeTime',
                   index: 'rdepMeTime'
@@ -38,7 +40,9 @@ var alternateAirport = function () {
                   index: 'schMeDis'
               }, {
                   name: 'fplMeDis',
-                  index: 'fplMeDis'
+                  index: 'fplMeDis',
+                editable:true,
+                editrules:{number:true}
               }, {
                   name: 'depMeDis',
                   index: 'depMeDis'
@@ -47,7 +51,9 @@ var alternateAirport = function () {
                   index: 'dyn10mMeDis'
               }, {
                   name: 'dyn20mMeDis',
-                  index: 'dyn20mMeDis'
+                  index: 'dyn20mMeDis',
+                editable:true,
+                editrules:{number:true}
               }, {
                   name: 'schAvgDis',
                   index: 'schAvgDis'
@@ -263,6 +269,9 @@ var alternateAirport = function () {
       rownumbers: true,
       height: "auto",
       shrinkToFit: true,
+      cellEdit : true,
+      cellsubmit : 'remote',
+      cellurl : 'http://localhost:63342/AlternateFlightsManageSystem/home.html',
       cmTemplate: {
         align: 'center',
         resize: false,
@@ -283,6 +292,17 @@ var alternateAirport = function () {
         $.each(colTitle, function (i, e) {
           $('#' + tableId).jqGrid('setLabel', i, '', [], {title: e});
         })
+      },
+      afterEditCell: function (id,name,val,iRow,iCol){
+        if(name=='point') {
+          console.log(name)
+        }
+      },
+      afterSaveCell : function(rowid,name,val,iRow,iCol) {
+        if(name == 'point') {
+          var taxval = table.jqGrid('getCell',rowid,iCol+1);
+          table.jqGrid('setRowData',rowid,{total:parseFloat(val)+parseFloat(taxval)});
+        }
       }
     })
       resizeToFitContainer('alernate_flight_grid_table')
@@ -301,6 +321,10 @@ var alternateAirport = function () {
       resizeToFitContainer('alernate_flight_grid_table')
     })
   };
+
+  function onRightClickTable() {
+
+  }
 
   /**
    *

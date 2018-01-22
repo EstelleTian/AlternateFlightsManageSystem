@@ -263,6 +263,7 @@ var alternateAirport = function () {
    * @param pagerId 表格统计条数的pagerId
    */
   var initGridTable = function (config, tableId, pagerId) {
+    var cellObj = '';
     var table = $('#' + tableId).jqGrid({
       styleUI: 'Bootstrap',
       datatype: 'local',
@@ -298,11 +299,21 @@ var alternateAirport = function () {
           console.log(name)
         }
       },
+      onCellSelect: function (rowid, iCol, cellcontent, e) {
+        cellObj =$(e.target)
+      },
       afterSaveCell : function(rowid,name,val,iRow,iCol) {
         if(name == 'point') {
           var taxval = table.jqGrid('getCell',rowid,iCol+1);
           table.jqGrid('setRowData',rowid,{total:parseFloat(val)+parseFloat(taxval)});
         }
+      },
+      afterSubmitCell:function(serverresponse, rowid, cellname, value, iRow, iCol){
+       if(serverresponse.state == 200){
+         cellObj.qtip({
+           content:'修改成功',
+         })
+       }
       }
     })
       resizeToFitContainer('alernate_flight_grid_table')

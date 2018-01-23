@@ -241,7 +241,6 @@ var alternateAirport = function () {
       return config;
     }
     //切换页面点击事件
-    $('.alternate-airport').on('click', function () {
       $.jgrid.gridUnload('alernate_flight_grid_table');
       index = $('.main-area section.active').index();
       var canvas = $('.' + moduleClass[index]);
@@ -268,7 +267,6 @@ var alternateAirport = function () {
         $.jgrid.gridUnload('alernate_flight_grid_table');
         initGridTable(tableConfig, 'alernate_flight_grid_table', 'ale-datas-pager')
       }
-    });
   }
   /**
    *@method initGridTable 初始化页面主表
@@ -330,7 +328,9 @@ var alternateAirport = function () {
     $('#' + tableId).jqGrid('setGridParam', {datatype: 'local', data: config.data}).trigger('reloadGrid')
     $('#' + tableId).jqGrid('setFrozenColumns')
     $(window).resize(function () {
-      resizeToFitContainer('alernate_flight_grid_table')
+      if(index == 4){
+        resizeToFitContainer('alernate_flight_grid_table')
+      }
     })
   };
 

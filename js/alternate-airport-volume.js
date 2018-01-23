@@ -3,157 +3,15 @@
  */
 var alternateAirport = function () {
   //IP地址
-  var ipHost = "http://localhost:8085/";
+  var ipHost = "http://192.168.243.104:8085/";
   //备降场表格对象
   var airVolumeTable = '';
-  //当前显示模块
-  var index = 0;
-  //当前模块数组
-  var moduleClass = ['arr-plan', 'pre-landing-plan', 'area-fly', 'dep-plan','alter_volume'];
-  //备降场表格数据
-  var data = {
-    "generatetime": "201801221210",
-    "status": 200,
-    "availableCapacity": 0,
-    "airportMessage": [
-      {
-        "airport": "ZWKL",
-        "total": 0,
-        "occupy": 0,
-        "available": 0,
-        "remark": "机位备注",
-        "positionCapInfo": [{
-          "airport": "ZWKL",
-          "positionType": "C1",
-          "capacity": 2,
-          "available": 2,
-          "occupy": 0
-        }, {
-          "airport": "ZWKL",
-          "positionType": "C2",
-          "capacity": 0,
-          "available": 0,
-          "occupy": 0
-        }, {
-          "airport": "ZWKL",
-          "positionType": "DE",
-          "capacity": 1,
-          "available": 1,
-          "occupy": 0
-        }]
-      },
-      {
-        "airport": "ZWKL",
-        "total": 0,
-        "occupy": 0,
-        "available": 0,
-        "remark": "机位备注",
-        "positionCapInfo": [{
-          "airport": "ZWKL",
-          "positionType": "C1",
-          "capacity": 2,
-          "available": 2,
-          "occupy": 0
-        }, {
-          "airport": "ZWKL",
-          "positionType": "C2",
-          "capacity": 0,
-          "available": 0,
-          "occupy": 0
-        }, {
-          "airport": "ZWKL",
-          "positionType": "DE",
-          "capacity": 1,
-          "available": 1,
-          "occupy": 0
-        }]
-      },
-      {
-        "airport": "ZWKL",
-        "total": 0,
-        "occupy": 0,
-        "available": 0,
-        "remark": "机位备注",
-        "positionCapInfo": [{
-          "airport": "ZWKL",
-          "positionType": "C1",
-          "capacity": 2,
-          "available": 2,
-          "occupy": 0
-        }, {
-          "airport": "ZWKL",
-          "positionType": "C2",
-          "capacity": 0,
-          "available": 0,
-          "occupy": 0
-        }, {
-          "airport": "ZWKL",
-          "positionType": "DE",
-          "capacity": 1,
-          "available": 1,
-          "occupy": 0
-        }]
-      }
-    ]
-  }
+  //备降场表格原始数据
+  var tableData = '';
   //备降场表格列配置
-  var dataConfig = {
-    "status": 200,
-    "generatetime": "201801221210",
-    "result": [
-      {
-        "postionCap": [{
-          "key": "C1total",
-          "value": "C1",
-          "text": "c1当前容量"
-        }, {
-          "key": "C1occupy",
-          "value": "C1",
-          "text": "c1占用"
-        }, {
-          "key": "C1available",
-          "value": "C1",
-          "text": "c1可用"
-        },{
-          "key": "C2total",
-          "value": "C2",
-          "text": "c2当前容量"
-        }, {
-          "key": "C2occupy",
-          "value": "C2",
-          "text": "c2占用"
-        }, {
-          "key": "C2available",
-          "value": "C2",
-          "text": "c2可用"
-        },{
-          "key": "DEtotal",
-          "value": "DE",
-          "text": "DE当前容量"
-        }, {
-          "key": "DEoccupy",
-          "value": "DE",
-          "text": "DE占用"
-        }, {
-          "key": "DEavailable",
-          "value": "DE",
-          "text": "DE可用"
-        }]
-      },
-      {
-        "arrFlightsScope": [{
-          "key": "arrAll",
-          "value": "1",
-          "text": "进港全部"
-        }, {
-          "key": "arrUnLand",
-          "value": "2",
-          "text": "进港未落地"
-        }]
-      }]
-  }
+  var dataColConfig = ''
   //数据生成时间
-  var generateTime = data.generatetime;
+  var generateTime = '';
   //备降场表格配置
   var tableConfig = {
     colName: ['备降场', '合计可用'],
@@ -169,104 +27,165 @@ var alternateAirport = function () {
       index: 'total',
     }],
     data: [],
-    typeArr:[]
+    typeArr: []
   }
-  //初始化组件
-  var initComment = function () {
-    // var url = ipHost + 'altf/airport/retrieveAirport'
-    // $.ajax({
-    //   type: "GET",
-    //   url: url,
-    //   data: "",
-    //   dataType: "JSON",
-    //   async: false,
-    //   success: function (data) {
-    //   },
-    //   error: function (xhr, status, error) {
-    //   }
-    // });
-    /**
-     * 备降场容量表格列配置
-     * @param obj
-     * @param config
-     */
-    var colConfigConvert = function (obj,config) {
-      $.each(obj,function (i,e) {
-        if($.isValidObject(e.postionCap)){
-          $.each(e.postionCap,function (index,ele) {
-            var obj = {};
-            var titleObj = {};
-            obj['index'] = ele.key;
-            obj['name'] = ele.key;
-            config.colModel.push(obj);
-            config.typeArr.push(ele.value);
-            config.colTitle[ele.key] = ele.text;
-            config.colName.push(ele.text);
-          })
-          var remark = {
-            index:'remark',
-            name:'remark',
-          };
-          config.colModel.push(remark);
-          config.colTitle['remark'] = '航班备注';
-          config.colName.push('航班备注');
+  //定时器总开关
+  var isRefresh = true;
+
+  var refreshTime = 1000 * 3;
+  //初始化表格
+  var initDataBasic = function () {
+    $.jgrid.gridUnload('alernate_flight_grid_table');
+    //阻止右键点击默认事件
+    preventDefaultEvent()
+    getTableColmodel(dataColConfig, isRefresh);
+  }
+  /**
+   *
+   */
+  var getTableColmodel = function (dataColConfig, isRefresh) {
+    var url = ipHost + 'altf/airport/retrieveAirportConfig'
+    $.ajax({
+      type: "GET",
+      url: url,
+      data: "",
+      dataType: "JSON",
+      async: false,
+      success: function (data) {
+        if ($.isValidObject(data)) {
+          var colConfig = data;
+          getTableData(colConfig, dataColConfig, isRefresh);
+        } else {
+          console.warn("列配置为空")
         }
-      })
-      return config;
-    }
-    /**
-     *备降场数据转化
-     * @param dataObj
-     * @param config
-     * @returns {*}
-     */
-    var airportDataConvert = function (dataObj, config) {
-      var typeArr = tableConfig.typeArr;
-      $.each(dataObj, function (i, e) {
-        var obj = {};
-        obj['airport'] = e.airport;
-        obj['total'] = e.total;
-        obj['remark'] = e.remark;
-        $.each(e.positionCapInfo, function (index, ele) {
-          $.each(typeArr, function (j, m) {
-            if (m == ele.positionType) {
-              obj[m + 'total'] = ele.capacity;
-              obj[m + 'available'] = ele.available;
-              obj[m + 'occupy'] = ele.occupy;
-            }
-          })
-        })
-        config.data.push(obj);
-      })
-      return config;
-    }
-    //切换页面点击事件
-      $.jgrid.gridUnload('alernate_flight_grid_table');
-      index = $('.main-area section.active').index();
-      var canvas = $('.' + moduleClass[index]);
-      // 绑定Canvas事件，屏蔽表格区域内浏览器右键菜单
-      canvas.bind('mouseenter', function () {
-        document.oncontextmenu = function () {
-          return false;
-        };
-      }).bind('mouseleave', function () {
-        document.oncontextmenu = function () {
-          return false;
-        };
-      }).bind('mouseover', function () {
-        document.oncontextmenu = function () {
-          return false;
-        };
-      });
-      tableConfig = colConfigConvert(dataConfig.result,tableConfig)
-      tableConfig = airportDataConvert(data.airportMessage, tableConfig)
-      if (!$.isValidObject(airVolumeTable)) {
-        dataStyleConvert(tableConfig.data)
-        initGridTable(tableConfig, 'alernate_flight_grid_table', 'ale-datas-pager')
-      } else {
-        $.jgrid.gridUnload('alernate_flight_grid_table');
-        initGridTable(tableConfig, 'alernate_flight_grid_table', 'ale-datas-pager')
+      },
+      error: function (xhr, status, error) {
+        console.error(error)
       }
+    });
+  }
+  /**
+   * 获取表格数据
+   */
+  var getTableData = function (newColConfig, oldColConfig, isRefresh) {
+    var url = ipHost + 'altf/airport/retrieveAirport'
+    $.ajax({
+      type: "GET",
+      url: url,
+      data: "",
+      dataType: "JSON",
+      async: false,
+      success: function (data) {
+        if ($.isValidObject(data)) {
+          tableData = data;
+          generateTime = data.generateTime
+          tableConfig.data = [];
+          if (!$.isValidObject(airVolumeTable)) {
+            //列配置设置
+            dataColConfig = colConfigConvert(newColConfig.airportConfig, tableConfig)
+            //data转换
+            tableConfig = airportDataConvert(data.airportMessage, tableConfig)
+            //列颜色配置转换
+            dataStyleConvert(tableConfig.data)
+            // 初始化表格
+            initGridTable(tableConfig, 'alernate_flight_grid_table', 'ale-datas-pager')
+          } else {
+            var newColCon = colConfigConvert(newColConfig.airportConfig, tableConfig);
+            if (oldColConfig == newColCon) {
+              // 列配置不变
+              //data转换
+              tableConfig = airportDataConvert(data.airportMessage, tableConfig)
+              //列颜色配置转换
+              dataStyleConvert(tableConfig.data)
+              airVolumeTable.jqGrid('setGridParam', tableConfig.data).trigger('reloadGrid');
+            } else {
+              // 列配置改变
+              $.jgrid.gridUnload('alernate_flight_grid_table')
+              //列配置设置
+              tableConfig = newColCon;
+              //data转换
+              tableConfig = airportDataConvert(data.airportMessage, tableConfig)
+              //列颜色配置转换
+              dataStyleConvert(tableConfig.data)
+              initGridTable(tableConfig, 'alernate_flight_grid_table', 'ale-datas-pager')
+            }
+          }
+          if (isRefresh) {
+            startTimer(getTableColmodel, dataColConfig, isRefresh,refreshTime);
+          }
+        }
+      },
+      error: function (xhr, status, error) {
+      }
+    });
+  }
+  /**
+   * 修改机场容量qtip提示
+   * @param cellObj
+   * @param state
+   */
+  var showQtip = function (cellObj, state) {
+    var styleClasses = 'qtip-green';
+    var tipMesssage = ' '
+    if (state) {
+      styleClasses = 'qtip-green-custom qtip-rounded';
+      tipMesssage = '修改成功'
+    } else {
+      tipMesssage = '修改失败'
+      styleClasses = 'qtip-red-custom qtip-rounded';
+    }
+    cellObj.qtip({
+      content: {
+        text: tipMesssage,
+      },
+      position: {
+        my: 'bottom center', // 同jQueryUI Position
+        at: 'top center',
+      },
+      style: {
+        classes: styleClasses
+      },
+      // 显示配置
+      show: {
+        delay: 0,
+        target: cellObj,
+        ready: true, // 初始化完成后马上显示
+        effect: function () {
+          $(this).fadeIn(); // 显示动画
+        }
+      },
+      // 隐藏配置
+      hide: {
+        target: cellObj, // 指定对象
+        event: 'scroll unfocus click', // 失去焦点时隐藏
+        effect: function () {
+          $(this).fadeOut(); // 隐藏动画
+        },
+      },
+    })
+    setTimeout(function () {
+      cellObj.qtip('destroy', true);
+    }, 3000)
+  }
+  /**
+   * 阻止右键点击默认事件
+   */
+  var preventDefaultEvent = function () {
+    var canvas = $('.alter_volume');
+    // 绑定Canvas事件，屏蔽表格区域内浏览器右键菜单
+    canvas.bind('mouseenter', function () {
+      document.oncontextmenu = function () {
+        return false;
+      };
+    }).bind('mouseleave', function () {
+      document.oncontextmenu = function () {
+        return false;
+      };
+    }).bind('mouseover', function () {
+      document.oncontextmenu = function () {
+        return false;
+      };
+    });
   }
   /**
    *@method initGridTable 初始化页面主表
@@ -328,11 +247,77 @@ var alternateAirport = function () {
     $('#' + tableId).jqGrid('setGridParam', {datatype: 'local', data: config.data}).trigger('reloadGrid')
     $('#' + tableId).jqGrid('setFrozenColumns')
     $(window).resize(function () {
-      if(index == 4){
+      if (index == 4) {
         resizeToFitContainer('alernate_flight_grid_table')
       }
     })
   };
+
+  /**
+   * 备降场容量表格列配置
+   * @param obj
+   * @param config
+   */
+  var colConfigConvert = function (obj, config) {
+    config.colName = ['备降场', '合计可用'];
+    config.colTitle = {
+      airport: '备降场',
+      total: '合计可用',
+    };
+    config.colModel = [{
+      name: 'airport',
+      index: 'airport'
+    }, {
+      name: 'total',
+      index: 'total',
+    }];
+    config.data = [];
+    config.typeArr = [];
+    $.each(obj.postionCap, function (index, ele) {
+      var obj = {};
+      var titleObj = {};
+      obj['index'] = ele.key;
+      obj['name'] = ele.key;
+      config.colModel.push(obj);
+      config.typeArr.push(ele.value);
+      config.colTitle[ele.key] = ele.text;
+      config.colName.push(ele.text);
+    })
+    var remark = {
+      index: 'remark',
+      name: 'remark',
+    };
+    config.colModel.push(remark);
+    config.colTitle['remark'] = '航班备注';
+    config.colName.push('航班备注');
+    return config;
+  }
+  /**
+   *备降场数据转化
+   * @param dataObj
+   * @param config
+   * @returns {*}
+   */
+  var airportDataConvert = function (dataObj, config) {
+    var typeArr = tableConfig.typeArr;
+    $.each(dataObj, function (i, e) {
+      var obj = {};
+      obj['airport'] = e.airport;
+      obj['total'] = e.total;
+      obj['remark'] = e.remark;
+      $.each(e.positionCapInfo, function (index, ele) {
+        $.each(typeArr, function (j, m) {
+          if (m == ele.positionType) {
+            obj[m + 'total'] = ele.capacity;
+            obj[m + 'available'] = ele.available;
+            obj[m + 'occupy'] = ele.occupy;
+          }
+        })
+      })
+      config.data.push(obj);
+    })
+    return config;
+  }
 
   /**
    *备降场表格样式转换
@@ -362,23 +347,12 @@ var alternateAirport = function () {
 
     // 清除协调窗口
     clearCollaborateContainer(opt);
-    /* // 当前行数据
-     var rowData = table.jqGrid().getRowData(rowid);
-     $('.selected-cell').removeClass('selected-cell');
-     // 获取单元格colModel对象
-     var colModel = table.jqGrid('getGridParam')['colModel'][iCol];
-     // 获取触发事件的单元格对象
-     var cellObj = $(e.target);*!/*/
     // 记录当前选中的单元格对象
     opt.cellObj.addClass('selected-cell');
-    var currentModulee = moduleClass[index];
-
     //容量
-    if (currentModulee == 'alter_volume') {
+    if ($('.alter_volume').is(":visible")) {
       collaborateAlter(opt);
     }
-
-
   };
   /**
    *添加右键协调操作DOM
@@ -387,6 +361,23 @@ var alternateAirport = function () {
   var collaborateAlter = function (opt) {
     // 获取协调DOM元素
     var collaboratorDom = $(CollaborateDom.CAPACITY);
+    //表单验证绑定
+    var form = collaboratorDom.find('form');
+    form.bootstrapValidator({
+      feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+      },
+      fields: {
+        flightId: {
+          validators: {
+            notEmpty: {},
+            onlyNumber: {},
+          }
+        }
+      }
+    });
     $('#gbox_' + opt.tableId).append(collaboratorDom);
     // 定位协调DOM
     collaboratorDom.position({
@@ -395,18 +386,41 @@ var alternateAirport = function () {
       at: 'right top'
     });
     $('#modificate_volume').on('click', function () {
-      getNewVolume()
+      //获取验证结果
+      var bootstrapValidator = form.data('bootstrapValidator');
+      //手动再次触发验证
+      bootstrapValidator.validate();
+      if (bootstrapValidator.isValid()) {
+        getNewVolume()
+      }
     })
     $('#cancale').on('click', function () {
       clearCollaborateContainer();
     })
+    $('.modal-close-btn').on('click', function () {
+      clearCollaborateContainer();
+    })
   };
+
+  var fireAllDataChange = function () {
+
+  }
 
   /**
    * 修改当前容量
    */
   function getNewVolume() {
-
+    // $.ajax({
+    //   type: "GET",
+    //   url: url,
+    //   data: "",
+    //   dataType: "JSON",
+    //   async: false,
+    //   success: function (data) {
+    //   },
+    //   error: function (xhr, status, error) {
+    //   }
+    // });
   }
 
   /**
@@ -481,9 +495,44 @@ var alternateAirport = function () {
     return attrs;
   }
 
+  /**
+   * 定时器
+   * @param func
+   * @param instance
+   * @param isNext
+   * @param time
+   */
+  var startTimer = function (func, instance, isNext, time) {
+    if (typeof func == "function") {
+      setTimeout(function () {
+        func(instance, isNext);
+      }, time);
+    }
+  };
+  /**
+   * 表格单条数据更新
+   * @param tableObj
+   * @param rowid
+   * @param rowData
+   */
+  var fireSingleDataChange = function (tableObj, rowid, rowData) {
+    // 表格数据ID集合
+    var ids = tableObj.jqGrid('getDataIDs');
+    var f = tableObj.jqGrid('delRowData', rowid);
+    if (f) {
+      // 再原数据的前一位之后插入新数据
+      if (index >= 2) {
+        tableObj.jqGrid('addRowData', rowid, rowData, 'after', ids[index - 2]);
+      } else {
+        tableObj.jqGrid('addRowData', rowid, rowData, 'first');
+      }
+    }
+
+  }
+
   return {
     init: function () {
-      initComment();
+      initDataBasic();
     }
   }
 }();

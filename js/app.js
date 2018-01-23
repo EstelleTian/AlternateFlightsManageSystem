@@ -26,7 +26,15 @@ var App = function () {
         arrObj = new FormModule({
             canvasId: 'arr-module',
             tableId: 'arr-table',
-            url : 'http://192.168.243.104:8085/altf/airport/retrieveArrFlights'
+            url : 'http://192.168.243.104:8085/altf/airport/retrieveArrFlights',
+            initGridTable : function (table) {
+                var opt = {
+                    canvasId: 'arr-module',
+                    tableId: 'arr-table',
+                    pagerId: 'arr-table-pager'
+                };
+                initCommonTable(table, opt);
+            }
 
         });
         arrObj.initFormModuleObject();
@@ -35,7 +43,10 @@ var App = function () {
         alternateObj = new FormModule({
             canvasId: 'alternate-module',
             tableId: 'alternate-table',
-            url : 'http://192.168.243.104:8085/altf/airport/retrieveAlternateFlights'
+            url : 'http://192.168.243.104:8085/altf/airport/retrieveAlternateFlights',
+            initGridTable : function (table) {
+                console.log(table);
+            }
         });
         alternateObj.initFormModuleObject();
 
@@ -43,7 +54,10 @@ var App = function () {
         overObj = new FormModule({
             canvasId: 'over-module',
             tableId: 'over-table',
-            url : 'http://192.168.243.104:8085/altf/airport/retrieveOverFlights'
+            url : 'http://192.168.243.104:8085/altf/airport/retrieveOverFlights',
+            initGridTable : function (table) {
+                console.log(table);
+            }
         });
         overObj.initFormModuleObject();
 
@@ -51,7 +65,10 @@ var App = function () {
         depObj = new FormModule({
             canvasId: 'dep-module',
             tableId: 'dep-table',
-            url : 'http://192.168.243.104:8085/altf/airport/retrieveDepFlights'
+            url : 'http://192.168.243.104:8085/altf/airport/retrieveDepFlights',
+            initGridTable : function (table) {
+                console.log(table);
+            }
         });
         depObj.initFormModuleObject();
     };
@@ -65,6 +82,53 @@ var App = function () {
             index = $('.main-area section.active').index();
         });
     };
+    
+    /**
+     * 初始化通用表格
+     * */
+    var initCommonTable = function (table,params) {
+        var opt = {
+            colNames: GridTableConfig.common.colName,
+            colModel: GridTableConfig.common.colModel,
+            cmTemplate: GridTableConfig.colModelTemplate,
+            // colDisplay: flight_single_impact_grid_table_column_display,
+            // colStyle: GridTableConfig,
+            colTitle: GridTableConfig.common.colTitle,
+            // colEdit: flight_single_impact_grid_table_column_edit,
+            // colAuthority: user_authritys,
+            // colCollaborateUrl: CellOpreationUrl,
+            // colConverter: FlightGridTableDataUtil,
+            /*params: {
+             scorll: true,
+             shrinkToFit: false,
+             rowNum: 999999,
+             // sortname: 'FLOWCONTROL_POINT_PASSTIME',
+             sortorder: 'asc'
+             },*/
+            // baseData: {
+            //     airportConfigs: airport_configuration,
+            //     deiceGroups: user.deiceGroupName
+            // },
+            // autoScroll: 'FLOWCONTROL_POINT_PASSTIME',
+            // onSelectRow: highlightCaculateFlight,
+            // afterCollaborate: fireAreaFlightSingleDataChange
+        };
+        // 追加附加属性
+        if($.isValidObject(params)){
+            for(var i in params){
+                opt[i] = params[i];
+            }
+        }
+        table = new GridTable(opt);
+        table.initGridTableObject();
+
+    };
+    
+    var initAlertnate = function () {
+        table = new GridTable({
+
+        });
+    }
 
 
     return {

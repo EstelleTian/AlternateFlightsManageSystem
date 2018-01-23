@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>乌鲁木齐机场返航备降系统（原型）</title>
+    <title>乌鲁木齐机场返航备降系统</title>
     <link rel="shortcut icon" href="favicon.ico"/>
     <link rel="stylesheet" href="plugins/bootstrap/dist/css/normalize.css">
     <link rel="stylesheet" href="plugins/bootstrap/dist/css/bootstrap.min.css">
@@ -22,7 +22,7 @@
 <body>
 <div class="app-transition">
     <div class="navbar">
-        <div class="slogan">乌鲁木齐机场返航备降系统（原型）</div>
+        <div class="slogan">乌鲁木齐机场返航备降系统</div>
         <div class="login-time">2018-01-12 09:55</div>
         <div class="glyphicon glyphicon-user icon"></div>
         <div class="user-name">xinjiang</div>
@@ -312,27 +312,26 @@
                     <div class="result-panel">
                         <ul class="sub_title" >
                             <span class="total_count">合计可用(不含敦煌):</span>
-                            <span class="total_count">21</span>
+                            <span class="total_count available_capacity"></span>
                         </ul>
                         <div class="table-contianer">
                             <table id="alernate_flight_grid_table" class="alernate_flight_grid_table" ></table>
                             <div id="ale-datas-pager"></div>
                         </div>
-
                         <div class="h200 des">
-                            <p>
-                                <span class="de_park">占用DE类停机位:</span>
-                                <span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325</span>
-                            </p>
-                            <p>
-                                <span class="c1_park">占用C1类停机位:</span>
-                                <span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325</span>
-                            </p>
-                            <p>
-                                <span class="c2_park">占用C2类停机位:</span>
-                                <span>B747,B767,IL76,A322,A253,D225</span>
-                            </p>
-                            <p>
+                            <!--<p>-->
+                                <!--<span class="de_park">占用DE类停机位:</span>-->
+                                <!--<span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325</span>-->
+                            <!--</p>-->
+                            <!--<p>-->
+                                <!--<span class="c1_park">占用C1类停机位:</span>-->
+                                <!--<span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325</span>-->
+                            <!--</p>-->
+                            <!--<p>-->
+                                <!--<span class="c2_park">占用C2类停机位:</span>-->
+                                <!--<span>B747,B767,IL76,A322,A253,D225</span>-->
+                            <!--</p>-->
+                            <p class="tip_container">
                                 <span class="tip">不全!待添加及修正</span>
                             </p>
                             <p>说明:初始化是只需修改个机场当前容量即可,默认为设计容量,职位零或不可用时不用填,其余值开始备降后自动计算</p>

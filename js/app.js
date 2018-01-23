@@ -26,7 +26,7 @@ var App = function () {
         arrObj = new FormModule({
             canvasId: 'arr-module',
             tableId: 'arr-table',
-            url : 'http://localhost:8085/altf/airport/retrieveArrFlights'
+            url : 'http://192.168.243.104:8085/altf/airport/retrieveArrFlights'
 
         });
         arrObj.initFormModuleObject();
@@ -35,7 +35,7 @@ var App = function () {
         alternateObj = new FormModule({
             canvasId: 'alternate-module',
             tableId: 'alternate-table',
-            url : 'http://localhost:8085/altf/airport/retrieveAlternateFlights'
+            url : 'http://192.168.243.104:8085/altf/airport/retrieveAlternateFlights'
         });
         alternateObj.initFormModuleObject();
 
@@ -43,7 +43,7 @@ var App = function () {
         overObj = new FormModule({
             canvasId: 'over-module',
             tableId: 'over-table',
-            url : 'http://localhost:8085/altf/airport/retrieveOverFlights'
+            url : 'http://192.168.243.104:8085/altf/airport/retrieveOverFlights'
         });
         overObj.initFormModuleObject();
 
@@ -51,7 +51,7 @@ var App = function () {
         depObj = new FormModule({
             canvasId: 'dep-module',
             tableId: 'dep-table',
-            url : 'http://localhost:8085/altf/airport/retrieveDepFlights'
+            url : 'http://192.168.243.104:8085/altf/airport/retrieveDepFlights'
         });
         depObj.initFormModuleObject();
     };

@@ -35,6 +35,8 @@ var FormModule = function (params) {
      * */
     this.url = params.url;
 
+    this.initGridTable = params.initGridTable;
+
     /**
      *  范围标识码
      * */
@@ -107,18 +109,31 @@ FormModule.prototype.fn = function () {
 FormModule.prototype.resizeTableContainer = function () {
     // 当前对象this代理
     var thisProxy = this;
+    // 容器
     var $container = $('.app-transition');
+    // 导航栏
     var $nav = $('.navbar',$container);
+    // 菜单栏
     var $menu = $('.menu-bar', $container);
+    // 主显示区
     var $main = $('.main-area');
+    // 模块头部
     var $head = $('.panel-heading',thisProxy.canvas);
+    // 模块体
     var $body = $('.panel-body', thisProxy.canvas);
+    // 模块内的表单栏
     var $form = $('.form-panel', thisProxy.canvas);
+    // 模块内的当前查询条件栏
     var $condition = $('.condition-panel', thisProxy.canvas);
+    // 模块内数据结果可视化区
     var $result = $('.result-panel', thisProxy.canvas);
+    // 求得主显示区高度:(总高度-导航栏-菜单栏-主显示区外边距)
     var mainHeight = $container.outerHeight() - $nav.outerHeight(true) -$menu.outerHeight(true) - $main.css('marginTop').replace('px', '')*1- $main.css('marginBottom').replace('px', '')*1;
+    // 求得模块体高度:(主显示区高度-模块体内边距)
     var bodyHeight = mainHeight - $body.css('paddingTop').replace('px', '')*1 - $body.css('paddingBottom').replace('px', '')*1;
+    // 求得模块内数据结果可视化区高度:(模块体高度-模块头-模块内的表单栏-模块内的当前查询条件栏)
     var h =bodyHeight - $head.outerHeight() - $form.outerHeight() - $condition .outerHeight();
+    // 设置模块内数据结果可视化区高度
     $result.height(h);
 };
 
@@ -234,6 +249,12 @@ FormModule.prototype.initInquireData = function () {
         thisProxy.loading.start();
         // 清除提示、警告、查询条件、数据生成时间等
         thisProxy.clear();
+        // 更新当前查询条件
+        thisProxy.updateCondition();
+        // 计算表格容器大小,使其大小自适应
+        // (因为更新显示了模块内当前查询条件栏内容，所以重新计算表格容器的高度)
+        thisProxy.resizeTableContainer();
+
         // 校验表单是否有效
         var valid = thisProxy.validateForm();
         // 若校验通过则查询数据
@@ -270,6 +291,7 @@ FormModule.prototype.validateForm = function () {
     var thisProxy = this;
     // 若范围无效则提示
     if(!$.isValidVariable(thisProxy.scope)){
+        // 展示提示
         thisProxy.showMsg('danger','范围无效,请选择有效的范围选项');
         return false;
     }else {
@@ -313,24 +335,38 @@ FormModule.prototype.inquireData = function () {
             };
             // 成功
             if (data.status == 200) {
+                // 保存原生数据
                 thisProxy.table.data = data;
                 /****todo***/
+                // 取得数据生成时间
+                thisProxy.generateTime = data.generateTime;
+                // 更新数据生成时间并显示
+                thisProxy.updateTime();
+                // 初始化表格
+                thisProxy.initTable();
+                // 转换数据
+
+                // 更新表格数据
+                // thisProxy.fireTableDataChange();
             } else if (data.status == 400) {
+                // 展示提示
                 thisProxy.showMsg('danger','data.error');
             } else if (data.status == 500) {
+                // 展示提示
                 thisProxy.showMsg('danger','data.error');
             };
         },
         error: function ( status, error) {
             // 启用表单事件
             thisProxy.desabledForm(false);
-            //停止按钮loading动画
+            // 停止按钮loading动画
             thisProxy.loading.stop();
+            // 展示提示
             thisProxy.showMsg('danger','请求接口错误');
             console.error('ajax requset  fail, error:');
             console.error(error);
         }
-    })
+    });
 
 };
 
@@ -399,32 +435,79 @@ FormModule.prototype.clear = function () {
 };
 
 /**
- * 清空提示信息
+ * 禁用或启用表单事件
  *
  * */
 FormModule.prototype.desabledForm = function (bool) {
     // 当前对象this代理
     var thisProxy = this;
+    // 取得表单容器
     var $form = $('.form-panel',thisProxy.canvas);
-    if(bool){
+    // 真则禁用，假则启用
+    if(bool == true){
         $form.addClass('no-event');
-    }else {
+    }else if(bool == false){
         $form.removeClass('no-event');
     }
 };
 
-
+/**
+ * 初始化表格
+ * */
+FormModule.prototype.initTable = function () {
+    // 当前对象this代理
+    var thisProxy = this;
+    // 校验自定义的initGridTable方法是否有效
+    if($.isValidVariable(thisProxy.initGridTable) && typeof thisProxy.initGridTable == 'function'){
+        // 调用initGridTable方法
+        thisProxy.initGridTable(thisProxy.table);
+    }
+};
 
 
 /**
- * 更新数据生成时间
+ * 更新数据生成时间并显示
  * */
 FormModule.prototype.updateTime = function () {
     // 当前对象this代理
     var thisProxy = this;
-    var $node = $('.panel-heading .time', thisProxy.canvas);
-    var time = thisProxy.formaterGenerateTimeTime(thisProxy.generateTime);
-    $node.text('数据更新生成时间: ' + time).attr('title','数据更新生成时间: '+time);
+    // 校验时间是否有效
+    if($.isValidVariable(thisProxy.generateTime)){
+        // 取得数据生成时间节点
+        var $node = $('.panel-heading .time', thisProxy.canvas);
+        // 格式化处理时间
+        var time = thisProxy.formaterGenerateTimeTime(thisProxy.generateTime);
+        // 显示数据生成时间
+        $node.text('数据更新生成时间: ' + time).attr('title','数据更新生成时间: '+time);
+    }
+
+};
+
+/**
+ * 更新当前查询条件
+ * */
+FormModule.prototype.updateCondition = function () {
+    // 当前对象this代理
+    var thisProxy = this;
+    var scopeText = $('.form-panel .dropdown-toggle', thisProxy.canvas).text();
+    var key = thisProxy.keyword;
+    $('.condition-panel .scope', thisProxy.canvas).html(scopeText).attr('title','范围:'+ scopeText);
+    $('.condition-panel .key', thisProxy.canvas).html(key).attr('title','关键字:'+ key);
+    $('.condition-panel',thisProxy.canvas).removeClass('hidden');
+};
+
+/**
+ * 更新表格数据
+ * */
+FormModule.prototype.fireTableDataChange = function () {
+    // 当前对象this代理
+    var thisProxy = this;
+
+    // 绘制表格数据
+    thisProxy.table.drawGridTableData();
+    // 调整表格大小以适应所在容器
+    thisProxy.table.resizeToFitContainer();
+
 };
 
 

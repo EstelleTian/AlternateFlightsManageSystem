@@ -64,7 +64,8 @@ var GridTableConfig = function () {
             // ATD
             {
                 name: 'atd',
-                index: 'atd'
+                index: 'atd',
+                width:120
             },
             // 计划ETA
             {
@@ -249,7 +250,7 @@ var GridTableConfig = function () {
 
     // colModel模板
     var colModelTemplate = {
-            width: 65,
+            width: 100,
             align: 'center',
             sortable: true,
             search: true,

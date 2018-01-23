@@ -267,7 +267,7 @@ ul, li {
     height: 100%;
 }
 
-.table>tbody>tr.success>td.selected-cell {
+.table>tbody>tr.success>td.grid-table-current-select-cell {
     background: #39f;
     box-shadow: 0 0 10px 0px #222;
 }

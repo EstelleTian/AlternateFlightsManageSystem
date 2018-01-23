@@ -335,19 +335,13 @@ FormModule.prototype.inquireData = function () {
             };
             // 成功
             if (data.status == 200) {
-                // 保存原生数据
-                thisProxy.table.data = data;
                 /****todo***/
                 // 取得数据生成时间
                 thisProxy.generateTime = data.generateTime;
                 // 更新数据生成时间并显示
                 thisProxy.updateTime();
                 // 初始化表格
-                thisProxy.initTable();
-                // 转换数据
-
-                // 更新表格数据
-                // thisProxy.fireTableDataChange();
+                thisProxy.initTable(data);
             } else if (data.status == 400) {
                 // 展示提示
                 thisProxy.showMsg('danger','data.error');
@@ -454,13 +448,13 @@ FormModule.prototype.desabledForm = function (bool) {
 /**
  * 初始化表格
  * */
-FormModule.prototype.initTable = function () {
+FormModule.prototype.initTable = function (data) {
     // 当前对象this代理
     var thisProxy = this;
     // 校验自定义的initGridTable方法是否有效
     if($.isValidVariable(thisProxy.initGridTable) && typeof thisProxy.initGridTable == 'function'){
         // 调用initGridTable方法
-        thisProxy.initGridTable(thisProxy.table);
+        thisProxy.initGridTable(data,thisProxy.table);
     }
 };
 
@@ -496,19 +490,7 @@ FormModule.prototype.updateCondition = function () {
     $('.condition-panel',thisProxy.canvas).removeClass('hidden');
 };
 
-/**
- * 更新表格数据
- * */
-FormModule.prototype.fireTableDataChange = function () {
-    // 当前对象this代理
-    var thisProxy = this;
 
-    // 绘制表格数据
-    thisProxy.table.drawGridTableData();
-    // 调整表格大小以适应所在容器
-    thisProxy.table.resizeToFitContainer();
-
-};
 
 
 

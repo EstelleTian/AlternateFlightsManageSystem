@@ -62,8 +62,19 @@ var App = function () {
             canvasId: 'alternate-module',
             tableId: 'alternate-table',
             url : 'http://192.168.243.104:8085/altf/airport/retrieveAlternateFlights',
-            initGridTable : function (table) {
-                console.log(table);
+            initGridTable : function (data,table) {
+                var opt = {
+                    tableId: 'alternate-table',
+                    pagerId: 'alternate-table-pager',
+                    colNames: GridTableConfig.alertnate.colName,
+                    colModel: GridTableConfig.alertnate.colModel,
+                    cmTemplate: GridTableConfig.colModelTemplate,
+                    colTitle: GridTableConfig.alertnate.colTitle
+                };
+                table = new GridTable(opt);
+                table.initGridTableObject();
+                // 更新表格数据
+                table.fireTableDataChange(data);
             }
         });
         alternateObj.initFormModuleObject();
@@ -73,8 +84,19 @@ var App = function () {
             canvasId: 'over-module',
             tableId: 'over-table',
             url : 'http://192.168.243.104:8085/altf/airport/retrieveOverFlights',
-            initGridTable : function (table) {
-                console.log(table);
+            initGridTable : function (data,table) {
+                var opt = {
+                    tableId: 'over-table',
+                    pagerId: 'over-table-pager',
+                    colNames: GridTableConfig.common.colName,
+                    colModel: GridTableConfig.common.colModel,
+                    cmTemplate: GridTableConfig.colModelTemplate,
+                    colTitle: GridTableConfig.common.colTitle
+                };
+                table = new GridTable(opt);
+                table.initGridTableObject();
+                // 更新表格数据
+                table.fireTableDataChange(data);
             }
         });
         overObj.initFormModuleObject();
@@ -84,8 +106,19 @@ var App = function () {
             canvasId: 'dep-module',
             tableId: 'dep-table',
             url : 'http://192.168.243.104:8085/altf/airport/retrieveDepFlights',
-            initGridTable : function (table) {
-                console.log(table);
+            initGridTable : function (data,table) {
+                var opt = {
+                    tableId: 'dep-table',
+                    pagerId: 'dep-table-pager',
+                    colNames: GridTableConfig.common.colName,
+                    colModel: GridTableConfig.common.colModel,
+                    cmTemplate: GridTableConfig.colModelTemplate,
+                    colTitle: GridTableConfig.common.colTitle
+                };
+                table = new GridTable(opt);
+                table.initGridTableObject();
+                // 更新表格数据
+                table.fireTableDataChange(data);
             }
         });
         depObj.initFormModuleObject();
@@ -96,27 +129,15 @@ var App = function () {
      * */
     var initIndex = function () {
         index = $('.main-area section.active').index();
+        App.index = index;
         $('.menu-bar li').on('click',function () {
             index = $('.main-area section.active').index();
+            App.index = index;
         });
     };
-    
-    /**
-     * 初始化通用表格
-     * */
-    var initCommonTable = function (table,params) {
-
-    };
-    
-    var initAlertnate = function () {
-        table = new GridTable({
-
-        });
-    }
-
 
     return {
-
+        index : index,
         init : function () {
             initIndex();
             initModule();

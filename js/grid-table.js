@@ -267,11 +267,11 @@ GridTable.prototype.resizeToFitContainer = function () {
 GridTable.prototype.fireTableDataChange = function (dataObj) {
     // 当前对象this代理
     var thisProxy = this;
-
+    // 校验数据是否有效
     if(!$.isValidObject(dataObj) || !$.isValidObject(dataObj.flights)){
         return;
     }
-
+    // 取得航班集合
     var data = dataObj.flights;
     // thisProxy.data = {};
     thisProxy.tableDataMap = {};
@@ -279,11 +279,9 @@ GridTable.prototype.fireTableDataChange = function (dataObj) {
     var tableData = [];
     var tableMap = {};
     for (var index in data) {
-        var d = data[index];
-        if($.isValidVariable(d.flightDataId)){
-            var id = d.flightDataId;
-            d.id = id;
-        }
+        // 取得单个航班数据并转换
+        var d = thisProxy.convertData(data[index]);
+        var id = d.id;
         tableData.push(d);
         tableMap[id] = d;
     }
@@ -390,4 +388,17 @@ GridTable.prototype.clearCollaborateContainer = function () {
     }
     /*// 清理popover窗口
     $('.popover').popover("hide");*/
+};
+
+/**
+ * 转换数据
+ * @param flight 航班数据
+ */
+GridTable.prototype.convertData = function (flight) {
+    // 航班数据无id且有flightDataId
+    if($.isValidVariable(flight.flightDataId) && !$.isValidVariable(flight.id)){
+        // 设置航班id 为 flightDataId, 用于右键协调时获取对应航班数据(rowid值是以id属性值来定义的)
+        flight.id = flight.flightDataId
+    }
+    return flight;
 };

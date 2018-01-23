@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" href="plugins/jqgrid/css/ui.jqgrid-bootstrap.css">
     <link rel="stylesheet" href="plugins/jqgrid/css/ui.jqgrid-bootstrap-custom.css">
+    <link rel="stylesheet" href="plugins/bootstrap-validator/dist/css/bootstrapValidator.css">
     <link rel="stylesheet" href="plugins/ladda/css/ladda.css">
     <link rel="stylesheet" href="plugins/qtip2/css/jquery.qtip.min.css">
     <link rel="stylesheet" href="plugins/qtip2/css/jquery.qtip-custom.css">
@@ -299,6 +300,7 @@
                 </div>
             </div>
         </section>
+        <!--模块5-->
         <section class="alter_volume">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -319,20 +321,19 @@
 
                         <div class="h200 des">
                             <p>
-                                <span>占用DE类停机位:</span>
+                                <span class="de_park">占用DE类停机位:</span>
                                 <span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325</span>
                             </p>
                             <p>
-                                <span>占用C1类停机位:</span>
+                                <span class="c1_park">占用C1类停机位:</span>
                                 <span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325</span>
                             </p>
                             <p>
-                                <span>占用C2类停机位:</span>
+                                <span class="c2_park">占用C2类停机位:</span>
                                 <span>B747,B767,IL76,A322,A253,D225</span>
                             </p>
                             <p>
-                                <span>占用DE类停机位:</span>
-                                <span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325,E535,E982,Q552,R325</span>
+                                <span class="tip">不全!待添加及修正</span>
                             </p>
                             <p>说明:初始化是只需修改个机场当前容量即可,默认为设计容量,职位零或不可用时不用填,其余值开始备降后自动计算</p>
                             <p>合计可用:为该机场所有可用停机位之和,小于等于3显示红色</p>
@@ -357,6 +358,9 @@
 <script src="plugins/jqgrid/js/jquery.jqGrid.util.js" type="text/javascript"></script>
 <script src="plugins/jqgrid/i18n/grid.locale-cn.js" type="text/javascript"></script>
 <script src="plugins/ladda/js/spin.min.js" type="text/javascript" ></script>
+<script src="plugins/bootstrap-validator/dist/js/bootstrapValidator.min.js"></script>
+<script src="plugins/bootstrap-validator/dist/js/bootstrapValidator-all.js"></script>
+<script src="plugins/bootstrap-validator/dist/js/atfmCustomValidatorRules.js"></script>
 <script src="plugins/ladda/js/ladda.js" type="text/javascript" ></script>
 <script src="plugins/qtip2/js/jquery.qtip.min.js"></script>
 <!--页面布局事件-->

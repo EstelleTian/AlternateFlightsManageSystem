@@ -1,0 +1,47 @@
+@CHARSET "UTF-8";
+
+/**
+ * 覆盖qtip中的默认显示字体
+ */
+.qtip-default {
+	font-size: 16px !important;
+	line-height: 20px;
+}
+
+.qtip-green {
+	font-size: 16px !important;
+	line-height: 20px;
+}
+
+.qtip-red {
+	font-size: 16px !important;
+	line-height: 20px;
+}
+
+.qtip-default-custom {
+	font-size: 16px !important;
+	line-height: 20px;
+	border-color: #8a6d3b;
+	color: #8a6d3b;
+	background-color: #fcf8e3;
+}
+
+.qtip-green-custom {
+	font-size: 16px !important;
+	line-height: 20px;
+	border-color: #3c763d; 
+	color: #3c763d;
+	background-color: #dff0d8;
+}
+
+.qtip-red-custom {
+	font-size: 16px !important;
+	line-height: 20px;
+	border-color: #a94442; 
+	background-color: #f2dede;
+	color: #a94442;
+}
+
+
+
+

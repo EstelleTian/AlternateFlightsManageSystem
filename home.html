@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>乌鲁木齐机场返航备降系统（原型）</title>
+    <title>乌鲁木齐机场返航备降系统</title>
     <link rel="shortcut icon" href="favicon.ico"/>
     <link rel="stylesheet" href="plugins/bootstrap/dist/css/normalize.css">
     <link rel="stylesheet" href="plugins/bootstrap/dist/css/bootstrap.min.css">
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" href="plugins/jqgrid/css/ui.jqgrid-bootstrap.css">
     <link rel="stylesheet" href="plugins/jqgrid/css/ui.jqgrid-bootstrap-custom.css">
+    <link rel="stylesheet" href="plugins/bootstrap-validator/dist/css/bootstrapValidator.css">
     <link rel="stylesheet" href="plugins/ladda/css/ladda.css">
     <link rel="stylesheet" href="plugins/qtip2/css/jquery.qtip.min.css">
     <link rel="stylesheet" href="plugins/qtip2/css/jquery.qtip-custom.css">
@@ -21,7 +22,7 @@
 <body>
 <div class="app-transition">
     <div class="navbar">
-        <div class="slogan">乌鲁木齐机场返航备降系统（原型）</div>
+        <div class="slogan">乌鲁木齐机场返航备降系统</div>
         <div class="login-time">2018-01-12 09:55</div>
         <div class="glyphicon glyphicon-user icon"></div>
         <div class="user-name">xinjiang</div>
@@ -299,40 +300,39 @@
                 </div>
             </div>
         </section>
+        <!--模块5-->
         <section class="alter_volume">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="poster">备降场容量</div>
-                    <div class="time">数据生成时间:2018-01-12 12:45</div>
+                    <div class="alter_volume_time">数据生成时间:2018-01-12 12:45</div>
                 </div>
 
                 <div class="panel-body">
                     <div class="result-panel">
                         <ul class="sub_title" >
                             <span class="total_count">合计可用(不含敦煌):</span>
-                            <span class="total_count">21</span>
+                            <span class="total_count available_capacity"></span>
                         </ul>
                         <div class="table-contianer">
                             <table id="alernate_flight_grid_table" class="alernate_flight_grid_table" ></table>
                             <div id="ale-datas-pager"></div>
                         </div>
-
                         <div class="h200 des">
-                            <p>
-                                <span>占用DE类停机位:</span>
-                                <span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325</span>
-                            </p>
-                            <p>
-                                <span>占用C1类停机位:</span>
-                                <span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325</span>
-                            </p>
-                            <p>
-                                <span>占用C2类停机位:</span>
-                                <span>B747,B767,IL76,A322,A253,D225</span>
-                            </p>
-                            <p>
-                                <span>占用DE类停机位:</span>
-                                <span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325,E535,E982,Q552,R325</span>
+                            <!--<p>-->
+                                <!--<span class="de_park">占用DE类停机位:</span>-->
+                                <!--<span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325</span>-->
+                            <!--</p>-->
+                            <!--<p>-->
+                                <!--<span class="c1_park">占用C1类停机位:</span>-->
+                                <!--<span>B747,B767,IL76,A322,A253,D225,E535,E982,Q552,R325</span>-->
+                            <!--</p>-->
+                            <!--<p>-->
+                                <!--<span class="c2_park">占用C2类停机位:</span>-->
+                                <!--<span>B747,B767,IL76,A322,A253,D225</span>-->
+                            <!--</p>-->
+                            <p class="tip_container">
+                                <span class="tip">不全!待添加及修正</span>
                             </p>
                             <p>说明:初始化是只需修改个机场当前容量即可,默认为设计容量,职位零或不可用时不用填,其余值开始备降后自动计算</p>
                             <p>合计可用:为该机场所有可用停机位之和,小于等于3显示红色</p>
@@ -357,6 +357,9 @@
 <script src="plugins/jqgrid/js/jquery.jqGrid.util.js" type="text/javascript"></script>
 <script src="plugins/jqgrid/i18n/grid.locale-cn.js" type="text/javascript"></script>
 <script src="plugins/ladda/js/spin.min.js" type="text/javascript" ></script>
+<script src="plugins/bootstrap-validator/dist/js/bootstrapValidator.min.js"></script>
+<script src="plugins/bootstrap-validator/dist/js/bootstrapValidator-all.js"></script>
+<script src="plugins/bootstrap-validator/dist/js/atfmCustomValidatorRules.js"></script>
 <script src="plugins/ladda/js/ladda.js" type="text/javascript" ></script>
 <script src="plugins/qtip2/js/jquery.qtip.min.js"></script>
 <!--页面布局事件-->

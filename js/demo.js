@@ -16,68 +16,68 @@ var Demo = function () {
     var tableConfig = {
         colName: ['计划批号','备降场', '状态', '航班号', '机号','机型', '任务', '起飞机场','计划ETD', '动态ETD', 'ATD','计划ETA','降落机场','备注' ],
         colTitle: {
-            pid:'计划批号',
-            alterPart:'备降场',
+            flightDataId:'计划批号',
+            altairport:'备降场',
             status:'状态',
-            flightID:'航班号',
-            flightNum:'机号',
-            flightType:'机型',
+            flightId:'航班号',
+            registeNum:'机号',
+            aircraftType:'机型',
             task:'任务',
-            arrPart:'起飞机场',
-            pETD:'计划ETD',
-            dyETD:'动态ETD',
-            ATD:'ATD',
-            pETA:'计划ETA',
-            depPart:'降落机场',
-            commont:'备注'
+            depap:'起飞机场',
+            petd:'计划ETD',
+            detd:'动态ETD',
+            atd:'ATD',
+            peta:'计划ETA',
+            arrap:'降落机场',
+            remark:'备注'
         },
         colModel: [
             {
-                name: 'pid',
-                index: 'pid',
+                name: 'flightDataId',
+                index: 'flightDataId',
                 width:120,
                 frozen:true
             },{
-                name: 'alterPart',
-                index: 'alterPart',
+                name: 'altairport',
+                index: 'altairport',
                 width:120,
                 frozen:true
             }, {
                 name: 'status',
                 index: 'status'
             }, {
-                name: 'flightID',
-                index: 'flightID'
+                name: 'flightId',
+                index: 'flightId'
             }, {
-                name: 'flightNum',
-                index: 'flightNum'
+                name: 'registeNum',
+                index: 'registeNum'
             }, {
-                name: 'flightType',
-                index: 'flightType'
+                name: 'aircraftType',
+                index: 'aircraftType'
             }, {
                 name: 'task',
                 index: 'task'
             }, {
-                name: 'arrPart',
-                index: 'arrPart'
+                name: 'depap',
+                index: 'depap'
             }, {
-                name: 'pETD',
-                index: 'pETD'
+                name: 'petd',
+                index: 'petd'
             }, {
-                name: 'dyETD',
-                index: 'dyETD'
+                name: 'detd',
+                index: 'detd'
             }, {
-                name: 'ATD',
-                index: 'ATD'
+                name: 'atd',
+                index: 'atd'
             }, {
-                name: 'pETA',
-                index: 'pETA'
+                name: 'peta',
+                index: 'peta'
             }, {
-                name: 'depPart',
-                index: 'depPart'
+                name: 'arrap',
+                index: 'arrap'
             }, {
-                name: 'commont',
-                index: 'commont'
+                name: 'remark',
+                index: 'remark'
             }]
     };
     // 模拟数据
@@ -895,7 +895,7 @@ var Demo = function () {
             title: '查询历史',
             content: str,
             status: 1, /* 1:正常 2:警告 3:危险 不填:默认情况*/ width: 1000,
-            mtop : 200,
+            mtop : 160,
             showCancelBtn: false,
             isIcon : false
         };

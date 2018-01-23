@@ -276,7 +276,7 @@ ul, li {
     text-align: left;
     height: auto;
     padding-bottom: 0;
-    /*border: solid 2px #3399FF;*/
+    border: solid 2px #3399FF;
     position: absolute;
     z-index: 3;
     background-color: white;

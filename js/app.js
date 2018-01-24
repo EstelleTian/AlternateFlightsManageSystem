@@ -266,6 +266,97 @@ var app = function () {
         }
     };
 
+    /**
+     * 初始化各模块右键协调窗口DOM
+     * @param time 定时间隔 ms
+     *
+     *  因为部分协调窗口列表项从后端请求，所以定时刷新校验数据有效性
+     * */
+    var initCollaborateDom = function (time) {
+        // 若数据有效则更新各模块范围列表项，
+        if($.isValidObject(alternateAirport.airportConfig) && $.isValidObject(alternateAirport.airportConfig.alternateAirport)){
+            var collaborateDomData  = alternateAirport.airportConfig.alternateAirport;
+            // 拼接各模块协调窗口列表项
+            concatCollaborateDom(collaborateDomData);
+        }else {
+            // 数据无效则开启延时回调自身
+            var timer = setTimeout(function () {
+                initCollaborateDom(time);
+            },time);
+        }
+    };
+
+    /**
+     * 拼接各模块协调窗口列表项
+     * */
+    var concatCollaborateDom = function (data) {
+        /*
+        * 1 = 民用机场  2= 军民合用 3=其他
+        *
+        * */
+
+        // 其它
+        var other = '';
+        // 军民合用
+        var complex = '';
+        // 民用
+        var civil = '';
+        data.map(function (item, index, arr) {
+            var type = item.type;
+            var value = item.value;
+            var name = item.name;
+            var node = '<li><a href="javascript:; " data-val="'+ value +'" class="'+ value +'">'+ name+'</a></li>';
+
+            if(type ==1 ){
+                civil += node;
+            }else if(type ==2){
+                complex += node;
+
+            }else if(type ==3){
+                other += node;
+            }
+        });
+
+
+        //拼接军民合用子菜单
+        GridTableCollaborateDom.COMPLEX.append(complex);
+        // 追加到二级菜单中的军民合用菜单项下
+        $('.complex', GridTableCollaborateDom.LEVEL2).parent().append(GridTableCollaborateDom.COMPLEX);
+        // 拼接其它子菜单
+        GridTableCollaborateDom.OTHER.append(other);
+        // 追加到二级菜单中的其它菜单项下
+        $('.other', GridTableCollaborateDom.LEVEL2).parent().append(GridTableCollaborateDom.OTHER);
+        // 民用菜单项追加到二级菜单开头
+        GridTableCollaborateDom.LEVEL2.prepend(civil);
+
+
+        /**
+         *  克隆二级菜单并追加到相应一级菜单项下
+         * */
+        // 进港计划模块 预选备降项
+        cloneCollaborateDom($('.pre-alternate',GridTableCollaborateDom.ARR_DOM), GridTableCollaborateDom.LEVEL2);
+        // 进港计划模块 确定备降项
+        cloneCollaborateDom($('.confirm-alternate',GridTableCollaborateDom.ARR_DOM), GridTableCollaborateDom.LEVEL2);
+        // 备降计划模块 更改预选
+        cloneCollaborateDom($('.update-pre-alternate',GridTableCollaborateDom.ALTERNATE_DOM), GridTableCollaborateDom.LEVEL2);
+        // 备降计划模块 更改备降
+        cloneCollaborateDom($('.update-alternate',GridTableCollaborateDom.ALTERNATE_DOM), GridTableCollaborateDom.LEVEL2);
+        // cloneCollaborateDom(GridTableCollaborateDom.OVER_DOM, GridTableCollaborateDom.LEVEL2);
+        // cloneCollaborateDom(GridTableCollaborateDom.ARR_DOM, GridTableCollaborateDom.LEVEL2);
+    };
+
+    /**
+     * 克隆二级菜单并追加到相应一级菜单项下
+     *
+     * @param $dom 被选菜单项元素
+     * @param $template 被克隆元素(二级菜单)
+     * */
+    var cloneCollaborateDom = function ($dom,$template) {
+        // 克隆
+        var $node = $template.clone();
+        // 追加到被选菜单项下
+        $dom.parent().append($node);
+    };
 
 
     return {
@@ -275,6 +366,7 @@ var app = function () {
             initModule();
             initHistory();
             initScopeList(1000);
+            initCollaborateDom(1000);
         }
     }
 }();

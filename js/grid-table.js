@@ -204,6 +204,11 @@ GridTable.prototype.initGridTableObject = function () {
         // 绑定右键单击事件
         onRightClickRow: function (rowid, iRow, iCol, e) {
             thisProxy.onRightClickRow(rowid, iRow, iCol, e);
+        },
+        //　绑定排序事件
+        // 当点击排序列但是数据还未进行变化时触发此事件
+        onSortCol : function (index, iCol, sortorder ) {
+            thisProxy.onSortCol(index, iCol, sortorder);
         }
     };
     // 追加jqGrid自定义参数
@@ -322,8 +327,12 @@ GridTable.prototype.drawGridTableData = function () {
  * @param e
  */
 GridTable.prototype.onCellSelect = function (rowid, iCol, cellcontent, e) {
+    // 代理
+    var thisProxy = this;
     // 清除单元格样式
-    this.clearCollaborateContainer();
+    thisProxy.clearCollaborateContainer();
+    // 调整冻结列高度
+    thisProxy.resizeFrozenTable();
 };
 
 
@@ -338,11 +347,7 @@ GridTable.prototype.onCellSelect = function (rowid, iCol, cellcontent, e) {
 GridTable.prototype.onRightClickRow = function (rowid, iRow, iCol, e) {
     // 代理
     var thisProxy = this;
-    var opts = {
-        rowid : rowid,
-        iRow : iRow,
-        iCol : iCol
-    };
+
     // 清除单元格样式
     this.clearCollaborateContainer();
     // 获取单元格colModel对象
@@ -358,7 +363,7 @@ GridTable.prototype.onRightClickRow = function (rowid, iRow, iCol, e) {
         return null;
     }
     // 可交互标记
-    var collaborateFlag = true;
+    // var collaborateFlag = true;
 
     // // 计划批号协调
     // if (colModel.name == 'flightDataId') {
@@ -371,26 +376,149 @@ GridTable.prototype.onRightClickRow = function (rowid, iRow, iCol, e) {
             return false;
         };
     }
-
+    // 参数汇总
+    var opt = {
+        rowid : rowid,
+        iRow : iRow,
+        iCol : iCol,
+        flight : flight,
+        cellObj : cellObj
+    };
     // 获取表格id
     var tableId = thisProxy.tableId;
+    // 依据表格id 区分模块
+    if(tableId == 'arr-table'){
+        // 进港计划模块
+        thisProxy.collaborateArr(opt);
+    }else if(tableId == 'alternate-table'){
+        // 备降计划模块
+        thisProxy.collaborateAlternate(opt);
+
+    }else if(tableId == 'over-table'){
+        // 疆内飞越模块
+        thisProxy.collaborateOver(opt);
+
+    }else if(tableId == 'dep-table'){
+        // 出港计划模块
+        thisProxy.collaborateDep(opt);
+    }
 
 };
 
 
 /**
+ *  列排序事件
+ * */
+GridTable.prototype.onSortCol = function (index, iCol, sortorder) {
+    // 代理
+    var thisProxy = this;
+    // 清除协调窗口
+    thisProxy.clearCollaborateContainer();
+};
+
+/**
  * 清除协调窗口
  */
 GridTable.prototype.clearCollaborateContainer = function () {
-    // 清理协调窗口
-    $('.' + GridTable.SELECTED_CELL_CLASS).removeClass(GridTable.SELECTED_CELL_CLASS);
-    $('.' + GridTable.COLLABORATE_DOM_CLASS).remove();
-    if ('auto' == this.canvas.css('overflow')) {
-        this.canvas.css('overflow', 'hidden');
+    // 代理
+    var thisProxy = this;
+    // 清理
+    // 取得对应表格的冻结列表格
+    var $frozenTable  = $('#'+thisProxy.tableId+'_frozen', thisProxy.canvas);
+    // 移除表格中被选中单元格的特殊class
+    $('.' + GridTable.SELECTED_CELL_CLASS, thisProxy.table).removeClass(GridTable.SELECTED_CELL_CLASS);
+    // 移除表格中的协调窗口
+    $('.' + GridTable.COLLABORATE_DOM_CLASS, thisProxy.table).remove();
+    // 移除冻结列表格中被选中单元格的特殊class
+    $('.' + GridTable.SELECTED_CELL_CLASS, $frozenTable).removeClass(GridTable.SELECTED_CELL_CLASS);
+    // 移除冻结列表格中的协调窗口
+    $('.' + GridTable.COLLABORATE_DOM_CLASS, $frozenTable).remove();
+    if ('auto' == thisProxy.canvas.css('overflow')) {
+        thisProxy.canvas.css('overflow', 'hidden');
     }
     /*// 清理popover窗口
     $('.popover').popover("hide");*/
 };
+
+/**
+ * 进港模块协调
+ */
+GridTable.prototype.collaborateArr = function (opt) {
+    // 代理
+    var thisProxy = this;
+    // 获取协调DOM元素
+    var collaboratorDom = GridTableCollaborateDom.ARR_DOM;
+    // 追加协调DOM至容器
+    thisProxy.table.append(collaboratorDom);
+
+    // 定位协调DOM
+    collaboratorDom.position({
+        of: opt.cellObj,
+        my: 'left top',
+        at: 'right top'
+    });
+};
+
+
+/**
+ * 备降计划模块协调
+ */
+GridTable.prototype.collaborateAlternate = function (opt) {
+    // 代理
+    var thisProxy = this;
+    // 获取协调DOM元素
+    var collaboratorDom = GridTableCollaborateDom.ALTERNATE_DOM;
+    // 追加协调DOM至容器
+    thisProxy.table.append(collaboratorDom);
+
+    // 定位协调DOM
+    collaboratorDom.position({
+        of: opt.cellObj,
+        my: 'left top',
+        at: 'right top'
+    });
+};
+
+
+/**
+ * 疆内飞越模块协调
+ */
+GridTable.prototype.collaborateOver = function (opt) {
+    // 代理
+    var thisProxy = this;
+    // 获取协调DOM元素
+    var collaboratorDom = GridTableCollaborateDom.OVER_DOM;
+    // 追加协调DOM至容器
+    thisProxy.table.append(collaboratorDom);
+
+    // 定位协调DOM
+    collaboratorDom.position({
+        of: opt.cellObj,
+        my: 'left top',
+        at: 'right top'
+    });
+};
+
+
+/**
+ * 出港模块协调
+ */
+GridTable.prototype.collaborateDep = function (opt) {
+    // 代理
+    var thisProxy = this;
+    // 获取协调DOM元素
+    var collaboratorDom = GridTableCollaborateDom.DEP_DOM;
+    // 追加协调DOM至容器
+    thisProxy.table.append(collaboratorDom);
+
+    // 定位协调DOM
+    collaboratorDom.position({
+        of: opt.cellObj,
+        my: 'left top',
+        at: 'right top'
+    });
+};
+
 
 /**
  * 转换数据
@@ -407,7 +535,9 @@ GridTable.prototype.convertData = function (flight) {
 
 //调整冻结列高度
 GridTable.prototype.resizeFrozenTable = function(){
-    var frozenDom = $('#'+this.tableId+'_frozen').parent();
-    frozenDom.height( this.frozenHeight  + 'px');
+    // 代理
+    var thisProxy = this;
+    var frozenDom = $('#'+thisProxy.tableId+'_frozen').parent();
+    frozenDom.height( thisProxy.frozenHeight  + 'px');
 
 };

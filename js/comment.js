@@ -13,7 +13,7 @@ var CollaborateDom = {
     '<h3 class="panel-title">当前容量修改</h3><a class="glyphicon glyphicon-remove modal-close-btn"></a></div><div class="panel-body">' +
     '<form action="" method="post">'+
     '<div class="form-group">' +
-    '<label class="sr-only" for="update-ctd-time">Flight</label>' +
+    '<label class="sr-only " for="update-ctd-time">Flight</label>' +
     '<div class="input-group form-group-custom has-feedback"><span class="input-group-addon">容量值</span>' +
     '<input type="text" name="flightId" id="flightId" class="form-control flightId-toupper" placeholder="输入容量值">' +
     '<span class="glyphicon form-control-feedback" aria-hidden="true"></span>' +
@@ -21,8 +21,8 @@ var CollaborateDom = {
     '</div>' +
     '</div>'+
     '<div class="form-group form-group-custom"">'+
-    '</div>' + '<button type="button" id="cancale" class="atfm-btn atfm-btn-gray collaborate-content-level pull-right">取消</button>'+
-    '<button type="button" id="modificate_volume" class="atfm-btn atfm-btn-blue collaborate-content-level pull-right">指定</button>'+
+    '</div>' + '<button type="button" id="cancale" class="atfm-btn atfm-btn-gray  pull-right">取消</button>'+
+    '<button type="button" id="modificate_volume" data-style="zoom-out" class="atfm-btn ladda-label atfm-btn-blue ladda-button collaborate-content-level pull-right">指定</button>'+
     '</div>' +
     '</form>' +
     '</div></div>',

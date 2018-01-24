@@ -153,7 +153,7 @@ var alternateAirport = function () {
       },
       position: {
         my: 'bottom center', // 同jQueryUI Position
-        at: 'top center',
+        at: 'top center'
       },
       style: {
         classes: styleClasses
@@ -377,8 +377,8 @@ var alternateAirport = function () {
       name: 'remark',
     };
     config.colModel.push(remark);
-    config.colTitle['remark'] = '航班备注';
-    config.colName.push('航班备注');
+    config.colTitle['remark'] = '机位备注';
+    config.colName.push('机位备注');
   }
 
   /**
@@ -453,6 +453,8 @@ var alternateAirport = function () {
    * @param opt
    */
   function getNewVolume(capacity, opt) {
+    var loading = Ladda.create($('.collaborate-content-level')[0])
+    loading.start();
     var url = ipHost + 'altf/airport/updatePositionCap'
     $.ajax({
       type: "POST",
@@ -469,6 +471,7 @@ var alternateAirport = function () {
           var generateTime = data.generateTime
           $('.alter_volume_time').text('数据生成时间:' + formatterTime(generateTime))
           $('.available_capacity').text(data.availableCapacity)
+          loading.stop();
           var singleData = {
             data: [],
             typeArr:tableConfig.typeArr
@@ -593,7 +596,7 @@ var alternateAirport = function () {
         var newCellObj = getCellObject(opt.rowid,opt.iRow,opt.iCol)
         showQtip(newCellObj, true)
       } else {
-        tableObj.jqGrid('addRowData', opt.rowid, rowData, 'first');
+        tableObj.jqGrid('addRowData', opt.rowid, rowData.data[0], 'first');
         clearCollaborateContainer()
         var newCellObj = getCellObject(opt.rowid,opt.iRow,opt.iCol)
         showQtip(newCellObj, true)
@@ -655,6 +658,30 @@ var alternateAirport = function () {
 
     airVolumeTable.parents(".ui-jqgrid-bdiv").off('scroll', position).on('scroll', position);
   };
+  /**
+   * 用户登出
+   */
+  // var userLogOut = function () {
+  //   $(".user_logout").click(function () {
+  //     // var userId = localStorage.getItem("userId");
+  //     $.ajax({
+  //       type: "POST",
+  //       url: ipHost + "crs_system/userLogout",
+  //       data: {
+  //
+  //       },
+  //       success: function (data) {
+  //         if ($.isValidObject(data)) {
+  //
+  //         }
+  //       },
+  //       error: function () {
+  //         console.error('retrieve statistic data failed, state:');
+  //         console.error(status);
+  //       }
+  //     })
+  //   })
+  // }
 
   return {
     init: function () {

@@ -306,6 +306,7 @@ var alternateAirport = function () {
    * @returns {*}
    */
   var dataConfigConvert = function (dataObj, config) {
+    //多条颜色数据转换
     if($.isArray(dataObj)){
       //data数据填充
       $.each(dataObj, function (i, e) {
@@ -325,6 +326,7 @@ var alternateAirport = function () {
         config.data.push(obj);
       })
     }else{
+      // 单条数据转换
       var obj = {};
       obj['airport'] = dataObj.airport;
       obj['total'] = dataObj.total;

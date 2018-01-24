@@ -1,5 +1,7 @@
 /**
- * 表单组件
+ * 2018/01/23
+ * author: zxy
+ * 数据查询模块表单组件
  */
 
 
@@ -70,9 +72,6 @@ FormModule.prototype.initFormModuleObject = function () {
     // 表格容器大小自适应
     thisProxy.resizeTableContainer();
 
-    // 设置默认选中的范围选项
-    thisProxy.setDefaultScope();
-
     // 绑定范围选择切换
     thisProxy.changeScope();
 
@@ -132,13 +131,17 @@ FormModule.prototype.resizeTableContainer = function () {
 };
 
 /**
- * 设置默认选中的范围选项:范围列表项自定义居属性值为1的项为默认选中项
+ * 设置默认选中的范围选项:范围列表项自定义属性值为1的项为默认选中项,备降模块取自定义属性值为ALL的为默认选中项
  * */
 FormModule.prototype.setDefaultScope = function () {
     // 当前对象this代理
     var thisProxy = this;
     // 取得范围列表项自定义居属性值为1的项
     var $default = $('.form-panel .dropdown-menu a[data-val="1"]', thisProxy.canvas);
+    // 若tablId为'alternate-table'即为备降模块,取自定义属性值为ALL的为默认选中项
+    if(thisProxy.tableId == 'alternate-table'){
+        $default = $('.form-panel .dropdown-menu a[data-val="ALL"]', thisProxy.canvas);
+    }
     // 取得范围按钮
     var $btn = $('.form-panel .dropdown-toggle', thisProxy.canvas);
     // 取得默认选项的自定义属性data-val的值,用于记录范围标识码
@@ -157,13 +160,21 @@ FormModule.prototype.setDefaultScope = function () {
 FormModule.prototype.changeScope = function () {
     // 当前对象this代理
     var thisProxy = this;
-    var $item = $('.form-panel .dropdown-menu a', thisProxy.canvas);
-
-    $item.on('click',function () {
-        // 取得当前点击选中的范围列表项
-        var $that = $(this);
-        // 取得范围按钮
-        var $btn = $that.parent().parent().prev();
+    // 范围列表容器
+    var $menu = $('.form-panel .dropdown-menu', thisProxy.canvas);
+    // 取得范围按钮
+    var $btn =  $('.form-panel .dropdown-toggle', thisProxy.canvas);
+    // 范围列表容器绑定点击事件(因为范围列表动态追加的，所有要用事件委托，把事件绑定在范围列表容器上)
+    $menu.on('click',function (e) {
+        // 取得当前点击目标源
+        var $that = $(e.target);
+        // 取得源 className
+        var thatClassName = $.trim($that.attr('class'));
+        // 若className 不等于'scope-item',则目标源不是范围列表,直接跳出，
+        // 反之，取得相关属性数据并更新到范围按钮和范围标识码上
+        if(!thatClassName =='scope-item'){
+            return;
+        }
         // 取当前点击选中的范围列表项的自定义属性data-val的值,用于记录范围标识码
         var val = $that.attr('data-val');
         // 取得当前点击选中的范围列表项的节点内容,用于更新到范围按钮
@@ -185,8 +196,15 @@ FormModule.prototype.changeKeyword = function () {
     var $input = $('.form-panel .key', thisProxy.canvas);
 
     $input.on('keyup', function () {
+        // 当前输入框值
         var val = $(this).val();
-        thisProxy.keyword = val;
+        // 转换为大写
+        var upperCaseVal = val.toUpperCase();
+        // 设置值为大写值
+        $(this).val(upperCaseVal);
+        // $(this).change();
+        // 保存到关键字标识
+        thisProxy.keyword = upperCaseVal;
     });
 };
 
@@ -466,7 +484,7 @@ FormModule.prototype.updateTime = function () {
         // 格式化处理时间
         var time = thisProxy.formaterGenerateTimeTime(thisProxy.generateTime);
         // 显示数据生成时间
-        $node.text('数据更新生成时间: ' + time).attr('title','数据更新生成时间: '+time);
+        $node.text('数据生成时间: ' + time).attr('title','数据生成时间: '+time);
     }
 
 };
@@ -484,7 +502,29 @@ FormModule.prototype.updateCondition = function () {
     $('.condition-panel',thisProxy.canvas).removeClass('hidden');
 };
 
-
+/**
+ * 更新范围列表项
+ *
+ * @param data 范围列表项集合
+ * */
+FormModule.prototype.setScope = function (data) {
+    // 当前对象this代理
+    var thisProxy = this;
+    // 获取列表容器
+    var $menu = $('.form-panel .dropdown-menu', thisProxy.canvas);
+    // 创建一个空串
+    var con = '';
+    data.map(function (item, index, arr) {
+        // 拼接html结构串
+        var node = '<li><a href="javascript:;" class="scope-item" '+ 'data-val="'+ item.value + '"' + '>' + item.text +'</a></li>';
+        // 追加串
+        con += node;
+    });
+    // 清空列表容器并把新列表html串追加到列表容器
+    $menu.empty().append(con);
+    // 设置默认选中项
+    thisProxy.setDefaultScope();
+};
 
 
 

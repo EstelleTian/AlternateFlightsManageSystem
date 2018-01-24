@@ -1,4 +1,6 @@
 /**
+ * 2018/01/23
+ * author: zxy
  * 表格组件
  */
 
@@ -401,4 +403,11 @@ GridTable.prototype.convertData = function (flight) {
         flight.id = flight.flightDataId
     }
     return flight;
+};
+
+//调整冻结列高度
+GridTable.prototype.resizeFrozenTable = function(){
+    var frozenDom = $('#'+this.tableId+'_frozen').parent();
+    frozenDom.height( this.frozenHeight  + 'px');
+
 };

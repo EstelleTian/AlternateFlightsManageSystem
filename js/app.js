@@ -1,4 +1,7 @@
 /**
+ * 2018/01/23
+ * author: zxy
+ * 模块入口
  *
  */
 
@@ -10,11 +13,21 @@ var app = function () {
     var tableIDs = ['arr-table','alternate-table','over-table','dep-table'];
     // 模块内表格pagerID
     var pagerIDs = ['arr-table-pager','alternate-table-pager','over-table-pager','dep-table-pager'];*/
+    // 各模块范围列表项数据集合
+    var scopeListData ={};
 
+    /**
+     * 各模块对象
+     * */
+    // 进港计划模块
     var arrObj = {};
+    // 备降计划模块
     var alternateObj= {};
+    // 备降计划历史查询模块
     var alternateHistoryObj= {};
+    // 疆内飞越模块
     var overObj = {};
+    // 出港计划模块
     var depObj = {};
    /* // 模块对象
     var moduleObj = [arrObj,alternateObj,overObj,depObj];*/
@@ -137,14 +150,20 @@ var app = function () {
         });
     };
 
-
+    /**
+     * 初始化备降历史数据查询
+     * */
     var initHistory = function () {
         $('.history-inquire').on('click',function () {
+            // 创建模态框
             createModal();
+            // 初始化模块
             initHistoryModule();
         })
     };
-
+    /**
+     * 创建模态框并绘制模态框内容html结构
+     * */
     var createModal = function () {
         var str = '<div class="alternate-history-module"><ul class="form-panel" ><li class="form-item"><label>开始日期</label><input type="text" class="start-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><label>结束日期</label><input type="text" class="end-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><button class="atfm-btn atfm-btn-blue ladda-button inquire" data-style="zoom-out"> <span class="ladda-label">查询</span> </button></li><li class="form-item"><span class="alert"></span></li></ul> <ul class="condition-panel hidden"> <li class="form-item"> 当前查询条件: </li> <li class="form-item date-scope hidden"></li><li class="form-item time-tip hidden"> 数据生成时间: </li>  <li class="form-item time hidden"> </ul><div class="result-panel"> <table id="alternate-history-table"></table> <div id="alternate-history-table-pager"></div> </div></div>';
         var options = {
@@ -161,8 +180,12 @@ var app = function () {
         $('#bootstrap-modal-dialog-footer').remove();
     };
 
-
+    /**
+     * 初始化备降历史数据查询模块
+     *
+     * */
     var initHistoryModule = function () {
+        // 备降计划历史查询模块
         alternateHistoryObj = new HistoryFormModule({
             canvasId: 'alternate-history-module',
             tableId: 'alternate-history-table',
@@ -181,10 +204,69 @@ var app = function () {
                 // 更新表格数据
                 table.fireTableDataChange(data);
             }
-
         });
         alternateHistoryObj.initHistoryFormModuleObject();
     };
+
+    /**
+     *  初始化各模块范围列表项
+     *
+     *  @param time 定时间隔 ms
+     *
+     *  因为范围列表项从后端请求，所以定时刷新校验数据有效性
+     *
+     * */
+
+    var initScopeList = function (time) {
+
+        // 若数据有效则更新各模块范围列表项，
+        if($.isValidObject(alternateAirport.airportConfig) ){
+            scopeListData = alternateAirport.airportConfig;
+            // 更新各模块范围列表项
+            setScopeList();
+        }else {
+            // 数据无效则开启延时回调自身
+            var timer = setTimeout(function () {
+                initScopeList(time);
+            },time);
+        }
+    };
+
+    /**
+     * 更新各模块范围列表项
+     *
+     * */
+    var setScopeList = function () {
+
+        if($.isValidObject(scopeListData.airportConfig)){
+
+            var airportConfig = scopeListData.airportConfig;
+            // 进港计划模块
+            var arrFlightsScope = airportConfig.arrFlightsScope;
+            if ($.isValidObject(arrFlightsScope)) {
+                arrObj.setScope(arrFlightsScope);
+            }
+
+            // 疆内飞越模块
+            var overFlightsScope = airportConfig.overFlightsScope;
+            if ($.isValidObject(overFlightsScope)) {
+                overObj.setScope(overFlightsScope);
+            }
+            // 出港计划模块
+            var depFlightsScope = airportConfig.depFlightsScope;
+            if ($.isValidObject(depFlightsScope)) {
+                depObj.setScope(depFlightsScope);
+            }
+        }
+
+        // 备降计划模块
+        if ($.isValidObject(scopeListData.alternateAirport)) {
+            var alternateFlightsScope = scopeListData.alternateAirport;
+            alternateObj.setScope(alternateFlightsScope);
+        }
+    };
+
+
 
     return {
         index : index,
@@ -192,6 +274,7 @@ var app = function () {
             initIndex();
             initModule();
             initHistory();
+            initScopeList(1000);
         }
     }
 }();

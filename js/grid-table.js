@@ -402,3 +402,10 @@ GridTable.prototype.convertData = function (flight) {
     }
     return flight;
 };
+
+//调整冻结列高度
+GridTable.prototype.resizeFrozenTable = function(){
+    var frozenDom = $('#'+this.tableId+'_frozen').parent();
+    frozenDom.height( this.frozenHeight  + 'px');
+
+};

@@ -96,12 +96,6 @@ FormModule.prototype.initFormModuleObject = function () {
 
 };
 
-
-FormModule.prototype.fn = function () {
-    // 当前对象this代理
-    var thisProxy = this;
-};
-
 /**
  * 计算表格容器大小,使其大小自适应
  *

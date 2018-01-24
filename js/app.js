@@ -1,4 +1,7 @@
 /**
+ * 2018/01/23
+ * author: zxy
+ * 模块入口
  *
  */
 
@@ -10,17 +13,21 @@ var app = function () {
     var tableIDs = ['arr-table','alternate-table','over-table','dep-table'];
     // 模块内表格pagerID
     var pagerIDs = ['arr-table-pager','alternate-table-pager','over-table-pager','dep-table-pager'];*/
+    // 各模块范围列表项数据集合
+    var scopeListData ={};
 
-    var socpeList = {
-        arrObj : {
-
-        }
-    };
-
+    /**
+     * 各模块对象
+     * */
+    // 进港计划模块
     var arrObj = {};
+    // 备降计划模块
     var alternateObj= {};
+    // 备降计划历史查询模块
     var alternateHistoryObj= {};
+    // 疆内飞越模块
     var overObj = {};
+    // 出港计划模块
     var depObj = {};
    /* // 模块对象
     var moduleObj = [arrObj,alternateObj,overObj,depObj];*/
@@ -143,10 +150,14 @@ var app = function () {
         });
     };
 
-
+    /**
+     * 初始化备降历史数据查询
+     * */
     var initHistory = function () {
         $('.history-inquire').on('click',function () {
+            // 创建模态框
             createModal();
+            // 初始化模块
             initHistoryModule();
         })
     };
@@ -174,6 +185,7 @@ var app = function () {
      *
      * */
     var initHistoryModule = function () {
+        // 备降计划历史查询模块
         alternateHistoryObj = new HistoryFormModule({
             canvasId: 'alternate-history-module',
             tableId: 'alternate-history-table',
@@ -192,7 +204,6 @@ var app = function () {
                 // 更新表格数据
                 table.fireTableDataChange(data);
             }
-
         });
         alternateHistoryObj.initHistoryFormModuleObject();
     };
@@ -207,15 +218,50 @@ var app = function () {
      * */
 
     var initScopeList = function (time) {
-          var timer = setTimeout(function () {
-              if($.isValidVariable(alternateAirport.airportConfig)){
-                  clearTimeout(timer);
-                  console.log(alternateAirport.airportConfig);
-              }else {
-                  initScopeList(time);
-              }
-          },time);
+
+        // 若数据有效则更新各模块范围列表项，
+        if($.isValidObject(alternateAirport.airportConfig) && $.isValidObject(alternateAirport.airportConfig.airportConfig)){
+            scopeListData = alternateAirport.airportConfig.airportConfig;
+            // 更新各模块范围列表项
+            setScopeList();
+        }else {
+            // 数据无效则开启延时回调自身
+            var timer = setTimeout(function () {
+                initScopeList(time);
+            },time);
+        }
     };
+
+    /**
+     * 更新各模块范围列表项
+     *
+     * */
+    var setScopeList = function () {
+        // 进港计划模块
+        if ($.isValidObject(scopeListData.arrFlightsScope)) {
+            var arrFlightsScope = scopeListData.arrFlightsScope;
+            arrObj.setScope(arrFlightsScope);
+        }
+        // 备降计划模块
+        if ($.isValidObject(scopeListData.alternateStatus)) {
+            var alternateFlightsScope = scopeListData.alternateStatus;
+            alternateObj.setScope(alternateFlightsScope);
+        }
+        // 疆内飞越模块
+        if ($.isValidObject(scopeListData.overFlightsScope)) {
+            var overFlightsScope = scopeListData.overFlightsScope;
+            overObj.setScope(overFlightsScope);
+        }
+        // 出港计划模块
+        if ($.isValidObject(scopeListData.depFlightsScope)) {
+            var depFlightsScope = scopeListData.depFlightsScope;
+            depObj.setScope(depFlightsScope);
+        }
+
+
+    };
+
+
 
     return {
         index : index,

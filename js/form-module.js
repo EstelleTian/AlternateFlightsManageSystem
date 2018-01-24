@@ -1,5 +1,7 @@
 /**
- * 表单组件
+ * 2018/01/23
+ * author: zxy
+ * 数据查询模块表单组件
  */
 
 
@@ -69,9 +71,6 @@ FormModule.prototype.initFormModuleObject = function () {
 
     // 表格容器大小自适应
     thisProxy.resizeTableContainer();
-
-    // 设置默认选中的范围选项
-    thisProxy.setDefaultScope();
 
     // 绑定范围选择切换
     thisProxy.changeScope();
@@ -157,13 +156,21 @@ FormModule.prototype.setDefaultScope = function () {
 FormModule.prototype.changeScope = function () {
     // 当前对象this代理
     var thisProxy = this;
-    var $item = $('.form-panel .dropdown-menu a', thisProxy.canvas);
-
-    $item.on('click',function () {
-        // 取得当前点击选中的范围列表项
-        var $that = $(this);
-        // 取得范围按钮
-        var $btn = $that.parent().parent().prev();
+    // 范围列表容器
+    var $menu = $('.form-panel .dropdown-menu', thisProxy.canvas);
+    // 取得范围按钮
+    var $btn =  $('.form-panel .dropdown-toggle', thisProxy.canvas);
+    // 范围列表容器绑定点击事件(因为范围列表动态追加的，所有要用事件委托，把事件绑定在范围列表容器上)
+    $menu.on('click',function (e) {
+        // 取得当前点击目标源
+        var $that = $(e.target);
+        // 取得源 className
+        var thatClassName = $.trim($that.attr('class'));
+        // 若className 不等于'scope-item',则目标源不是范围列表,直接跳出，
+        // 反之，取得相关属性数据并更新到范围按钮和范围标识码上
+        if(!thatClassName =='scope-item'){
+            return;
+        }
         // 取当前点击选中的范围列表项的自定义属性data-val的值,用于记录范围标识码
         var val = $that.attr('data-val');
         // 取得当前点击选中的范围列表项的节点内容,用于更新到范围按钮
@@ -484,7 +491,24 @@ FormModule.prototype.updateCondition = function () {
     $('.condition-panel',thisProxy.canvas).removeClass('hidden');
 };
 
-
+FormModule.prototype.setScope = function (data) {
+    // 当前对象this代理
+    var thisProxy = this;
+    // 获取列表容器
+    var $menu = $('.form-panel .dropdown-menu', thisProxy.canvas);
+    // 创建一个空串
+    var con = '';
+    data.map(function (item, index, arr) {
+        // 拼接html结构串
+        var node = '<li><a href="javascript:;" class="scope-item" '+ 'data-id="'+ item.id+ '"'+ 'data-val="'+ item.value + '"' + '>' + item.text +'</a></li>';
+        // 追加串
+        con += node;
+    });
+    // 清空列表容器并把新列表html串追加到列表容器
+    $menu.empty().append(con);
+    // 设置默认选中项
+    thisProxy.setDefaultScope();
+};
 
 
 

@@ -77,6 +77,9 @@
         singleDecimal: {
             'default': '只能为正整数或一位小数',
         },
+        hunEffectiveNumber: {
+            'default': '请输入0-99内的数字',
+        },
 
 
         //间隔大于等于5
@@ -624,7 +627,25 @@
                 }
                 return true
             }
-        }
+        },
+
+        //00~99正整数
+        hunEffectiveNumber: {
+            validate: function (validator, $field, options) {
+                var inputVal = $.trim($field.val());
+                if (inputVal == "") {
+                    return true;
+                }
+                var regexp = /^[0-9]{1}[0-9]{1}$/;
+                if (!regexp.test(inputVal)) {
+                    return {
+                        valid: false,
+                        message: '有效范围: 00~99的正整数'
+                    }
+                }
+                return true;
+            }
+        },
 
 
 

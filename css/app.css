@@ -183,25 +183,25 @@ ul, li {
     flex: 1 0 auto;
     flex-direction: column;
 }
-.panel-body .form-panel, .panel-body .condition-panel, .history-data .condition-panel, .history-data .form-panel{
+.panel-body .form-panel, .panel-body .condition-panel, .alternate-history-module .condition-panel, .alternate-history-module .form-panel{
     display: flex;
     /*justify-content: center;*/
     width: 100%;
     min-height: 5rem;
     font-size: 1.5rem;
 }
-.panel-body .form-panel, .history-data .form-panel {
+.panel-body .form-panel, .alternate-history-module .form-panel {
     border-bottom: 1px solid #dddddd;
     flex-wrap: wrap;
 }
-.history-data .form-panel .form-control{
+.alternate-history-module .form-panel .form-control{
    width: 50%;
 }
 
 .form-control[readonly] {
     background: #FFFFFF;
 }
-.panel-body .form-panel .form-item, .panel-body .condition-panel li, .history-data .form-panel .form-item, .history-data .condition-panel li {
+.panel-body .form-panel .form-item, .panel-body .condition-panel li, .alternate-history-module .form-panel .form-item, .alternate-history-module .condition-panel li {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -210,19 +210,19 @@ ul, li {
     margin-bottom: 1rem;
     padding: 0 1rem;
 }
-.panel-body .form-panel .form-item .alert {
+.form-panel .form-item .alert {
     display: none;
     align-items: center;
     margin: 0;
 }
-.panel-body .form-panel .form-item .alert.active {
+.form-panel .form-item .alert.active {
     display: inline-block;
 }
 
 .panel-body .form-panel .form-item.one-child {
     justify-content: flex-end;
 }
-.panel-body .form-panel .form-item > label, .history-data .form-panel .form-item > label{
+.panel-body .form-panel .form-item > label, .alternate-history-module .form-panel .form-item > label{
     display: inline-block;
     max-width: 100%;
     margin-bottom: 5px;
@@ -249,8 +249,12 @@ ul, li {
     text-decoration: none;
     color: #4a4a4a;
 }
-.history-data .result-panel {
-    height: 40rem;
+/*.alternate-history-module .result-panel {*/
+    /*height: 45rem;*/
+/*}*/
+
+.alternate-history-module {
+    height: 50rem;
 }
 
 .summary-list {
@@ -318,11 +322,15 @@ ul, li {
     display: block;
 
 }
-.history-data .condition-panel {
+.alternate-history-module .condition-panel {
     min-height: 5rem;
 }
 .no-event {
     pointer-events: none !important;
+}
+
+.atfm-btn {
+    line-height: 1.42857143;
 }
 
 
@@ -339,6 +347,35 @@ ul, li {
     }
 
 }
+
+@media (max-width: 1366px) {
+    .modal-dialog {
+        width: 1100px !important;
+    }
+}
+@media (max-width: 1200px) {
+    .modal-dialog {
+        width: 1000px !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .modal-dialog {
+        width: 700px !important;
+    }
+}
+@media (max-width: 768px) {
+    .modal-dialog {
+        width: 480px !important;
+    }
+}
+@media (max-width: 512px) {
+    .modal-dialog {
+        width: 428px !important;
+    }
+}
+
+
 /*********************magic-checkbox 复选框美化**************************************/
 @keyframes hover-color {
     from {

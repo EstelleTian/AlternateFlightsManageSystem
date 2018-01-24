@@ -66,7 +66,7 @@ var alternateAirport = function () {
       async: false,
       success: function (data) {
         if ($.isValidObject(data)&&data.status == 200) {
-          airportConfig = data;
+          alternateAirport.airportConfig = data;
           colConfigConvert(airportConfig.airportConfig,tableConfig)
           getTableData(tableConfig,isRefresh);
           setDownText(airportConfig.airportConfig)
@@ -236,6 +236,7 @@ var alternateAirport = function () {
             rowid: rowid,
             iRow: iRow,
             iCol: iCol,
+            tableId:tableId,
             airport: rowData.airport,
             type: type[0],
             cellObj: cellObj
@@ -397,13 +398,10 @@ var alternateAirport = function () {
       //获取验证结果
       var bootstrapValidator = form.data('bootstrapValidator');
       var capacity = form.find('#flightId').val();
-      var airport = opt.airport;
-      var type = opt.type;
-
       //手动再次触发验证
       bootstrapValidator.validate();
       if (bootstrapValidator.isValid()) {
-        getNewVolume(airport,capacity,type)
+        getNewVolume(capacity,opt)
       }
     })
     $('#cancale').on('click', function () {
@@ -417,27 +415,34 @@ var alternateAirport = function () {
   /**
    * 修改当前容量
    */
-  function getNewVolume(airport,capacity,type) {
+  function getNewVolume(capacity,opt) {
     var url = ipHost + 'altf/airport/updatePositionCap'
-    // $.ajax({
-    //   type: "POST",
-    //   url: url,
-    //   data:{
-    //     airport:airport,
-    //     capacity:capacity,
-    //     type:type,
-    //   },
-    //   dataType: "JSON",
-    //   async: false,
-    //   success: function (data) {
-    //     console.log(data);
-    //     if($.isValidObject(data)){
-    //
-    //     }
-    //   },
-    //   error: function (xhr, status, error) {
-    //   }
-    // });
+    $.ajax({
+      type: "POST",
+      url: url,
+      data:{
+        airport:opt.airport,
+        capacity:capacity,
+        type:opt.type,
+      },
+      dataType: "JSON",
+      async: false,
+      success: function (data) {
+        console.log(data);
+        if($.isValidObject(data)){
+          var singleData = { data:[] };
+          singleData = dataConfigConvert(data.airportMessage,singleData);
+          fireSingleDataChange(airVolumeTable,opt.rowid,singleData)
+        }else{
+          clearCollaborateContainer()
+          showQtip(opt.cellObj,false);
+        }
+      },
+      error: function (xhr, status, error) {
+          clearCollaborateContainer()
+          showQtip(opt.cellObj,false);
+      }
+    });
   }
 
   /**
@@ -540,8 +545,12 @@ var alternateAirport = function () {
       // 再原数据的前一位之后插入新数据
       if (index >= 2) {
         tableObj.jqGrid('addRowData', rowid, rowData, 'after', ids[index - 2]);
+        clearCollaborateContainer()
+        showQtip(opt.cellObj,true)
       } else {
         tableObj.jqGrid('addRowData', rowid, rowData, 'first');
+        clearCollaborateContainer()
+        showQtip(opt.cellObj,true)
       }
     }
 

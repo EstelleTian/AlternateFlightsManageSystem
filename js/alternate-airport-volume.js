@@ -418,6 +418,7 @@ var alternateAirport = function () {
           validators: {
             notEmpty: {},
             onlyNumber: {},
+            hunEffectiveNumber:{},
           }
         }
       }

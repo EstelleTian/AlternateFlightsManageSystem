@@ -3,7 +3,7 @@
  */
 
 
-var App = function () {
+var app = function () {
     /*// 模块 class 名称
     var moduleClass = ['arr-module','alternate-module','over-module','dep-module'];
     // 模块内表格ID
@@ -13,6 +13,7 @@ var App = function () {
 
     var arrObj = {};
     var alternateObj= {};
+    var alternateHistoryObj= {};
     var overObj = {};
     var depObj = {};
    /* // 模块对象
@@ -27,13 +28,31 @@ var App = function () {
             canvasId: 'arr-module',
             tableId: 'arr-table',
             url : 'http://192.168.243.104:8085/altf/airport/retrieveArrFlights',
-            initGridTable : function (table) {
+            initGridTable : function (data,table) {
                 var opt = {
-                    canvasId: 'arr-module',
                     tableId: 'arr-table',
-                    pagerId: 'arr-table-pager'
+                    pagerId: 'arr-table-pager',
+                    colNames: GridTableConfig.common.colName,
+                    colModel: GridTableConfig.common.colModel,
+                    cmTemplate: GridTableConfig.colModelTemplate,
+                    colTitle: GridTableConfig.common.colTitle,
+
+                    // colCollaborateUrl: CellOpreationUrl,
+                    // colConverter: FlightGridTableDataUtil,
+                    // params: {
+                    //  // scorll: true,
+                    //  // shrinkToFit: false,
+                    //  // rowNum: 999999,
+                    //  // sortname: 'FLOWCONTROL_POINT_PASSTIME',
+                    //  // sortorder: 'asc'
+                    //  },
+
+                    // afterCollaborate: fireAreaFlightSingleDataChange
                 };
-                initCommonTable(table, opt);
+                table = new GridTable(opt);
+                table.initGridTableObject();
+                // 更新表格数据
+                 table.fireTableDataChange(data);
             }
 
         });
@@ -44,8 +63,19 @@ var App = function () {
             canvasId: 'alternate-module',
             tableId: 'alternate-table',
             url : 'http://192.168.243.104:8085/altf/airport/retrieveAlternateFlights',
-            initGridTable : function (table) {
-                console.log(table);
+            initGridTable : function (data,table) {
+                var opt = {
+                    tableId: 'alternate-table',
+                    pagerId: 'alternate-table-pager',
+                    colNames: GridTableConfig.alertnate.colName,
+                    colModel: GridTableConfig.alertnate.colModel,
+                    cmTemplate: GridTableConfig.colModelTemplate,
+                    colTitle: GridTableConfig.alertnate.colTitle
+                };
+                table = new GridTable(opt);
+                table.initGridTableObject();
+                // 更新表格数据
+                table.fireTableDataChange(data);
             }
         });
         alternateObj.initFormModuleObject();
@@ -55,8 +85,19 @@ var App = function () {
             canvasId: 'over-module',
             tableId: 'over-table',
             url : 'http://192.168.243.104:8085/altf/airport/retrieveOverFlights',
-            initGridTable : function (table) {
-                console.log(table);
+            initGridTable : function (data,table) {
+                var opt = {
+                    tableId: 'over-table',
+                    pagerId: 'over-table-pager',
+                    colNames: GridTableConfig.common.colName,
+                    colModel: GridTableConfig.common.colModel,
+                    cmTemplate: GridTableConfig.colModelTemplate,
+                    colTitle: GridTableConfig.common.colTitle
+                };
+                table = new GridTable(opt);
+                table.initGridTableObject();
+                // 更新表格数据
+                table.fireTableDataChange(data);
             }
         });
         overObj.initFormModuleObject();
@@ -66,8 +107,19 @@ var App = function () {
             canvasId: 'dep-module',
             tableId: 'dep-table',
             url : 'http://192.168.243.104:8085/altf/airport/retrieveDepFlights',
-            initGridTable : function (table) {
-                console.log(table);
+            initGridTable : function (data,table) {
+                var opt = {
+                    tableId: 'dep-table',
+                    pagerId: 'dep-table-pager',
+                    colNames: GridTableConfig.common.colName,
+                    colModel: GridTableConfig.common.colModel,
+                    cmTemplate: GridTableConfig.colModelTemplate,
+                    colTitle: GridTableConfig.common.colTitle
+                };
+                table = new GridTable(opt);
+                table.initGridTableObject();
+                // 更新表格数据
+                table.fireTableDataChange(data);
             }
         });
         depObj.initFormModuleObject();
@@ -78,68 +130,72 @@ var App = function () {
      * */
     var initIndex = function () {
         index = $('.main-area section.active').index();
+        app.index = index;
         $('.menu-bar li').on('click',function () {
             index = $('.main-area section.active').index();
+            app.index = index;
         });
     };
-    
-    /**
-     * 初始化通用表格
-     * */
-    var initCommonTable = function (table,params) {
-        var opt = {
-            colNames: GridTableConfig.common.colName,
-            colModel: GridTableConfig.common.colModel,
-            cmTemplate: GridTableConfig.colModelTemplate,
-            // colDisplay: flight_single_impact_grid_table_column_display,
-            // colStyle: GridTableConfig,
-            colTitle: GridTableConfig.common.colTitle,
-            // colEdit: flight_single_impact_grid_table_column_edit,
-            // colAuthority: user_authritys,
-            // colCollaborateUrl: CellOpreationUrl,
-            // colConverter: FlightGridTableDataUtil,
-            /*params: {
-             scorll: true,
-             shrinkToFit: false,
-             rowNum: 999999,
-             // sortname: 'FLOWCONTROL_POINT_PASSTIME',
-             sortorder: 'asc'
-             },*/
-            // baseData: {
-            //     airportConfigs: airport_configuration,
-            //     deiceGroups: user.deiceGroupName
-            // },
-            // autoScroll: 'FLOWCONTROL_POINT_PASSTIME',
-            // onSelectRow: highlightCaculateFlight,
-            // afterCollaborate: fireAreaFlightSingleDataChange
+
+
+    var initHistory = function () {
+        $('.history-inquire').on('click',function () {
+            createModal();
+            initHistoryModule();
+        })
+    };
+
+    var createModal = function () {
+        var str = '<div class="alternate-history-module"><ul class="form-panel" ><li class="form-item"><label>开始日期</label><input type="text" class="start-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><label>结束日期</label><input type="text" class="end-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><button class="atfm-btn atfm-btn-blue ladda-button inquire" data-style="zoom-out"> <span class="ladda-label">查询</span> </button></li><li class="form-item"><span class="alert"></span></li></ul> <ul class="condition-panel hidden"> <li class="form-item"> 当前查询条件: </li> <li class="form-item date-scope hidden"></li><li class="form-item time-tip hidden"> 数据生成时间: </li>  <li class="form-item time hidden"> </ul><div class="result-panel"> <table id="alternate-history-table"></table> <div id="alternate-history-table-pager"></div> </div></div>';
+        var options = {
+            title: '查询历史',
+            content: str,
+            status: 1, /* 1:正常 2:警告 3:危险 不填:默认情况*/
+            width: 1280,
+            mtop : 160,
+            showCancelBtn: false,
+            isIcon : false
         };
-        // 追加附加属性
-        if($.isValidObject(params)){
-            for(var i in params){
-                opt[i] = params[i];
-            }
-        }
-        table = new GridTable(opt);
-        table.initGridTableObject();
-
+        BootstrapDialogFactory.dialog(options);
+        // 移除模态框footer
+        $('#bootstrap-modal-dialog-footer').remove();
     };
-    
-    var initAlertnate = function () {
-        table = new GridTable({
+
+
+    var initHistoryModule = function () {
+        alternateHistoryObj = new HistoryFormModule({
+            canvasId: 'alternate-history-module',
+            tableId: 'alternate-history-table',
+            url: 'http://192.168.243.104:8085/altf/airport/retrieveAlternateHistory',
+            initGridTable: function (data, table) {
+                var opt = {
+                    tableId: 'alternate-history-table',
+                    pagerId: 'alternate-history-table-pager',
+                    colNames: GridTableConfig.alertnate.colName,
+                    colModel: GridTableConfig.alertnate.colModel,
+                    cmTemplate: GridTableConfig.colModelTemplate,
+                    colTitle: GridTableConfig.alertnate.colTitle
+                };
+                table = new GridTable(opt);
+                table.initGridTableObject();
+                // 更新表格数据
+                table.fireTableDataChange(data);
+            }
 
         });
-    }
-
+        alternateHistoryObj.initHistoryFormModuleObject();
+    };
 
     return {
-
+        index : index,
         init : function () {
             initIndex();
             initModule();
+            initHistory();
         }
     }
 }();
 
 $(document).ready(function () {
-    App.init();
+    app.init();
 });

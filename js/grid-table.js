@@ -11,7 +11,7 @@ function GridTable(params) {
     /**
      * 表格所在容器ID
      */
-    this.canvasId = params.canvasId;
+    // this.canvasId = params.canvasId;
 
     /**
      * 表格所在容器jQuery对象
@@ -126,13 +126,25 @@ function GridTable(params) {
 }
 
 
+/**
+ * 常量-当前选择单元格类名
+ */
+GridTable.SELECTED_CELL_CLASS = 'grid-table-current-select-cell';
+
+/**
+ * 常量-协调元素类名
+ */
+GridTable.COLLABORATE_DOM_CLASS = 'grid-table-collaborate-container';
+
+
+
 GridTable.prototype.initGridTableObject = function () {
     // 当前对象this代理
     var thisProxy = this;
-    // 容器jQuery对象
-    thisProxy.canvas = $('#' + thisProxy.canvasId);
     // 表格jQuery对象
     thisProxy.table = $('#' + thisProxy.tableId);
+    // 容器jQuery对象
+    thisProxy.canvas = thisProxy.table.parent();
     // 初始化jqGrid默认参数
     var gridTableOptions = {
         // 单独使用bootstrap样式，或通过全局设置$.jgrid.defaults.styleUI = 'Bootstrap';
@@ -144,7 +156,7 @@ GridTable.prototype.initGridTableObject = function () {
         // 列Model模板
         cmTemplate: thisProxy.cmTemplate,
         // 列标题
-        cmTemplate: thisProxy.colTitle,
+        colTitle: thisProxy.colTitle,
         // 数据类型
         datatype: 'local',
         // 单次显示数据行数
@@ -167,10 +179,10 @@ GridTable.prototype.initGridTableObject = function () {
         pginput: false,
         // 定义导航栏是否显示记录数
         viewrecords: true,
-        // 是否支持通过checkbox进行行多选（支持多选，但默认不开启）
-        multiselect: true,
+        // 是否支持通过checkbox进行行多选（默认不支持多选）
+        multiselect: false,
         // 是否限制仅通过checkbox进行行多选（在“伪”关闭多选模式时开启，默认“伪”关闭）
-        multiboxonly: true,
+        multiboxonly: false,
         // 绑定左键单击事件
         onCellSelect: function (rowid, iCol, cellcontent, e) {
             thisProxy.onCellSelect(rowid, iCol, cellcontent, e);
@@ -245,5 +257,148 @@ GridTable.prototype.initGridTableObject = function () {
  * 调整表格大小以适应所在容器
  */
 GridTable.prototype.resizeToFitContainer = function () {
-    GridTableUtil.resizeToFitContainer(this.tableId);
+    var thisProxy = this;
+    GridTableUtil.resizeToFitContainer(thisProxy.tableId);
+};
+
+/**
+ *
+ * */
+GridTable.prototype.fireTableDataChange = function (dataObj) {
+    // 当前对象this代理
+    var thisProxy = this;
+    // 校验数据是否有效
+    if(!$.isValidObject(dataObj) || !$.isValidObject(dataObj.flights)){
+        return;
+    }
+    // 取得航班集合
+    var data = dataObj.flights;
+    // thisProxy.data = {};
+    thisProxy.tableDataMap = {};
+    thisProxy.tableData = {};
+    var tableData = [];
+    var tableMap = {};
+    for (var index in data) {
+        // 取得单个航班数据并转换
+        var d = thisProxy.convertData(data[index]);
+        var id = d.id;
+        tableData.push(d);
+        tableMap[id] = d;
+    }
+    thisProxy.tableDataMap = tableMap;
+    thisProxy.tableData = tableData;
+
+    // 绘制表格数据
+    thisProxy.drawGridTableData();
+    // 调整表格大小以适应所在容器
+    thisProxy.resizeToFitContainer();
+};
+
+
+
+/**
+ * 绘制表格数据
+ */
+GridTable.prototype.drawGridTableData = function () {
+    var thisProxy = this;
+    // 清空表格数据
+    thisProxy.gridTableObject.jqGrid('clearGridData');
+    // 更新表格数据
+    var params = {data: this.tableData, srcoll: 1};
+    this.gridTableObject.jqGrid('setGridParam', params).trigger('reloadGrid');
+
+    // this.frozenHeight = $('#'+thisProxy.tableId+'_frozen').parent().height();
+    // this.resizeFrozenTable();
+};
+
+/**
+ * 左键单击事件
+ *
+ * @param rowid
+ * @param iCol
+ * @param cellcontent
+ * @param e
+ */
+GridTable.prototype.onCellSelect = function (rowid, iCol, cellcontent, e) {
+    // 清除单元格样式
+    this.clearCollaborateContainer();
+};
+
+
+/**
+ * 右键单击事件
+ *
+ * @param rowid
+ * @param iRow
+ * @param iCol
+ * @param e
+ */
+GridTable.prototype.onRightClickRow = function (rowid, iRow, iCol, e) {
+    // 代理
+    var thisProxy = this;
+    var opts = {
+        rowid : rowid,
+        iRow : iRow,
+        iCol : iCol
+    };
+    // 清除单元格样式
+    this.clearCollaborateContainer();
+    // 获取单元格colModel对象
+    var colModel = this.gridTableObject.jqGrid('getGridParam')['colModel'][iCol];
+    // 获取触发事件的单元格对象
+    var cellObj = $(e.target);
+    // 记录当前选中的单元格对象
+    cellObj.addClass(GridTable.SELECTED_CELL_CLASS);
+
+    // 获取航班计划
+    var flight = this.tableDataMap[rowid];
+    if(!flight){
+        return null;
+    }
+    // 可交互标记
+    var collaborateFlag = true;
+
+    // // 计划批号协调
+    // if (colModel.name == 'flightDataId') {
+    //     this.collaborateFlightDataId(rowid, iRow, iCol, cellObj, collaborateFlag);
+    // }
+
+    // 屏蔽协调窗口的右键操作
+    if ($('.' + GridTable.COLLABORATE_DOM_CLASS)[0] != null) {
+        $('.' + GridTable.COLLABORATE_DOM_CLASS)[0].oncontextmenu = function (e) {
+            return false;
+        };
+    }
+
+    // 获取表格id
+    var tableId = thisProxy.tableId;
+
+};
+
+
+/**
+ * 清除协调窗口
+ */
+GridTable.prototype.clearCollaborateContainer = function () {
+    // 清理协调窗口
+    $('.' + GridTable.SELECTED_CELL_CLASS).removeClass(GridTable.SELECTED_CELL_CLASS);
+    $('.' + GridTable.COLLABORATE_DOM_CLASS).remove();
+    if ('auto' == this.canvas.css('overflow')) {
+        this.canvas.css('overflow', 'hidden');
+    }
+    /*// 清理popover窗口
+    $('.popover').popover("hide");*/
+};
+
+/**
+ * 转换数据
+ * @param flight 航班数据
+ */
+GridTable.prototype.convertData = function (flight) {
+    // 航班数据无id且有flightDataId
+    if($.isValidVariable(flight.flightDataId) && !$.isValidVariable(flight.id)){
+        // 设置航班id 为 flightDataId, 用于右键协调时获取对应航班数据(rowid值是以id属性值来定义的)
+        flight.id = flight.flightDataId
+    }
+    return flight;
 };

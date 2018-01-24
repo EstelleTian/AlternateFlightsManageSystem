@@ -1,9 +1,12 @@
 /**
+ * Created by FQL on 2018/1/24.
+ */
+/**
  * 表单组件
  */
 
 
-var FormModule = function (params) {
+var HistoryFormModule = function (params) {
     // 检查参数有效性
     if (!$.isValidObject(params)) {
         return;
@@ -38,15 +41,15 @@ var FormModule = function (params) {
     this.initGridTable = params.initGridTable;
 
     /**
-     *  范围标识码
+     *  起始日期
      * */
-    this.scope = '';
+    this.start = '';
 
 
     /**
-     *  关键字
+     *  终止日期
      * */
-    this.keyword = '';
+    this.end = '';
 
     /**
      * 布尔－是否开启过滤条件 默认为false
@@ -59,25 +62,18 @@ var FormModule = function (params) {
  * 初始化表单组件
  *
  * */
-FormModule.prototype.initFormModuleObject = function () {
+HistoryFormModule.prototype.initHistoryFormModuleObject = function () {
     // 当前对象this代理
     var thisProxy = this;
     // 容器jQuery对象
     thisProxy.canvas = $('.' + thisProxy.canvasId);
     // 表格jQuery对象
     thisProxy.table = $('#' + thisProxy.tableId);
+    // 初始化日期插件并绑定日期变更时更新start、end的值
+    thisProxy.initDatePicker();
 
-    // 表格容器大小自适应
-    thisProxy.resizeTableContainer();
-
-    // 设置默认选中的范围选项
-    thisProxy.setDefaultScope();
-
-    // 绑定范围选择切换
-    thisProxy.changeScope();
-
-    // 绑定关键字录入
-    thisProxy.changeKeyword();
+    // 绑定输入框数值变更监听
+    thisProxy.changeDate();
 
     // 切换过滤条件开关
     thisProxy.changeFilter();
@@ -90,9 +86,9 @@ FormModule.prototype.initFormModuleObject = function () {
 
     // 绑定窗口调整时
     $(window).resize(function () {
-        // 使窗口调整时表格容器大小自适应
-        thisProxy.resizeTableContainer();
-    });
+     // 使窗口调整时表格容器大小自适应
+     thisProxy.resizeTableContainer();
+     });
 
 };
 
@@ -100,41 +96,29 @@ FormModule.prototype.initFormModuleObject = function () {
  * 计算表格容器大小,使其大小自适应
  *
  * **/
-FormModule.prototype.resizeTableContainer = function () {
+HistoryFormModule.prototype.resizeTableContainer = function () {
     // 当前对象this代理
     var thisProxy = this;
-    // 容器
-    var $container = $('.app-transition');
-    // 导航栏
-    var $nav = $('.navbar',$container);
-    // 菜单栏
-    var $menu = $('.menu-bar', $container);
-    // 主显示区
-    var $main = $('.main-area');
-    // 模块头部
-    var $head = $('.panel-heading',thisProxy.canvas);
-    // 模块体
-    var $body = $('.panel-body', thisProxy.canvas);
+
     // 模块内的表单栏
     var $form = $('.form-panel', thisProxy.canvas);
     // 模块内的当前查询条件栏
     var $condition = $('.condition-panel', thisProxy.canvas);
     // 模块内数据结果可视化区
     var $result = $('.result-panel', thisProxy.canvas);
-    // 求得主显示区高度:(总高度-导航栏-菜单栏-主显示区外边距)
-    var mainHeight = $container.outerHeight() - $nav.outerHeight(true) -$menu.outerHeight(true) - $main.css('marginTop').replace('px', '')*1- $main.css('marginBottom').replace('px', '')*1;
-    // 求得模块体高度:(主显示区高度-模块体内边距)
-    var bodyHeight = mainHeight - $body.css('paddingTop').replace('px', '')*1 - $body.css('paddingBottom').replace('px', '')*1;
-    // 求得模块内数据结果可视化区高度:(模块体高度-模块头-模块内的表单栏-模块内的当前查询条件栏)
-    var h =bodyHeight - $head.outerHeight() - $form.outerHeight() - $condition .outerHeight();
+    // 求得模块内数据结果可视化区高度:(模块高度-模块内的表单栏-模块内的当前查询条件栏)
+    var h =thisProxy.canvas.outerHeight() - $form.outerHeight() - $condition.outerHeight();
+
+    var w = thisProxy.canvas.outerWidth();
+
     // 设置模块内数据结果可视化区高度
-    $result.height(h);
+    $result.height(h).width(w);
 };
 
 /**
  * 设置默认选中的范围选项:范围列表项自定义居属性值为1的项为默认选中项
  * */
-FormModule.prototype.setDefaultScope = function () {
+HistoryFormModule.prototype.setDefaultScope = function () {
     // 当前对象this代理
     var thisProxy = this;
     // 取得范围列表项自定义居属性值为1的项
@@ -151,50 +135,11 @@ FormModule.prototype.setDefaultScope = function () {
     thisProxy.scope = val;
 };
 
-/**
- *  绑定范围选择切换
- * */
-FormModule.prototype.changeScope = function () {
-    // 当前对象this代理
-    var thisProxy = this;
-    var $item = $('.form-panel .dropdown-menu a', thisProxy.canvas);
-
-    $item.on('click',function () {
-        // 取得当前点击选中的范围列表项
-        var $that = $(this);
-        // 取得范围按钮
-        var $btn = $that.parent().parent().prev();
-        // 取当前点击选中的范围列表项的自定义属性data-val的值,用于记录范围标识码
-        var val = $that.attr('data-val');
-        // 取得当前点击选中的范围列表项的节点内容,用于更新到范围按钮
-        var valCN = $that.html();
-        // 更新范围按钮内容
-        $btn.html( valCN +'<span class="caret"></span>');
-        // 更新范围标识码
-        thisProxy.scope = val;
-    })
-};
-
-/**
- * 绑定关键字录入
- *
- * */
-FormModule.prototype.changeKeyword = function () {
-    // 当前对象this代理
-    var thisProxy = this;
-    var $input = $('.form-panel .key', thisProxy.canvas);
-
-    $input.on('keyup', function () {
-        var val = $(this).val();
-        thisProxy.keyword = val;
-    });
-};
-
 
 /**
  * 格式化数据生成时间
  * */
-FormModule.prototype.formaterGenerateTimeTime = function (time) {
+HistoryFormModule.prototype.formaterGenerateTimeTime = function (time) {
     var year = time.substring(0, 4);
     var mon = time.substring(4, 6);
     var date = time.substring(6, 8);
@@ -208,7 +153,7 @@ FormModule.prototype.formaterGenerateTimeTime = function (time) {
 /**
  * 切换过滤条件开关
  * */
-FormModule.prototype.changeFilter = function () {
+HistoryFormModule.prototype.changeFilter = function () {
     // 当前对象this代理
     var thisProxy = this;
     // 取得过滤html节点
@@ -232,7 +177,7 @@ FormModule.prototype.changeFilter = function () {
  * 初始化数据查询
  * */
 
-FormModule.prototype.initInquireData = function () {
+HistoryFormModule.prototype.initInquireData = function () {
     // 当前对象this代理
     var thisProxy = this;
     // 查询按钮绑定事件
@@ -243,16 +188,17 @@ FormModule.prototype.initInquireData = function () {
         thisProxy.loading.start();
         // 清除提示、警告、查询条件、数据生成时间等
         thisProxy.clear();
-        // 更新当前查询条件
-        thisProxy.updateCondition();
-        // 计算表格容器大小,使其大小自适应
-        // (因为更新显示了模块内当前查询条件栏内容，所以重新计算表格容器的高度)
-        thisProxy.resizeTableContainer();
+
 
         // 校验表单是否有效
         var valid = thisProxy.validateForm();
         // 若校验通过则查询数据
         if(valid){
+            // 更新当前查询条件
+            thisProxy.updateCondition();
+            // 计算表格容器大小,使其大小自适应
+            // (因为更新显示了模块内当前查询条件栏内容，所以重新计算表格容器的高度)
+            thisProxy.resizeTableContainer();
             // 查询数据
             thisProxy.inquireData();
         }else {
@@ -270,7 +216,7 @@ FormModule.prototype.initInquireData = function () {
  * 初始化loading动画
  *
  * */
-FormModule.prototype.initLoading = function () {
+HistoryFormModule.prototype.initLoading = function () {
     // 当前对象this代理
     var thisProxy = this;
     thisProxy.loading = Ladda.create($('.inquire', thisProxy.canvas)[0]);
@@ -280,17 +226,23 @@ FormModule.prototype.initLoading = function () {
  * 校验表单是否有效
  *
  * */
-FormModule.prototype.validateForm = function () {
+HistoryFormModule.prototype.validateForm = function () {
     // 当前对象this代理
     var thisProxy = this;
+    var regexp = /(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})(((0[13578]|1[02])(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)(0[1-9]|[12][0-9]|30))|(02(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))0229)/;
+    //起始日期
+    var s = regexp.test(thisProxy.start);
     // 若范围无效则提示
-    if(!$.isValidVariable(thisProxy.scope)){
+    if(!s){
         // 展示提示
-        thisProxy.showMsg('danger','范围无效,请选择有效的范围选项');
+        thisProxy.showMsg('danger','开始日期无效');
         return false;
-    }else {
-        return true;
+    }else if($.trim(thisProxy.end) != '' && !regexp.test(thisProxy.end)) {
+        // 展示提示
+        thisProxy.showMsg('danger','结束日期无效');
+        return false;
     }
+    return true;
 
 };
 
@@ -298,7 +250,7 @@ FormModule.prototype.validateForm = function () {
  * 查询数据
  *
  * */
-FormModule.prototype.inquireData = function () {
+HistoryFormModule.prototype.inquireData = function () {
     // 当前对象this代理
     var thisProxy = this;
     // 校验请求地址是否有效
@@ -311,7 +263,7 @@ FormModule.prototype.inquireData = function () {
         return;
     }
     // 拼接参数,拼接完整的请求地址
-    var url = thisProxy.url + '?scope='+ thisProxy.scope +'&keyWord='+ thisProxy.keyword;
+    var url = thisProxy.url + '?start='+ thisProxy.start +'&end='+ thisProxy.end;
     // 请求获取数据
     $.ajax({
         url:url,
@@ -364,7 +316,7 @@ FormModule.prototype.inquireData = function () {
  *@param type 类型 （成功、警告、错误）
  *
  * */
-FormModule.prototype.showMsg = function (type, content, clearTime) {
+HistoryFormModule.prototype.showMsg = function (type, content, clearTime) {
     // 当前对象this代理
     var thisProxy = this;
     var $err = $('.alert',thisProxy.canvas);
@@ -399,18 +351,23 @@ FormModule.prototype.showMsg = function (type, content, clearTime) {
  * 清空
  *
  * */
-FormModule.prototype.clear = function () {
+HistoryFormModule.prototype.clear = function () {
     // 当前对象this代理
     var thisProxy = this;
-    //数据生成时间
-    var $time = $('.panel-heading .time', thisProxy.canvas);
-    // 当前查询条件
+    // 当前查询条件栏
     var $condition = $('.condition-panel', thisProxy.canvas);
+    // 数据生成时间
+    var $time = $('.time', $condition);
+    // 数据生成时间提示
+    var $tip = $('.time-tip', $condition);
+    // 起止日期
+    var $Date = $('.date-scope', $condition);
     // 提示信息
     var $err = $('.alert',thisProxy.canvas);
-
     // 清空数据生成时间
-    $time.html('').removeAttr('title');
+    $time.html('').removeAttr('title').addClass('hidden');
+    $tip.addClass('hidden');
+    $Date.addClass('hidden');
     // 隐藏当前查询条件栏
     $condition.addClass('hidden');
     // 清空提示
@@ -426,7 +383,7 @@ FormModule.prototype.clear = function () {
  * 禁用或启用表单事件
  *
  * */
-FormModule.prototype.desabledForm = function (bool) {
+HistoryFormModule.prototype.desabledForm = function (bool) {
     // 当前对象this代理
     var thisProxy = this;
     // 取得表单容器
@@ -442,7 +399,7 @@ FormModule.prototype.desabledForm = function (bool) {
 /**
  * 初始化表格
  * */
-FormModule.prototype.initTable = function (data) {
+HistoryFormModule.prototype.initTable = function (data) {
     // 当前对象this代理
     var thisProxy = this;
     // 校验自定义的initGridTable方法是否有效
@@ -456,17 +413,19 @@ FormModule.prototype.initTable = function (data) {
 /**
  * 更新数据生成时间并显示
  * */
-FormModule.prototype.updateTime = function () {
+HistoryFormModule.prototype.updateTime = function () {
     // 当前对象this代理
     var thisProxy = this;
     // 校验时间是否有效
     if($.isValidVariable(thisProxy.generateTime)){
         // 取得数据生成时间节点
-        var $node = $('.panel-heading .time', thisProxy.canvas);
+        var $node = $('.condition-panel .time', thisProxy.canvas);
+        var $tip = $('.condition-panel .time-tip', thisProxy.canvas);
         // 格式化处理时间
         var time = thisProxy.formaterGenerateTimeTime(thisProxy.generateTime);
         // 显示数据生成时间
-        $node.text('数据更新生成时间: ' + time).attr('title','数据更新生成时间: '+time);
+        $node.text(time).attr('title','数据生成时间: '+time).removeClass('hidden');
+        var $tip = $('.condition-panel .time-tip', thisProxy.canvas).removeClass('hidden');
     }
 
 };
@@ -474,14 +433,84 @@ FormModule.prototype.updateTime = function () {
 /**
  * 更新当前查询条件
  * */
-FormModule.prototype.updateCondition = function () {
+HistoryFormModule.prototype.updateCondition = function () {
     // 当前对象this代理
     var thisProxy = this;
-    var scopeText = $('.form-panel .dropdown-toggle', thisProxy.canvas).text();
-    var key = thisProxy.keyword;
-    $('.condition-panel .scope', thisProxy.canvas).html(scopeText).attr('title','范围:'+ scopeText);
-    $('.condition-panel .key', thisProxy.canvas).html(key).attr('title','关键字:'+ key);
+    var scopeText = thisProxy.start + ' - ' + thisProxy.end;
+    $('.condition-panel .date-scope', thisProxy.canvas).html(scopeText).attr('title','起止日期:'+ scopeText).removeClass('hidden');
     $('.condition-panel',thisProxy.canvas).removeClass('hidden');
+};
+/**
+ * 绑定日历插件
+ * */
+HistoryFormModule.prototype.initDatePicker = function () {
+    // 当前对象this代理
+    var thisProxy = this;
+
+    var $start = $('.form-item .start-date', thisProxy.canvas);
+    var $end = $('.form-item .end-date', thisProxy.canvas);
+    // 开始日期
+    $start.datepicker({
+        language: 'zh-CN',
+        // showOnFocus: false, //是否在获取焦点时显示面板 true显示 false不显示 默认true
+        autoclose: true, //选择日期后自动关闭面板
+        // clearBtn: true, //是否显示清空按钮
+        //todayHighlight: true,
+        // startDate: '0d', //可选日期的开始日期 0d:当前 -1d:当前的前1天, +1d:当前的后1天
+        endDate: '-1d', //可选日期最后日期
+        keepEmptyValues: true,
+        // forceParse: true,
+        //格式化
+        format: 'yyyymmdd',
+    }).on('changeDate', function () {
+        thisProxy.start = $start.val();
+    });
+    // 结束日期
+    $end.datepicker({
+        language: 'zh-CN',
+        // showOnFocus: false, //是否在获取焦点时显示面板 true显示 false不显示 默认true
+        autoclose: true, //选择日期后自动关闭面板
+        clearBtn: true, //是否显示清空按钮
+        //todayHighlight: true,
+        // startDate: '0d', //可选日期的开始日期 0d:当前 -1d:当前的前1天, +1d:当前的后1天
+        endDate: '-1d', //可选日期最后日期
+        keepEmptyValues: true,
+        // forceParse: true,
+        //格式化
+        format: 'yyyymmdd',
+    }).on('changeDate', function () {
+        thisProxy.end = $end.val();
+    });
+    // 当前日期
+    var now = $.getFullTime(new Date()).substring(0, 8);
+    // 当前日期的前一天日期值
+    var preDay =$.addStringTime(now + '0000', 3600 * 1000 * 24 * -1);
+    // 设置默认选中日期
+    $start.datepicker('setDate', $.parseFullTime(preDay));
+    $end.datepicker('setDate', $.parseFullTime(preDay));
+    // 保存默认日期
+    thisProxy.start = $start.val();
+    thisProxy.end = $end.val();
+
+};
+
+
+/**
+ * 绑定日期输入框数值变更监听: 失去焦点时获取输入框数值并更新保存到相应字段
+ * */
+HistoryFormModule.prototype.changeDate = function () {
+    // 当前对象this代理
+    var thisProxy = this;
+
+    var $start = $('.form-item .start-date', thisProxy.canvas);
+    var $end = $('.form-item .end-date', thisProxy.canvas);
+    $start.on('blur', function () {
+        thisProxy.start = $start.val();
+    });
+    // 结束日期
+    $end.on('blur', function () {
+        thisProxy.end = $end.val();
+    });
 };
 
 

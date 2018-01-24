@@ -38,7 +38,7 @@
 .flight-grid-table-collaborate-container #cancale {
   margin-left: 10px;
 }
-.flight-grid-table-collaborate-container .table > tbody > tr.success > td.selected-cell {
+.selected-cell {
   background: #39f !important;
   box-shadow: 0 0 10px 0px #222;
 }

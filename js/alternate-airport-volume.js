@@ -40,101 +40,111 @@ var alternateAirport = function () {
     $.jgrid.gridUnload('alernate_flight_grid_table');
     //阻止右键点击默认事件
     preventDefaultEvent()
-    getTableColmodel(dataColConfig, isRefresh);
+    Promise.all([
+      getTableColmodel(dataColConfig, isRefresh),getTableData(tableConfig, isRefresh)
+    ])
   }
   /**
    *设置表格下方文本
    * @param textObj
    */
   var setDownText = function (textObj) {
-    $.each(textObj.postionCategoryAirtype,function (i,e) {
-      var str = '<p><span>'+e.remark+':</span><span>'+e.value+'</span></p>';
+    $.each(textObj.postionCategoryAirtype, function (i, e) {
+      var str = '<p><span>' + e.remark + ':</span><span>' + e.value + '</span></p>';
       str = $(str);
-      $('.des')[0].insertBefore(str[0],$('.tip_container')[0]);
+      $('.des')[0].insertBefore(str[0], $('.tip_container')[0]);
     })
   }
   /**
    *获取表格列配置
    */
   var getTableColmodel = function () {
-    var url = ipHost + 'altf/airport/retrieveAirportConfig'
-    $.ajax({
-      type: "GET",
-      url: url,
-      data: "",
-      dataType: "JSON",
-      async: false,
-      success: function (data) {
-        if ($.isValidObject(data)&&data.status == 200) {
-          airportConfig = data;
-          alternateAirport.airportConfig = data;
-          colConfigConvert(airportConfig.airportConfig,tableConfig)
-          getTableData(tableConfig,isRefresh);
-          setDownText(airportConfig.airportConfig)
-        } else if(data.status == 500) {
-          console.warn(data.error.message)
-        }else{
-          console.warn('获取机场配置为空')
+    return new Promise(function (resolve, reject) {
+      var url = ipHost + 'altf/airport/retrieveAirportConfig'
+      $.ajax({
+        type: "GET",
+        url: url,
+        data: "",
+        dataType: "JSON",
+        async: false,
+        success: function (data) {
+          if ($.isValidObject(data) && data.status == 200) {
+            airportConfig = data;
+            alternateAirport.airportConfig = data;
+            colConfigConvert(airportConfig.airportConfig, tableConfig)
+            setDownText(airportConfig.airportConfig)
+          } else if (data.status == 500) {
+            console.warn(data.error.message)
+          } else {
+            console.warn('获取机场配置为空')
+          }
+          resolve(tableConfig);
+        },
+        error: function (xhr, status, error) {
+          console.error(error)
         }
-      },
-      error: function (xhr, status, error) {
-        console.error(error)
-      }
-    });
+      });
+    })
+
   }
   /**
    * 获取表格数据
+   * @param tableConfig
+   * @param isRefresh
    */
-  var getTableData = function ( tableConfig, isRefresh) {
-    var url = ipHost + 'altf/airport/retrieveAirport'
-    $.ajax({
-      type: "GET",
-      url: url,
-      data: "",
-      dataType: "JSON",
-      async: false,
-      success: function (data) {
-        if ($.isValidObject(data)&& data.status == 200) {
-          tableData = data;
-          var generateTime = data.generateTime
-          $('.alter_volume_time').text('数据生成时间:' + formatterTime(generateTime))
-          $('.available_capacity').text(data.availableCapacity)
-          //data转换
-          tableConfig = dataConfigConvert(data.airportMessage, tableConfig)
-          if (!$.isValidObject(airVolumeTable)) {
-            //列配置设置
-            dataColConfig = tableConfig.colModel;
-            // 初始化表格
-            initGridTable(tableConfig, 'alernate_flight_grid_table', 'ale-datas-pager')
-          } else {
-            // 数据更新
-            airVolumeTable.jqGrid('setGridParam', tableConfig.data).trigger('reloadGrid');
+  var getTableData = function (tableConfig, isRefresh) {
+    return new Promise(function (resolve, reject) {
+      var url = ipHost + 'altf/airport/retrieveAirport'
+      $.ajax({
+        type: "GET",
+        url: url,
+        data: "",
+        dataType: "JSON",
+        async: false,
+        success: function (data) {
+          if ($.isValidObject(data) && data.status == 200) {
+            tableData = data;
+            var generateTime = data.generateTime
+            $('.alter_volume_time').text('数据生成时间:' + formatterTime(generateTime))
+            $('.available_capacity').text(data.availableCapacity)
+            //data转换
+            tableConfig = dataConfigConvert(data.airportMessage, tableConfig)
+            if (!$.isValidObject(airVolumeTable)) {
+              //列配置设置
+              dataColConfig = tableConfig.colModel;
+              // 初始化表格
+              initGridTable(tableConfig, 'alernate_flight_grid_table', 'ale-datas-pager')
+            } else {
+              // 数据更新
+              airVolumeTable.jqGrid('setGridParam', tableConfig.data);
+            }
+            resolve(tableConfig);
+            if (isRefresh) {
+              startTimer(getTableData, tableConfig, isRefresh, refreshTime);
+            }
+          } else if (data.status == 500) {
+            console.warn(data.error.message)
           }
-          if (isRefresh) {
-            startTimer(getTableData, tableConfig, isRefresh, refreshTime);
-          }
-        }else if(data.status ==500){
-          console.warn(data.error.message)
+        },
+        error: function (xhr, status, error) {
+          console.warn(error)
         }
-      },
-      error: function (xhr, status, error) {
-        console.warn(error)
-      }
-    });
+      });
+    })
   }
   /**
    * 修改机场容量qtip提示
    * @param cellObj
    * @param state
    */
-  var showQtip = function (cellObj, state) {
+  var showQtip = function (cellObj, state,message) {
     var styleClasses = 'qtip-green';
     var tipMesssage = ' '
     if (state) {
       styleClasses = 'qtip-green-custom qtip-rounded';
       tipMesssage = '修改成功'
     } else {
-      tipMesssage = '修改失败'
+      tipMesssage = message;
       styleClasses = 'qtip-red-custom qtip-rounded';
     }
     cellObj.qtip({
@@ -237,7 +247,7 @@ var alternateAirport = function () {
             rowid: rowid,
             iRow: iRow,
             iCol: iCol,
-            tableId:tableId,
+            tableId: tableId,
             airport: rowData.airport,
             type: type[0],
             cellObj: cellObj
@@ -264,13 +274,13 @@ var alternateAirport = function () {
     // 容器
     var $container = $('.app-transition');
     // 导航栏
-    var $nav = $('.navbar',$container);
+    var $nav = $('.navbar', $container);
     // 菜单栏
     var $menu = $('.menu-bar', $container);
     // 主显示区
     var $main = $('.main-area');
     // 模块头部
-    var $head = $('.panel-heading',thisProxy);
+    var $head = $('.panel-heading', thisProxy);
     // 模块体
     var $body = $('.panel-body', thisProxy);
     // 模块内的合计可用
@@ -280,11 +290,11 @@ var alternateAirport = function () {
     // 模块内数据结果可视化区
     var $result = $('.table-contianer', thisProxy);
     // 求得主显示区高度:(总高度-导航栏-菜单栏-主显示区外边距)
-    var mainHeight = $container.outerHeight() - $nav.outerHeight(true) -$menu.outerHeight(true) - $main.css('marginTop').replace('px', '')*1- $main.css('marginBottom').replace('px', '')*1;
+    var mainHeight = $container.outerHeight() - $nav.outerHeight(true) - $menu.outerHeight(true) - $main.css('marginTop').replace('px', '') * 1 - $main.css('marginBottom').replace('px', '') * 1;
     // 求得模块体高度:(主显示区高度-模块体内边距)
-    var bodyHeight = mainHeight - $body.css('paddingTop').replace('px', '')*1 - $body.css('paddingBottom').replace('px', '')*1;
+    var bodyHeight = mainHeight - $body.css('paddingTop').replace('px', '') * 1 - $body.css('paddingBottom').replace('px', '') * 1;
     // 求得模块内数据结果可视化区高度:(模块体高度-模块头-模块内的表单栏-模块内的当前查询条件栏)
-    var h =bodyHeight - $head.outerHeight()-$head.css('marginBottom').replace('px', '')*1 - $form.outerHeight() - $condition .outerHeight();
+    var h = bodyHeight - $head.outerHeight() - $head.css('marginBottom').replace('px', '') * 1 - $form.outerHeight() - $condition.outerHeight();
     // 设置模块内数据结果可视化区高度
     $result.height(h);
   }
@@ -296,13 +306,30 @@ var alternateAirport = function () {
    * @returns {*}
    */
   var dataConfigConvert = function (dataObj, config) {
-    //data数据填充
-    $.each(dataObj, function (i, e) {
+    if($.isArray(dataObj)){
+      //data数据填充
+      $.each(dataObj, function (i, e) {
+        var obj = {};
+        obj['airport'] = e.airport;
+        obj['total'] = e.total;
+        obj['remark'] = e.remark;
+        $.each(e.positionCapInfo, function (index, ele) {
+          $.each(config.typeArr, function (j, m) {
+            if (m == ele.positionType) {
+              obj[m + 'total'] = ele.capacity;
+              obj[m + 'available'] = ele.available;
+              obj[m + 'occupy'] = ele.occupy;
+            }
+          })
+        })
+        config.data.push(obj);
+      })
+    }else{
       var obj = {};
-      obj['airport'] = e.airport;
-      obj['total'] = e.total;
-      obj['remark'] = e.remark;
-      $.each(e.positionCapInfo, function (index, ele) {
+      obj['airport'] = dataObj.airport;
+      obj['total'] = dataObj.total;
+      obj['remark'] = dataObj.remark;
+      $.each(dataObj.positionCapInfo, function (index, ele) {
         $.each(config.typeArr, function (j, m) {
           if (m == ele.positionType) {
             obj[m + 'total'] = ele.capacity;
@@ -312,7 +339,7 @@ var alternateAirport = function () {
         })
       })
       config.data.push(obj);
-    })
+    }
     // 表格样式转化
     $.each(config.data, function (i, e) {
       if (parseInt(e.total) > 3) {
@@ -328,7 +355,12 @@ var alternateAirport = function () {
     })
     return config;
   }
-  var colConfigConvert = function (colObj,config) {
+  /**
+   * 表格列配置转换
+   * @param colObj
+   * @param config
+   */
+  var colConfigConvert = function (colObj, config) {
     //colModel,colTitle,colName 转换
     $.each(colObj.postionCap, function (index, ele) {
       var obj = {};
@@ -356,10 +388,10 @@ var alternateAirport = function () {
   var onRightClickRow = function (opt) {
 
     // 清除协调窗口
-    clearCollaborateContainer(opt);
+    clearCollaborateContainer();
     // 记录当前选中的单元格对象
     opt.cellObj.addClass('selected-cell');
-    //容量
+    //修改容量值
     if ($('.alter_volume').is(":visible")) {
       collaborateAlter(opt);
     }
@@ -393,8 +425,10 @@ var alternateAirport = function () {
     collaboratorDom.position({
       of: opt.cellObj,
       my: 'left top',
-      at: 'right top'
+      at: 'right top',
+      collision: 'flipfit',
     });
+    followTargetPosition(collaboratorDom,opt.cellObj)
     $('#modificate_volume').on('click', function () {
       //获取验证结果
       var bootstrapValidator = form.data('bootstrapValidator');
@@ -402,7 +436,7 @@ var alternateAirport = function () {
       //手动再次触发验证
       bootstrapValidator.validate();
       if (bootstrapValidator.isValid()) {
-        getNewVolume(capacity,opt)
+        getNewVolume(capacity, opt)
       }
     })
     $('#cancale').on('click', function () {
@@ -414,34 +448,41 @@ var alternateAirport = function () {
   };
 
   /**
-   * 修改当前容量
+   * 修改当前容量值
+   * @param capacity
+   * @param opt
    */
-  function getNewVolume(capacity,opt) {
+  function getNewVolume(capacity, opt) {
     var url = ipHost + 'altf/airport/updatePositionCap'
     $.ajax({
       type: "POST",
       url: url,
-      data:{
-        airport:opt.airport,
-        capacity:capacity,
-        type:opt.type,
+      data: {
+        airport: opt.airport,
+        capacity: capacity,
+        type: opt.type,
       },
       dataType: "JSON",
       async: false,
       success: function (data) {
-        console.log(data);
-        if($.isValidObject(data)){
-          var singleData = { data:[] };
-          singleData = dataConfigConvert(data.airportMessage,singleData);
-          fireSingleDataChange(airVolumeTable,opt.rowid,singleData)
-        }else{
+        if ($.isValidObject(data)&&data.status == 200) {
+          var generateTime = data.generateTime
+          $('.alter_volume_time').text('数据生成时间:' + formatterTime(generateTime))
+          $('.available_capacity').text(data.availableCapacity)
+          var singleData = {
+            data: [],
+            typeArr:tableConfig.typeArr
+          };
+          singleData = dataConfigConvert(data.airportMessage, singleData);
+          fireSingleDataChange(airVolumeTable, opt, singleData)
+        } else {
           clearCollaborateContainer()
-          showQtip(opt.cellObj,false);
+          showQtip(opt.cellObj, false,data.error.message);
         }
       },
       error: function (xhr, status, error) {
-          clearCollaborateContainer()
-          showQtip(opt.cellObj,false);
+        clearCollaborateContainer()
+        showQtip(opt.cellObj, false,"接口访问失败");
       }
     });
   }
@@ -535,23 +576,27 @@ var alternateAirport = function () {
   /**
    * 表格单条数据更新
    * @param tableObj
-   * @param rowid
+   * @param opt
    * @param rowData
    */
-  var fireSingleDataChange = function (tableObj, rowid, rowData) {
+  var fireSingleDataChange = function (tableObj, opt, rowData) {
     // 表格数据ID集合
     var ids = tableObj.jqGrid('getDataIDs');
-    var f = tableObj.jqGrid('delRowData', rowid);
+    // 当前所在行序列
+    var index = tableObj.jqGrid('getInd', opt.rowid);
+    var f = tableObj.jqGrid('delRowData', opt.rowid);
     if (f) {
       // 再原数据的前一位之后插入新数据
       if (index >= 2) {
-        tableObj.jqGrid('addRowData', rowid, rowData, 'after', ids[index - 2]);
+        tableObj.jqGrid('addRowData', opt.rowid, rowData.data[0], 'after', ids[index - 2]);
         clearCollaborateContainer()
-        showQtip(opt.cellObj,true)
+        var newCellObj = getCellObject(opt.rowid,opt.iRow,opt.iCol)
+        showQtip(newCellObj, true)
       } else {
-        tableObj.jqGrid('addRowData', rowid, rowData, 'first');
+        tableObj.jqGrid('addRowData', opt.rowid, rowData, 'first');
         clearCollaborateContainer()
-        showQtip(opt.cellObj,true)
+        var newCellObj = getCellObject(opt.rowid,opt.iRow,opt.iCol)
+        showQtip(newCellObj, true)
       }
     }
 
@@ -570,13 +615,53 @@ var alternateAirport = function () {
     var str = year + '-' + mon + '-' + date + ' ' + hour + ":" + min;
     return str;
   }
+  /**
+   * 获取单元格对象
+   * @param rowid
+   * @param iRow
+   * @param iCol
+   * @returns {*}
+   */
+  var getCellObject = function (rowid, iRow, iCol) {
+    if ($.type(iCol) === 'string') {
+      // 字符类型，计算列名在表格中的列index值
+      var colModel = airVolumeTable.jqGrid('getGridParam', 'colModel');
+      var colIndex = null;
+      for (var index in colModel) {
+        if (colModel[index].name == iCol) {
+          colIndex = index;
+          break;
+        }
+      }
+      return airVolumeTable.find('tr#' + rowid).find('td').eq(colIndex);
+    } else {
+      return airVolumeTable.find('tr#' + rowid).find('td').eq(iCol);
+    }
+  };
+  /**
+   * 格滚动时协调DOM位置跟随目标单元格
+   * @param collaboratorDom
+   * @param cellObj
+   */
+  var followTargetPosition = function (collaboratorDom, cellObj) {
+    function position() {
+      collaboratorDom.position({
+        of: cellObj,
+        my: 'left top',
+        at: 'right top',
+        collision: 'flipfit',
+      });
+    }
+
+    airVolumeTable.parents(".ui-jqgrid-bdiv").off('scroll', position).on('scroll', position);
+  };
 
   return {
     init: function () {
       initDataBasic();
       tableContainerFit();
     },
-    airportConfig:airportConfig
+    airportConfig: airportConfig
   }
 }();
 $(document).ready(function () {

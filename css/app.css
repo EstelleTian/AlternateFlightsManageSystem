@@ -249,6 +249,9 @@ ul, li {
     text-decoration: none;
     color: #4a4a4a;
 }
+.form-panel .btn .caret {
+    margin-left: 5px;
+}
 /*.alternate-history-module .result-panel {*/
     /*height: 45rem;*/
 /*}*/

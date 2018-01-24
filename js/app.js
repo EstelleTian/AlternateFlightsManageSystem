@@ -220,8 +220,8 @@ var app = function () {
     var initScopeList = function (time) {
 
         // 若数据有效则更新各模块范围列表项，
-        if($.isValidObject(alternateAirport.airportConfig) && $.isValidObject(alternateAirport.airportConfig.airportConfig)){
-            scopeListData = alternateAirport.airportConfig.airportConfig;
+        if($.isValidObject(alternateAirport.airportConfig) ){
+            scopeListData = alternateAirport.airportConfig;
             // 更新各模块范围列表项
             setScopeList();
         }else {
@@ -237,28 +237,33 @@ var app = function () {
      *
      * */
     var setScopeList = function () {
-        // 进港计划模块
-        if ($.isValidObject(scopeListData.arrFlightsScope)) {
-            var arrFlightsScope = scopeListData.arrFlightsScope;
-            arrObj.setScope(arrFlightsScope);
+
+        if($.isValidObject(scopeListData.airportConfig)){
+
+            var airportConfig = scopeListData.airportConfig;
+            // 进港计划模块
+            var arrFlightsScope = airportConfig.arrFlightsScope;
+            if ($.isValidObject(arrFlightsScope)) {
+                arrObj.setScope(arrFlightsScope);
+            }
+
+            // 疆内飞越模块
+            var overFlightsScope = airportConfig.overFlightsScope;
+            if ($.isValidObject(overFlightsScope)) {
+                overObj.setScope(overFlightsScope);
+            }
+            // 出港计划模块
+            var depFlightsScope = airportConfig.depFlightsScope;
+            if ($.isValidObject(depFlightsScope)) {
+                depObj.setScope(depFlightsScope);
+            }
         }
+
         // 备降计划模块
-        if ($.isValidObject(scopeListData.alternateStatus)) {
-            var alternateFlightsScope = scopeListData.alternateStatus;
+        if ($.isValidObject(scopeListData.alternateAirport)) {
+            var alternateFlightsScope = scopeListData.alternateAirport;
             alternateObj.setScope(alternateFlightsScope);
         }
-        // 疆内飞越模块
-        if ($.isValidObject(scopeListData.overFlightsScope)) {
-            var overFlightsScope = scopeListData.overFlightsScope;
-            overObj.setScope(overFlightsScope);
-        }
-        // 出港计划模块
-        if ($.isValidObject(scopeListData.depFlightsScope)) {
-            var depFlightsScope = scopeListData.depFlightsScope;
-            depObj.setScope(depFlightsScope);
-        }
-
-
     };
 
 

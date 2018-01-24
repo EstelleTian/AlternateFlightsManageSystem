@@ -131,13 +131,17 @@ FormModule.prototype.resizeTableContainer = function () {
 };
 
 /**
- * 设置默认选中的范围选项:范围列表项自定义居属性值为1的项为默认选中项
+ * 设置默认选中的范围选项:范围列表项自定义属性值为1的项为默认选中项,备降模块取自定义属性值为ALL的为默认选中项
  * */
 FormModule.prototype.setDefaultScope = function () {
     // 当前对象this代理
     var thisProxy = this;
     // 取得范围列表项自定义居属性值为1的项
     var $default = $('.form-panel .dropdown-menu a[data-val="1"]', thisProxy.canvas);
+    // 若tablId为'alternate-table'即为备降模块,取自定义属性值为ALL的为默认选中项
+    if(thisProxy.tableId == 'alternate-table'){
+        $default = $('.form-panel .dropdown-menu a[data-val="ALL"]', thisProxy.canvas);
+    }
     // 取得范围按钮
     var $btn = $('.form-panel .dropdown-toggle', thisProxy.canvas);
     // 取得默认选项的自定义属性data-val的值,用于记录范围标识码
@@ -473,7 +477,7 @@ FormModule.prototype.updateTime = function () {
         // 格式化处理时间
         var time = thisProxy.formaterGenerateTimeTime(thisProxy.generateTime);
         // 显示数据生成时间
-        $node.text('数据更新生成时间: ' + time).attr('title','数据更新生成时间: '+time);
+        $node.text('数据生成时间: ' + time).attr('title','数据生成时间: '+time);
     }
 
 };
@@ -491,6 +495,11 @@ FormModule.prototype.updateCondition = function () {
     $('.condition-panel',thisProxy.canvas).removeClass('hidden');
 };
 
+/**
+ * 更新范围列表项
+ *
+ * @param data 范围列表项集合
+ * */
 FormModule.prototype.setScope = function (data) {
     // 当前对象this代理
     var thisProxy = this;
@@ -500,7 +509,7 @@ FormModule.prototype.setScope = function (data) {
     var con = '';
     data.map(function (item, index, arr) {
         // 拼接html结构串
-        var node = '<li><a href="javascript:;" class="scope-item" '+ 'data-id="'+ item.id+ '"'+ 'data-val="'+ item.value + '"' + '>' + item.text +'</a></li>';
+        var node = '<li><a href="javascript:;" class="scope-item" '+ 'data-val="'+ item.value + '"' + '>' + item.text +'</a></li>';
         // 追加串
         con += node;
     });

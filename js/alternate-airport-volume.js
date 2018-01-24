@@ -66,6 +66,7 @@ var alternateAirport = function () {
       async: false,
       success: function (data) {
         if ($.isValidObject(data)&&data.status == 200) {
+          airportConfig = data;
           alternateAirport.airportConfig = data;
           colConfigConvert(airportConfig.airportConfig,tableConfig)
           getTableData(tableConfig,isRefresh);

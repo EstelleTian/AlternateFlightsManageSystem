@@ -11,6 +11,12 @@ var app = function () {
     // 模块内表格pagerID
     var pagerIDs = ['arr-table-pager','alternate-table-pager','over-table-pager','dep-table-pager'];*/
 
+    var socpeList = {
+        arrObj : {
+
+        }
+    };
+
     var arrObj = {};
     var alternateObj= {};
     var alternateHistoryObj= {};
@@ -144,7 +150,9 @@ var app = function () {
             initHistoryModule();
         })
     };
-
+    /**
+     * 创建模态框并绘制模态框内容html结构
+     * */
     var createModal = function () {
         var str = '<div class="alternate-history-module"><ul class="form-panel" ><li class="form-item"><label>开始日期</label><input type="text" class="start-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><label>结束日期</label><input type="text" class="end-date form-control" maxlength="8" value="" readonly></li><li class="form-item"><button class="atfm-btn atfm-btn-blue ladda-button inquire" data-style="zoom-out"> <span class="ladda-label">查询</span> </button></li><li class="form-item"><span class="alert"></span></li></ul> <ul class="condition-panel hidden"> <li class="form-item"> 当前查询条件: </li> <li class="form-item date-scope hidden"></li><li class="form-item time-tip hidden"> 数据生成时间: </li>  <li class="form-item time hidden"> </ul><div class="result-panel"> <table id="alternate-history-table"></table> <div id="alternate-history-table-pager"></div> </div></div>';
         var options = {
@@ -161,7 +169,10 @@ var app = function () {
         $('#bootstrap-modal-dialog-footer').remove();
     };
 
-
+    /**
+     * 初始化备降历史数据查询模块
+     *
+     * */
     var initHistoryModule = function () {
         alternateHistoryObj = new HistoryFormModule({
             canvasId: 'alternate-history-module',
@@ -186,12 +197,33 @@ var app = function () {
         alternateHistoryObj.initHistoryFormModuleObject();
     };
 
+    /**
+     *  初始化各模块范围列表项
+     *
+     *  @param time 定时间隔 ms
+     *
+     *  因为范围列表项从后端请求，所以定时刷新校验数据有效性
+     *
+     * */
+
+    var initScopeList = function (time) {
+          var timer = setTimeout(function () {
+              if($.isValidVariable(alternateAirport.airportConfig)){
+                  clearTimeout(timer);
+                  console.log(alternateAirport.airportConfig);
+              }else {
+                  initScopeList(time);
+              }
+          },time);
+    };
+
     return {
         index : index,
         init : function () {
             initIndex();
             initModule();
             initHistory();
+            initScopeList(1000);
         }
     }
 }();

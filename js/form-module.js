@@ -196,8 +196,15 @@ FormModule.prototype.changeKeyword = function () {
     var $input = $('.form-panel .key', thisProxy.canvas);
 
     $input.on('keyup', function () {
+        // 当前输入框值
         var val = $(this).val();
-        thisProxy.keyword = val;
+        // 转换为大写
+        var upperCaseVal = val.toUpperCase();
+        // 设置值为大写值
+        $(this).val(upperCaseVal);
+        // $(this).change();
+        // 保存到关键字标识
+        thisProxy.keyword = upperCaseVal;
     });
 };
 

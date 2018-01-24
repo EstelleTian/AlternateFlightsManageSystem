@@ -252,6 +252,15 @@ ul, li {
 .form-panel .btn .caret {
     margin-left: 5px;
 }
+
+.form-panel .dropdown-menu {
+    max-height: 20rem;
+    overflow: auto;
+}
+
+.form-panel .key {
+    text-transform: uppercase;
+}
 /*.alternate-history-module .result-panel {*/
     /*height: 45rem;*/
 /*}*/

@@ -321,6 +321,7 @@ ul, li {
 .grid-table-collaborate-container li  .glyphicon {
     color: #999999;
     font-size: 1.2rem;
+    margin: 5px;
 }
 .grid-table-collaborate-container li>ul {
     display: none;
@@ -336,6 +337,9 @@ ul, li {
 }
 .alternate-history-module .condition-panel {
     min-height: 5rem;
+}
+.condition-panel {
+    border-bottom: 1px solid #dddddd;
 }
 .no-event {
     pointer-events: none !important;

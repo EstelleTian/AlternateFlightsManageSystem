@@ -286,8 +286,17 @@ HistoryFormModule.prototype.inquireData = function () {
                 thisProxy.generateTime = data.generateTime;
                 // 更新数据生成时间并显示
                 thisProxy.updateTime();
-                // 初始化表格
-                thisProxy.initTable(data);
+                if(!$.isValidObject(thisProxy.table.gridTableObject)){
+                    // 校验自定义的initGridTable方法是否有效
+                    if($.isValidVariable(thisProxy.initGridTable) && typeof thisProxy.initGridTable == 'function'){
+                        // 调用initGridTable方法,初始化表格
+                        thisProxy.table = thisProxy.initGridTable(thisProxy.table);
+                        thisProxy.table.fireTableDataChange(data);
+                    }
+                }else {
+                    // 更新表格数据
+                    thisProxy.table.fireTableDataChange(data);
+                }
             } else if (data.status == 400) {
                 // 展示提示
                 thisProxy.showMsg('danger','data.error');

@@ -36,7 +36,7 @@ var app = function () {
     var depObj = {};
 
     // 定时器时间,用于设置每个模块定时间隔时间 ms
-    var timer = 1000*60*3;
+    var timer = 1000*60*0.2;
     // 活动模块所在模块下标
     var index = 0;
 
@@ -55,7 +55,7 @@ var app = function () {
             // 默认选中的范围值
             defaultScope : '1',
             // 初始化表格
-            initGridTable : function (data,table) {
+            initGridTable : function (table) {
                 var opt = {
                     tableId: 'arr-table',
                     pagerId: 'arr-table-pager',
@@ -78,8 +78,7 @@ var app = function () {
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
-                // 更新表格数据
-                table.fireTableDataChange(data);
+                return table;
             },
             // 自定义过滤规则
             customFilterFunc : function () {
@@ -99,7 +98,7 @@ var app = function () {
             timer : timer,
             // 默认选中的范围值
             defaultScope : 'ALL',
-            initGridTable : function (data,table) {
+            initGridTable : function (table) {
                 var opt = {
                     tableId: 'alternate-table',
                     pagerId: 'alternate-table-pager',
@@ -110,8 +109,7 @@ var app = function () {
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
-                // 更新表格数据
-                table.fireTableDataChange(data);
+                return table;
             },
             // 自定义过滤规则
             customFilterFunc : function () {
@@ -130,7 +128,7 @@ var app = function () {
             timer : timer,
             // 默认选中的范围值
             defaultScope : '1',
-            initGridTable : function (data,table) {
+            initGridTable : function (table) {
                 var opt = {
                     tableId: 'over-table',
                     pagerId: 'over-table-pager',
@@ -141,8 +139,7 @@ var app = function () {
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
-                // 更新表格数据
-                table.fireTableDataChange(data);
+                return table;
             }
         });
         overObj.initFormModuleObject();
@@ -156,7 +153,7 @@ var app = function () {
             timer : timer,
             // 默认选中的范围值
             defaultScope : '1',
-            initGridTable : function (data,table) {
+            initGridTable : function (table) {
                 var opt = {
                     tableId: 'dep-table',
                     pagerId: 'dep-table-pager',
@@ -167,8 +164,7 @@ var app = function () {
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
-                // 更新表格数据
-                table.fireTableDataChange(data);
+                return table;
             }
         });
         depObj.initFormModuleObject();
@@ -226,7 +222,7 @@ var app = function () {
             canvasId: 'alternate-history-module',
             tableId: 'alternate-history-table',
             url: 'http://192.168.243.104:8085/altf/airport/retrieveAlternateHistory',
-            initGridTable: function (data, table) {
+            initGridTable: function (table) {
                 var opt = {
                     tableId: 'alternate-history-table',
                     pagerId: 'alternate-history-table-pager',
@@ -237,8 +233,7 @@ var app = function () {
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
-                // 更新表格数据
-                table.fireTableDataChange(data);
+                return table;
             }
         });
         alternateHistoryObj.initHistoryFormModuleObject();
@@ -428,9 +423,9 @@ var app = function () {
      * */
     var InquireDataByTimeInterval = function () {
         // 进港计划模块
-        // arrObj.initInquireData(true); // true 开启下一次定时刷新
+        arrObj.initInquireData(true); // true 开启下一次定时刷新
         // 备降计划模块
-        alternateObj.initInquireData(true);
+        // alternateObj.initInquireData(true);
         // 疆内飞越模块
         // overObj.initInquireData(true);
         // 出港计划模块

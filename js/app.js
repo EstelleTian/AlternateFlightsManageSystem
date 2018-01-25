@@ -13,8 +13,13 @@ var app = function () {
     var tableIDs = ['arr-table','alternate-table','over-table','dep-table'];
     // 模块内表格pagerID
     var pagerIDs = ['arr-table-pager','alternate-table-pager','over-table-pager','dep-table-pager'];*/
+
+    // 所需各项基本参数
+    var basicData = null;
     // 各模块范围列表项数据集合
-    var scopeListData ={};
+    var scopeListData = null;
+    // 右键协调窗口子菜单项数据集合
+    var subCollaborateDomData = null;
 
     /**
      * 各模块对象
@@ -29,8 +34,9 @@ var app = function () {
     var overObj = {};
     // 出港计划模块
     var depObj = {};
-   /* // 模块对象
-    var moduleObj = [arrObj,alternateObj,overObj,depObj];*/
+
+    // 定时器时间,用于设置每个模块定时间隔时间 ms
+    var timer = 1000*60*3;
     // 活动模块所在模块下标
     var index = 0;
 
@@ -38,9 +44,17 @@ var app = function () {
     var initModule = function () {
         // 进港计划模块
         arrObj = new FormModule({
+            // 容器ID
             canvasId: 'arr-module',
+            // 表格ID
             tableId: 'arr-table',
+            // 数据查询请求地址
             url : 'http://192.168.243.104:8085/altf/airport/retrieveArrFlights',
+            // 定时器时间
+            timer : timer,
+            // 默认选中的范围值
+            defaultScope : '1',
+            // 初始化表格
             initGridTable : function (data,table) {
                 var opt = {
                     tableId: 'arr-table',
@@ -65,7 +79,12 @@ var app = function () {
                 table = new GridTable(opt);
                 table.initGridTableObject();
                 // 更新表格数据
-                 table.fireTableDataChange(data);
+                table.fireTableDataChange(data);
+            },
+            // 自定义过滤规则
+            customFilterFunc : function () {
+                // 设置定时器时间为1分钟
+                this.timer = 1000*60*1;
             }
 
         });
@@ -76,6 +95,10 @@ var app = function () {
             canvasId: 'alternate-module',
             tableId: 'alternate-table',
             url : 'http://192.168.243.104:8085/altf/airport/retrieveAlternateFlights',
+            // 定时器时间
+            timer : timer,
+            // 默认选中的范围值
+            defaultScope : 'ALL',
             initGridTable : function (data,table) {
                 var opt = {
                     tableId: 'alternate-table',
@@ -89,6 +112,11 @@ var app = function () {
                 table.initGridTableObject();
                 // 更新表格数据
                 table.fireTableDataChange(data);
+            },
+            // 自定义过滤规则
+            customFilterFunc : function () {
+                // todo
+                //
             }
         });
         alternateObj.initFormModuleObject();
@@ -98,6 +126,10 @@ var app = function () {
             canvasId: 'over-module',
             tableId: 'over-table',
             url : 'http://192.168.243.104:8085/altf/airport/retrieveOverFlights',
+            // 定时器时间
+            timer : timer,
+            // 默认选中的范围值
+            defaultScope : '1',
             initGridTable : function (data,table) {
                 var opt = {
                     tableId: 'over-table',
@@ -120,6 +152,10 @@ var app = function () {
             canvasId: 'dep-module',
             tableId: 'dep-table',
             url : 'http://192.168.243.104:8085/altf/airport/retrieveDepFlights',
+            // 定时器时间
+            timer : timer,
+            // 默认选中的范围值
+            defaultScope : '1',
             initGridTable : function (data,table) {
                 var opt = {
                     tableId: 'dep-table',
@@ -208,6 +244,33 @@ var app = function () {
         alternateHistoryObj.initHistoryFormModuleObject();
     };
 
+
+    /**
+     * 初始化所需各项基本参数
+     * @param time 定时间隔 ms
+     *
+     *  因为数据从后端请求获取，所以定时刷新校验数据有效性
+     * */
+    var initBasicData = function (time) {
+        // 若数据有效则更新各模块范围列表项，
+        if($.isValidObject(alternateAirport.airportConfig) && $.isValidObject(alternateAirport.airportConfig.alternateAirport)){
+            basicData  = alternateAirport.airportConfig;
+            scopeListData  = alternateAirport.airportConfig;
+            subCollaborateDomData = alternateAirport.airportConfig.alternateAirport;
+            // 更新各模块范围列表项
+            setScopeList();
+            // 拼接各模块协调窗口列表项
+            concatCollaborateDom();
+            // 开启各模块定时刷新数据(按各自指定的默认范围为查询条件)
+            InquireDataByTimeInterval();
+        }else {
+            // 数据无效则开启延时回调自身
+            var timer = setTimeout(function () {
+                initBasicData(time);
+            },time);
+        }
+    };
+
     /**
      *  初始化各模块范围列表项
      *
@@ -289,11 +352,12 @@ var app = function () {
     /**
      * 拼接各模块协调窗口列表项
      * */
-    var concatCollaborateDom = function (data) {
+    var concatCollaborateDom = function () {
         /*
         * 1 = 民用机场  2= 军民合用 3=其他
         *
         * */
+        var data = subCollaborateDomData;
 
         // 其它
         var other = '';
@@ -358,6 +422,20 @@ var app = function () {
         $dom.parent().append($node);
     };
 
+    /**
+     * 开启各模块定时刷新数据
+     * (按各自指定的默认范围为查询条件)
+     * */
+    var InquireDataByTimeInterval = function () {
+        // 进港计划模块
+        // arrObj.initInquireData(true); // true 开启下一次定时刷新
+        // 备降计划模块
+        alternateObj.initInquireData(true);
+        // 疆内飞越模块
+        // overObj.initInquireData(true);
+        // 出港计划模块
+        // depObj.initInquireData(true);
+    };
 
     return {
         index : index,
@@ -365,8 +443,10 @@ var app = function () {
             initIndex();
             initModule();
             initHistory();
-            initScopeList(1000);
-            initCollaborateDom(1000);
+            /*initScopeList(1000);
+            initCollaborateDom(1000);*/
+            // 初始化所需各项基本参数
+            initBasicData(1000);
         }
     }
 }();

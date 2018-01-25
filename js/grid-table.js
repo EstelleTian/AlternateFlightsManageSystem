@@ -231,18 +231,24 @@ GridTable.prototype.initGridTableObject = function () {
     });
 
     // 绑定Canvas事件，屏蔽表格区域内浏览器右键菜单
-    thisProxy.canvas.bind('mouseenter', function () {
+    thisProxy.canvas.on('mouseenter', function () {
         document.oncontextmenu = function () {
             return false;
         };
-    }).bind('mouseleave', function () {
+    }).on('mouseleave', function () {
         document.oncontextmenu = function () {
             return true;
         };
-    }).bind('mouseover', function () {
+    }).on('mouseover', function () {
         document.oncontextmenu = function () {
             return false;
         };
+    });
+    // 绑定右键协调窗口事件,用于显隐菜单层级效果
+    thisProxy.canvas.on('mouseover', '.grid-table-collaborate-container li', function () {
+       $(this).addClass('hover');
+    }).on('mouseout', '.grid-table-collaborate-container li', function () {
+        $(this).removeClass('hover');
     });
 
     // 绑定Window事件，窗口变化时重新调整表格大小

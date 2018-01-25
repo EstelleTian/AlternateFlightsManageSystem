@@ -315,9 +315,9 @@ ul, li {
     text-decoration: none;
     font-size: 1.5rem;
 }
-.grid-table-collaborate-container li > a:hover {
+/*.grid-table-collaborate-container li > a:hover {
     background: #f5f5f5;
-}
+}*/
 .grid-table-collaborate-container li  .glyphicon {
     color: #999999;
     font-size: 1.2rem;
@@ -331,9 +331,16 @@ ul, li {
     top: 0;
     left: 14.2rem;
 }
-.grid-table-collaborate-container li:hover>ul {
-    display: block;
 
+.grid-table-collaborate-container li.hover > a {
+    background: #3399FF;
+    color: #ffffff;
+}
+.grid-table-collaborate-container li.hover > a >.glyphicon {
+    color: #ffffff;
+}
+.grid-table-collaborate-container li.hover>ul {
+    display: block;
 }
 .alternate-history-module .condition-panel {
     min-height: 5rem;

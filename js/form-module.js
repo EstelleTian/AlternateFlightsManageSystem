@@ -37,6 +37,9 @@ var FormModule = function (params) {
      * */
     this.url = params.url;
 
+    /*
+    * 初始化表格
+    * */
     this.initGridTable = params.initGridTable;
 
     /**
@@ -55,6 +58,22 @@ var FormModule = function (params) {
      *
      * */
     this.filter = false;
+
+    /**
+     * 定时器总开关 默认开启 true
+     * */
+
+    this.timerValve = true;
+
+    /**
+     *  定时器时间
+     * */
+    this.timer = params.timer;
+
+    /**
+     * 默认选中的范围值
+     * */
+    this.defaultScope  = params.defaultScope
 };
 
 /**
@@ -84,8 +103,8 @@ FormModule.prototype.initFormModuleObject = function () {
     //初始化查询按钮loading
     thisProxy.initLoading();
 
-    //初始化数据查询
-    thisProxy.initInquireData();
+    //绑定查询按钮事件
+    thisProxy.bindEventOnButton();
 
     // 绑定窗口调整时
     $(window).resize(function () {
@@ -136,12 +155,11 @@ FormModule.prototype.resizeTableContainer = function () {
 FormModule.prototype.setDefaultScope = function () {
     // 当前对象this代理
     var thisProxy = this;
-    // 取得范围列表项自定义居属性值为1的项
-    var $default = $('.form-panel .dropdown-menu a[data-val="1"]', thisProxy.canvas);
-    // 若tablId为'alternate-table'即为备降模块,取自定义属性值为ALL的为默认选中项
-    if(thisProxy.tableId == 'alternate-table'){
-        $default = $('.form-panel .dropdown-menu a[data-val="ALL"]', thisProxy.canvas);
-    }
+    // 取得默认选中的范围选项值
+    var defaultVal = thisProxy.defaultScope;
+    // 取得默认选中范围选项
+    var $default = $('.form-panel .dropdown-menu a[data-val="'+ defaultVal +'"]', thisProxy.canvas);
+
     // 取得范围按钮
     var $btn = $('.form-panel .dropdown-toggle', thisProxy.canvas);
     // 取得默认选项的自定义属性data-val的值,用于记录范围标识码
@@ -247,40 +265,55 @@ FormModule.prototype.changeFilter = function () {
 };
 
 /**
- * 初始化数据查询
+ *  绑定查询按钮事件
+ *
  * */
-
-FormModule.prototype.initInquireData = function () {
+FormModule.prototype.bindEventOnButton = function () {
     // 当前对象this代理
     var thisProxy = this;
     // 查询按钮绑定事件
     $('.inquire', thisProxy.canvas).on('click',function () {
-        // 禁用表单事件
-        thisProxy.desabledForm(true);
-        // 启用loading动画
-        thisProxy.loading.start();
-        // 清除提示、警告、查询条件、数据生成时间等
-        thisProxy.clear();
-        // 更新当前查询条件
-        thisProxy.updateCondition();
-        // 计算表格容器大小,使其大小自适应
-        // (因为更新显示了模块内当前查询条件栏内容，所以重新计算表格容器的高度)
-        thisProxy.resizeTableContainer();
-
-        // 校验表单是否有效
-        var valid = thisProxy.validateForm();
-        // 若校验通过则查询数据
-        if(valid){
-            // 查询数据
-            thisProxy.inquireData();
-        }else {
-            // 启用表单事件
-            thisProxy.desabledForm(false);
-            // 关闭loading动画
-            thisProxy.loading.stop();
-        }
+        // 初始化数据查询
+        thisProxy.initInquireData();
     });
+};
 
+/**
+ * 初始化数据查询
+ * */
+
+FormModule.prototype.initInquireData = function (refresh) {
+    // 当前对象this代理
+    var thisProxy = this;
+
+    // 禁用表单事件
+    thisProxy.desabledForm(true);
+    // 启用loading动画
+    thisProxy.loading.start();
+
+    // 更新当前查询条件
+    thisProxy.updateCondition();
+    // 计算表格容器大小,使其大小自适应
+    // (因为更新显示了模块内当前查询条件栏内容，所以重新计算表格容器的高度)
+    thisProxy.resizeTableContainer();
+
+    // 校验表单是否有效
+    var valid = thisProxy.validateForm();
+    // 若校验通过则查询数据
+    if(valid){
+        // 查询数据
+        thisProxy.inquireData();
+    }else {
+        // 启用表单事件
+        thisProxy.desabledForm(false);
+        // 关闭loading动画
+        thisProxy.loading.stop();
+    }
+
+    //定时刷新
+    if (refresh) {
+        thisProxy.startTimer(thisProxy.initInquireData, true, thisProxy.timer);
+    }
 
 };
 
@@ -303,6 +336,8 @@ FormModule.prototype.validateForm = function () {
     var thisProxy = this;
     // 若范围无效则提示
     if(!$.isValidVariable(thisProxy.scope)){
+        //清空相关数据信息
+        thisProxy.clear();
         // 展示提示
         thisProxy.showMsg('danger','范围无效,请选择有效的范围选项');
         return false;
@@ -324,8 +359,10 @@ FormModule.prototype.inquireData = function () {
         thisProxy.showMsg('danger','请求地址无效');
         // 启用表单事件
         thisProxy.desabledForm(false);
-        //停止按钮loading动画
+        // 停止按钮loading动画
         thisProxy.loading.stop();
+        // 清空相关数据信息
+        thisProxy.clear();
         return;
     }
     // 拼接参数,拼接完整的请求地址
@@ -414,7 +451,9 @@ FormModule.prototype.showMsg = function (type, content, clearTime) {
 };
 
 /**
- * 清空
+ * 清空相关数据信息
+ *
+ *  清除提示、警告、查询条件、数据生成时间等
  *
  * */
 FormModule.prototype.clear = function () {
@@ -524,6 +563,27 @@ FormModule.prototype.setScope = function (data) {
     $menu.empty().append(con);
     // 设置默认选中项
     thisProxy.setDefaultScope();
+};
+
+/**
+ * 定时器
+ * @param fn 执行函数
+ * @param instance 对象实例
+ * @isNext 是否继续定时执行
+ * @param time 时间间隔
+ * */
+
+
+FormModule.prototype.startTimer = function (fn, isNext, time) {
+    // 当前对象this代理
+    var thisProxy = this;
+    if (thisProxy.timerValve) { // 定时器开关
+        if (typeof fn == 'function') {
+            setTimeout(function () {
+                fn.call(thisProxy,isNext);
+            }, time)
+        }
+    }
 };
 
 

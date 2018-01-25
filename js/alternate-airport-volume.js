@@ -50,7 +50,7 @@ var alternateAirport = function () {
    */
   var setDownText = function (textObj) {
     $.each(textObj.postionCategoryAirtype, function (i, e) {
-      var str = '<p><span>' + e.remark + ':</span><span>' + e.value + '</span></p>';
+      var str = '<p><span>' + e.remark + '：</span><span>' + e.value + '</span></p>';
       str = $(str);
       $('.des')[0].insertBefore(str[0], $('.tip_container')[0]);
     })
@@ -137,7 +137,7 @@ var alternateAirport = function () {
    * @param cellObj
    * @param state
    */
-  var showQtip = function (cellObj, state,message) {
+  var showQtip = function (opt, state,message) {
     var styleClasses = 'qtip-green';
     var tipMesssage = ' '
     if (state) {
@@ -147,13 +147,18 @@ var alternateAirport = function () {
       tipMesssage = message;
       styleClasses = 'qtip-red-custom qtip-rounded';
     }
-    cellObj.qtip({
+    opt.cellObj.qtip({
       content: {
         text: tipMesssage,
       },
       position: {
         my: 'bottom center', // 同jQueryUI Position
-        at: 'top center'
+        at: 'top center',
+        container:opt.positionContainer,
+        adjust: {
+          resize: true ,
+          scroll: true
+        },
       },
       style: {
         classes: styleClasses
@@ -161,7 +166,7 @@ var alternateAirport = function () {
       // 显示配置
       show: {
         delay: 0,
-        target: cellObj,
+        target: opt.cellObj,
         ready: true, // 初始化完成后马上显示
         effect: function () {
           $(this).fadeIn(); // 显示动画
@@ -169,15 +174,15 @@ var alternateAirport = function () {
       },
       // 隐藏配置
       hide: {
-        target: cellObj, // 指定对象
+        target: opt.cellObj, // 指定对象
         event: 'scroll unfocus click', // 失去焦点时隐藏
         effect: function () {
           $(this).fadeOut(); // 隐藏动画
         },
-      },
+      }
     })
     setTimeout(function () {
-      cellObj.qtip('destroy', true);
+      opt.cellObj.qtip('destroy', true);
     }, 3000)
   }
   /**
@@ -240,6 +245,7 @@ var alternateAirport = function () {
         if (colName.indexOf('total') > 0) {
           // 当前行数据
           var rowData = airVolumeTable.jqGrid().getRowData(rowid);
+          var currentVal = rowData[colName];
           // 获取触发事件的单元格对象
           cellObj = $(e.target);
           var type = colName.split('total');
@@ -250,7 +256,9 @@ var alternateAirport = function () {
             tableId: tableId,
             airport: rowData.airport,
             type: type[0],
-            cellObj: cellObj
+            cellObj: cellObj,
+            currentVal:currentVal,
+            positionContainer:$(".table-contianer .ui-jqgrid-bdiv")
           }
           onRightClickRow(opt)
         }
@@ -407,6 +415,7 @@ var alternateAirport = function () {
     var collaboratorDom = $(CollaborateDom.CAPACITY);
     //表单验证绑定
     var form = collaboratorDom.find('form');
+    form.find('input').val(opt.currentVal);
     form.bootstrapValidator({
       feedbackIcons: {
         valid: 'glyphicon glyphicon-ok',
@@ -424,6 +433,7 @@ var alternateAirport = function () {
       }
     });
     $('#gbox_' + opt.tableId).append(collaboratorDom);
+    $('#flightId').focus().select()
     // 定位协调DOM
     collaboratorDom.position({
       of: opt.cellObj,
@@ -483,12 +493,12 @@ var alternateAirport = function () {
           fireSingleDataChange(airVolumeTable, opt, singleData)
         } else {
           clearCollaborateContainer()
-          showQtip(opt.cellObj, false,data.error.message);
+          showQtip(opt, false,data.error.message);
         }
       },
       error: function (xhr, status, error) {
         clearCollaborateContainer()
-        showQtip(opt.cellObj, false,"接口访问失败");
+        showQtip(opt, false,"接口访问失败");
       }
     });
   }
@@ -597,12 +607,14 @@ var alternateAirport = function () {
         tableObj.jqGrid('addRowData', opt.rowid, rowData.data[0], 'after', ids[index - 2]);
         clearCollaborateContainer()
         var newCellObj = getCellObject(opt.rowid,opt.iRow,opt.iCol)
-        showQtip(newCellObj, true)
+        opt.cellObj = newCellObj;
+        showQtip(opt, true)
       } else {
         tableObj.jqGrid('addRowData', opt.rowid, rowData.data[0], 'first');
         clearCollaborateContainer()
         var newCellObj = getCellObject(opt.rowid,opt.iRow,opt.iCol)
-        showQtip(newCellObj, true)
+        opt.cellObj = newCellObj;
+        showQtip(opt, true)
       }
     }
 

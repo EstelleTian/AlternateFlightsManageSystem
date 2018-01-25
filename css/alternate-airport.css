@@ -21,6 +21,10 @@ body .user_logout {
   color: #000000;
   border: solid 1px #b7b7b7;
 }
+body .available_capacity {
+  font-weight: bold;
+  font-size: 18px;
+}
 body .sub_title {
   margin-bottom: 10px;
   height: 30px;

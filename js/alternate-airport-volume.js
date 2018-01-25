@@ -50,7 +50,7 @@ var alternateAirport = function () {
    */
   var setDownText = function (textObj) {
     $.each(textObj.postionCategoryAirtype, function (i, e) {
-      var str = '<p><span>' + e.remark + ':</span><span>' + e.value + '</span></p>';
+      var str = '<p><span>' + e.remark + '：</span><span>' + e.value + '</span></p>';
       str = $(str);
       $('.des')[0].insertBefore(str[0], $('.tip_container')[0]);
     })
@@ -240,6 +240,7 @@ var alternateAirport = function () {
         if (colName.indexOf('total') > 0) {
           // 当前行数据
           var rowData = airVolumeTable.jqGrid().getRowData(rowid);
+          var currentVal = rowData[colName];
           // 获取触发事件的单元格对象
           cellObj = $(e.target);
           var type = colName.split('total');
@@ -250,7 +251,8 @@ var alternateAirport = function () {
             tableId: tableId,
             airport: rowData.airport,
             type: type[0],
-            cellObj: cellObj
+            cellObj: cellObj,
+            currentVal:currentVal
           }
           onRightClickRow(opt)
         }
@@ -407,6 +409,7 @@ var alternateAirport = function () {
     var collaboratorDom = $(CollaborateDom.CAPACITY);
     //表单验证绑定
     var form = collaboratorDom.find('form');
+    form.find('input').val(opt.currentVal);
     form.bootstrapValidator({
       feedbackIcons: {
         valid: 'glyphicon glyphicon-ok',
@@ -424,6 +427,7 @@ var alternateAirport = function () {
       }
     });
     $('#gbox_' + opt.tableId).append(collaboratorDom);
+    $('#flightId').focus().select()
     // 定位协调DOM
     collaboratorDom.position({
       of: opt.cellObj,

@@ -636,7 +636,7 @@
                 if (inputVal == "") {
                     return true;
                 }
-                var regexp = /^[0-9]{1}[0-9]{1}$/;
+                var regexp = /^(0|[0-9][0-9]?)$/;
                 if (!regexp.test(inputVal)) {
                     return {
                         valid: false,

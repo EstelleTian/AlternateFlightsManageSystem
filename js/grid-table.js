@@ -245,9 +245,26 @@ GridTable.prototype.initGridTableObject = function () {
         };
     });
     // 绑定右键协调窗口事件,用于显隐菜单层级效果
-    thisProxy.canvas.on('mouseover', '.grid-table-collaborate-container li', function () {
-       $(this).addClass('hover');
+    thisProxy.canvas.on('mouseover', '.grid-table-collaborate-container li', function (event) {
+        // 阻止事件冒泡
+        // event.stopPropagation();
+        $that = $(this);
+        // 添加class 若有子菜单则子菜单会显示
+        $that.addClass('hover');
+        // 子菜单
+        var $sub = $($that).children('.collaborate-menu');
+        // 若有子菜单则定位子菜单,解决某些情况下因菜单高度将表格高度撑高引起的表格滚动条跳动问题
+        if($sub.length > 0){
+            $sub.position({
+                of: $that,
+                my: 'left top',
+                at: 'right top'
+            });
+        }
+
+
     }).on('mouseout', '.grid-table-collaborate-container li', function () {
+        // 添加class 若有子菜单则子菜单会隐藏
         $(this).removeClass('hover');
     });
 

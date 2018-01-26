@@ -62,7 +62,7 @@ var GridTableCollaborateDom = function () {
     return {
         ARR_DOM: ARR_DOM,
         ALTERNATE_DOM: ALTERNATE_DOM,
-        // OVER_DOM: OVER_DOM,
+        OVER_DOM: OVER_DOM,
         DEP_DOM: DEP_DOM,
         LEVEL2 : LEVEL2,
         OTHER : OTHER,

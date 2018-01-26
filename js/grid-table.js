@@ -647,6 +647,8 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
     var thisProxy = this;
     // 获取单元格对象(因为更新数据是先删除再添加的，所以要重新获取一下新单元格对象)
     var cellObj =  thisProxy.getCellObject(opts.rowid, opts.iRow, opts.iCol);
+    // 容器
+       $container = $('.ui-jqgrid-bdiv', thisProxy.canvas);
     // 确定样式设置
     var styleClasses = 'qtip-green';
     if (type == 'SUCCESS') {
@@ -666,7 +668,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         // 显示配置
         show: {
             delay: 0,
-            target: thisProxy.canvas,
+            target: $container,
             ready: true, // 初始化完成后马上显示
             effect: function () {
                 $(this).fadeIn(); // 显示动画
@@ -674,7 +676,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         },
         // 隐藏配置
         hide: {
-            target: thisProxy.canvas, // 指定对象
+            target: $container, // 指定对象
             event: 'scroll unfocus click', // 失去焦点时隐藏
             effect: function () {
                 $(this).fadeOut(); // 隐藏动画
@@ -685,7 +687,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
             my: 'bottom center', // 同jQueryUI Position
             at: 'top center',
             viewport: true, // 显示区域
-            container: thisProxy.canvas, // 限制显示容器，以此容器为边界
+            container: $container, // 限制显示容器，以此容器为边界
             adjust: {
                 resize: true, // 窗口改变时，重置位置
                 method: 'shift shift'  //flipinvert/flip(页面变化时，任意位置翻转)  shift(转变) none(无)

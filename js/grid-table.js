@@ -451,12 +451,16 @@ GridTable.prototype.clearCollaborateContainer = function () {
     // 代理
     var thisProxy = this;
     // 清理
+    // 将协调窗口的被选菜单的class名 hover 去掉
+    $('.grid-table-collaborate-container li.hover', thisProxy.canvas).removeClass('hover');
+    var $conatainer = $('#gbox_' + thisProxy.tableId);
+
     // 取得对应表格的冻结列表格
     var $frozenTable  = $('#'+thisProxy.tableId+'_frozen', thisProxy.canvas);
     // 移除表格中被选中单元格的特殊class
-    $('.' + GridTable.SELECTED_CELL_CLASS, thisProxy.table).removeClass(GridTable.SELECTED_CELL_CLASS);
+    $('.' + GridTable.SELECTED_CELL_CLASS, $conatainer).removeClass(GridTable.SELECTED_CELL_CLASS);
     // 移除表格中的协调窗口
-    $('.' + GridTable.COLLABORATE_DOM_CLASS, thisProxy.table).remove();
+    $('.' + GridTable.COLLABORATE_DOM_CLASS, $conatainer).remove();
     // 移除冻结列表格中被选中单元格的特殊class
     $('.' + GridTable.SELECTED_CELL_CLASS, $frozenTable).removeClass(GridTable.SELECTED_CELL_CLASS);
     // 移除冻结列表格中的协调窗口
@@ -479,6 +483,10 @@ GridTable.prototype.collaborateArr = function (opt) {
     var thisProxy = this;
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.ARR_DOM;
+    // 校验DOM元素是否有效
+    if(!$.isValidVariable(collaboratorDom)){
+        return
+    }
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
 
@@ -554,6 +562,72 @@ GridTable.prototype.collaborateArr = function (opt) {
         })
 
     });
+
+    // 确定备降协调菜单
+    var $conAlternate = $('.confirm-alternate', collaboratorDom);
+    // 采用事件委托，在该菜单上绑定事件，
+    // 并过滤触发事件的元素为只有data-val属性的菜单项,
+    // 这样该菜单下的复合菜单项就不会被绑定点击事件了
+    $conAlternate.on('click', 'li[data-val]', function (event) {
+        // 阻止事件冒泡
+        event.stopPropagation();
+        // 当前点击的菜单项
+        var $that = $(this);
+        // 获取data-val属性值,此值对应该菜单的code(备降机场四字码)
+        var altAirport = $that.attr('data-val');
+        // 校验code 是否有效，无效则不作任何操作
+        if(!$.isValidVariable(altAirport)){
+            return;
+        }
+        // 计划批号
+        var flightDataId = opt.flight.flightDataId;
+        // 校验code 是否有效，无效则不作任何操作
+        if(!$.isValidVariable(flightDataId)){
+            return;
+        }
+        // 备降计划
+        var altId = opt.flight.altId || '';
+        // 操作请求地址
+        var submiturl = thisProxy.colCollaborateUrl.CONFIRM_ALTERNATE;
+        // 校验操作请求地址是否有效，无效则不作任何操作
+        if(!$.isValidVariable(submiturl)){
+            return;
+        }
+        submiturl = submiturl +'?flightDataId=' + flightDataId +'&altAirport=' + altAirport + '&altId='+ altId;
+        // ajax提交请求
+        $.ajax({
+            url:submiturl ,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 若数据无效
+                if (!$.isValidVariable(data)) {
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", "确定备降提交失败，请稍后重试");
+                };
+                //成功
+                if (data.status == 200) {
+                    // 取数据的altfFlights值
+                    var altfFlights = data.altfFlights;
+                    // 数据有效则更新单个数据
+                    if($.isValidObject(altfFlights)){
+                        thisProxy.fireSingleDataChange(altfFlights);
+                        thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '确定备降已提交成功');
+                    }
+                } else if (data.status == 202) { // 失败
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                } else if (data.status == 500) { // 失败
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                };
+            },
+            error: function ( status, error) {
+                console.error('ajax requset  fail, error:');
+                console.error(error);
+            }
+        })
+
+    });
 };
 /**
  * 协调窗口跟随页面移动方法
@@ -584,6 +658,10 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     var thisProxy = this;
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.ALTERNATE_DOM;
+    // 校验DOM元素是否有效
+    if(!$.isValidVariable(collaboratorDom)){
+        return
+    }
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
     // 定位协调DOM
@@ -604,6 +682,10 @@ GridTable.prototype.collaborateOver = function (opt) {
     var thisProxy = this;
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.OVER_DOM;
+    // 校验DOM元素是否有效
+    if(!$.isValidVariable(collaboratorDom)){
+        return
+    }
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
     // 定位协调DOM
@@ -624,6 +706,10 @@ GridTable.prototype.collaborateDep = function (opt) {
     var thisProxy = this;
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.DEP_DOM;
+    // 校验DOM元素是否有效
+    if(!$.isValidVariable(collaboratorDom)){
+        return
+    }
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
 
@@ -668,7 +754,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         // 显示配置
         show: {
             delay: 0,
-            target: $container,
+            target: thisProxy.canvas,
             ready: true, // 初始化完成后马上显示
             effect: function () {
                 $(this).fadeIn(); // 显示动画
@@ -676,7 +762,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         },
         // 隐藏配置
         hide: {
-            target: $container, // 指定对象
+            target: thisProxy.canvas, // 指定对象
             event: 'unfocus click', // 失去焦点时隐藏
             effect: function () {
                 $(this).fadeOut(); // 隐藏动画

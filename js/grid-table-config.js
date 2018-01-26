@@ -103,7 +103,7 @@ var GridTableConfig = function () {
     };
     // 备降计划表、备降历史数据查询表
     var alertnate = {
-        colName: ['备降计划主键','计划批号', '航班号', '机号', '机型', '机型分类', '占用机位', '任务', '起飞机场', '计划ETD', '动态ETD', 'ATD','动态ETA','ATA', '计划ETA', '降落机场', '备降场', '状态', '备降起飞','修改人','修改时间','备注'],
+        colName: ['备降计划主键','计划批号', '航班号', '机号', '机型', '机型分类', '占用机位', '任务', '起飞机场', '计划ETD', '动态ETD', 'ATD','动态ETA','ATA', '计划ETA', '降落机场', '备降场', '状态', '备降起飞','修改人','执行时间','修改时间','备注'],
         colTitle: {
             id : '备降计划主键',
             flightDataId: '计划批号',
@@ -125,6 +125,7 @@ var GridTableConfig = function () {
             status: '状态',
             alternateDeptime: '备降起飞',
             oper: '修改人',
+            executeDate: '执行时间',
             updateTime: '修改时间',
             remark: '备注'
         },
@@ -234,6 +235,11 @@ var GridTableConfig = function () {
             {
                 name: 'oper',
                 index: 'oper'
+            },
+            // 执行时间
+            {
+                name: 'executeDate',
+                index: 'executeDate'
             },
             // 修改时间
             {

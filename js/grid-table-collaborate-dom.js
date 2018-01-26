@@ -59,6 +59,25 @@ var GridTableCollaborateDom = function () {
     var OTHER = $('<ul class="collaborate-menu collaborate-menu-other">' + '</ul>');
     var COMPLEX = $('<ul class="collaborate-menu collaborate-menu-complex">' + '</ul>');
 
+    // 备降容量
+    var CAPACITY = '<div class="panel panel-info  flight-grid-table-collaborate-container"><div class="panel-heading">' +
+    '<h3 class="panel-title">修改当前容量</h3><a class="glyphicon glyphicon-remove modal-close-btn"></a></div><div class="panel-body">' +
+    '<form action="" method="post">'+
+    '<div class="form-group">' +
+    '<label class="sr-only " for="update-ctd-time">Flight</label>' +
+    '<div class="input-group form-group-custom has-feedback"><span class="input-group-addon">容量值</span>' +
+    '<input type="text" name="flightId" id="flightId" class="form-control flightId-toupper" placeholder="输入容量值">' +
+    '<span class="glyphicon form-control-feedback" aria-hidden="true"></span>' +
+    '<span id="inputSuccess1Status" class="sr-only"></span>' +
+    '</div>' +
+    '</div>'+
+    '<div class="form-group form-group-custom"">'+
+    '</div>' + '<button type="button" id="cancale" class="atfm-btn atfm-btn-gray  pull-right">取消</button>'+
+    '<button type="button" id="modificate_volume" data-style="zoom-out" class="atfm-btn ladda-label atfm-btn-blue ladda-button collaborate-content-level pull-right">指定</button>'+
+    '</div>' +
+    '</form>' +
+    '</div></div>';
+
     return {
         ARR_DOM: ARR_DOM,
         ALTERNATE_DOM: ALTERNATE_DOM,
@@ -66,7 +85,8 @@ var GridTableCollaborateDom = function () {
         DEP_DOM: DEP_DOM,
         LEVEL2 : LEVEL2,
         OTHER : OTHER,
-        COMPLEX : COMPLEX
+        COMPLEX : COMPLEX,
+        CAPACITY : CAPACITY
     }
 
 }();

@@ -51,10 +51,24 @@ var alternateAirport = function () {
    */
   var initSystemParam = function () {
     var userName = localStorage.getItem('userName');
-    var loginTime  = localStorage.getItem('loginTime');
+    var loginTime  = formaterTime(localStorage.getItem('loginTime')) ;
     $('.login-time').text('登陆时间：'+loginTime);
     $('.user-name').text(userName);
   }
+  /**
+   * 格式化时间
+   * */
+
+  var formaterTime = function (time) {
+        var year = time.substring(0, 4);
+        var mon = time.substring(4, 6);
+        var date = time.substring(6, 8);
+        var hour = time.substring(8, 10);
+        var min = time.substring(10, 12);
+        var str = year + '-' + mon + '-' + date + ' ' + hour + ":" + min;
+        return str;
+    };
+
   /**
    *设置表格下方文本
    * @param textObj

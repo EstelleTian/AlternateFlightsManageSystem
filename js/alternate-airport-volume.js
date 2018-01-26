@@ -50,8 +50,8 @@ var alternateAirport = function () {
    * 初始化用户信息
    */
   var initSystemParam = function () {
-    var userName = localStorage.getItem('userName');
-    var loginTime  = localStorage.getItem('loginTime');
+    var userName = sessionStorage.getItem('userName');
+    var loginTime  = sessionStorage.getItem('loginTime');
     $('.login-time').text('登陆时间：'+loginTime);
     $('.user-name').text(userName);
   }

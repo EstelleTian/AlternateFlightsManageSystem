@@ -453,12 +453,14 @@ GridTable.prototype.clearCollaborateContainer = function () {
     // 清理
     // 将协调窗口的被选菜单的class名 hover 去掉
     $('.grid-table-collaborate-container li.hover', thisProxy.canvas).removeClass('hover');
+    var $conatainer = $('#gbox_' + thisProxy.tableId);
+
     // 取得对应表格的冻结列表格
     var $frozenTable  = $('#'+thisProxy.tableId+'_frozen', thisProxy.canvas);
     // 移除表格中被选中单元格的特殊class
-    $('.' + GridTable.SELECTED_CELL_CLASS, thisProxy.table).removeClass(GridTable.SELECTED_CELL_CLASS);
+    $('.' + GridTable.SELECTED_CELL_CLASS, $conatainer).removeClass(GridTable.SELECTED_CELL_CLASS);
     // 移除表格中的协调窗口
-    $('.' + GridTable.COLLABORATE_DOM_CLASS, thisProxy.table).remove();
+    $('.' + GridTable.COLLABORATE_DOM_CLASS, $conatainer).remove();
     // 移除冻结列表格中被选中单元格的特殊class
     $('.' + GridTable.SELECTED_CELL_CLASS, $frozenTable).removeClass(GridTable.SELECTED_CELL_CLASS);
     // 移除冻结列表格中的协调窗口
@@ -752,7 +754,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         // 显示配置
         show: {
             delay: 0,
-            target: $container,
+            target: thisProxy.canvas,
             ready: true, // 初始化完成后马上显示
             effect: function () {
                 $(this).fadeIn(); // 显示动画
@@ -760,7 +762,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         },
         // 隐藏配置
         hide: {
-            target: $container, // 指定对象
+            target: thisProxy.canvas, // 指定对象
             event: 'unfocus click', // 失去焦点时隐藏
             effect: function () {
                 $(this).fadeOut(); // 隐藏动画

@@ -246,6 +246,8 @@ GridTable.prototype.initGridTableObject = function () {
     });
     // 绑定右键协调窗口事件,用于显隐菜单层级效果
     thisProxy.canvas.on('mouseover', '.grid-table-collaborate-container li', function (event) {
+        // 阻止事件冒泡
+        // event.stopPropagation();
         $that = $(this);
         // 添加class 若有子菜单则子菜单会显示
         $that.addClass('hover');
@@ -256,14 +258,14 @@ GridTable.prototype.initGridTableObject = function () {
             $sub.position({
                 of: $that,
                 my: 'left top',
-                at: 'right top',
-                collision : "fit"
+                at: 'right top'
             });
         }
-    }).on('mouseout', '.grid-table-collaborate-container li', function () {
-        // 移除class 若有子菜单则子菜单会隐藏
-        $(this).removeClass('hover');
 
+
+    }).on('mouseout', '.grid-table-collaborate-container li', function () {
+        // 添加class 若有子菜单则子菜单会隐藏
+        $(this).removeClass('hover');
     });
 
     // 绑定Window事件，窗口变化时重新调整表格大小
@@ -450,8 +452,6 @@ GridTable.prototype.clearCollaborateContainer = function () {
     var thisProxy = this;
     // 清理
     // 取得对应表格的冻结列表格
-    // 将协调窗口的被选菜单的class名 hover 去掉
-    $('.grid-table-collaborate-container li.hover', thisProxy.canvas).removeClass('hover');
     var $frozenTable  = $('#'+thisProxy.tableId+'_frozen', thisProxy.canvas);
     // 移除表格中被选中单元格的特殊class
     $('.' + GridTable.SELECTED_CELL_CLASS, thisProxy.table).removeClass(GridTable.SELECTED_CELL_CLASS);
@@ -479,21 +479,16 @@ GridTable.prototype.collaborateArr = function (opt) {
     var thisProxy = this;
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.ARR_DOM;
-    // 校验DOM元素是否有效
-    if(!$.isValidVariable(collaboratorDom)){
-        return
-    }
     // 追加协调DOM至容器
-    thisProxy.table.append(collaboratorDom);
-    // thisProxy.canvas.append(collaboratorDom);
+    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
 
     // 定位协调DOM
     collaboratorDom.position({
         of: opt.cellObj,
         my: 'left top',
-        at: 'right top',
-        collision : "fit"
+        at: 'right top'
     });
+     thisProxy.followTargetPosition(collaboratorDom, opt.cellObj)
     // 预选备降协调菜单
     var $preAlternate = $('.pre-alternate', collaboratorDom);
     // 采用事件委托，在该菜单上绑定事件，
@@ -559,73 +554,25 @@ GridTable.prototype.collaborateArr = function (opt) {
         })
 
     });
+};
+/**
+ * 协调窗口跟随页面移动方法
+ * @param collaboratorDom 协调对象
+ * @param cellObj 选中单元格
+ */
+GridTable.prototype.followTargetPosition = function (collaboratorDom, cellObj) {
+    // 代理
+    var thisProxy = this;
+    function position() {
+        collaboratorDom.position({
+            of: cellObj,
+            my: 'left top',
+            at: 'right top',
+            collision: 'flipfit',
+        });
+    }
 
-    // 确定备降协调菜单
-    var $conAlternate = $('.confirm-alternate', collaboratorDom);
-    // 采用事件委托，在该菜单上绑定事件，
-    // 并过滤触发事件的元素为只有data-val属性的菜单项,
-    // 这样该菜单下的复合菜单项就不会被绑定点击事件了
-    $conAlternate.on('click', 'li[data-val]', function (event) {
-        // 阻止事件冒泡
-        event.stopPropagation();
-        // 当前点击的菜单项
-        var $that = $(this);
-        // 获取data-val属性值,此值对应该菜单的code(备降机场四字码)
-        var altAirport = $that.attr('data-val');
-        // 校验code 是否有效，无效则不作任何操作
-        if(!$.isValidVariable(altAirport)){
-            return;
-        }
-        // 计划批号
-        var flightDataId = opt.flight.flightDataId;
-        // 校验code 是否有效，无效则不作任何操作
-        if(!$.isValidVariable(flightDataId)){
-            return;
-        }
-        // 备降计划
-        var altId = opt.flight.altId || '';
-        // 操作请求地址
-        var submiturl = thisProxy.colCollaborateUrl.CONFIRM_ALTERNATE;
-        // 校验操作请求地址是否有效，无效则不作任何操作
-        if(!$.isValidVariable(submiturl)){
-            return;
-        }
-        submiturl = submiturl +'?flightDataId=' + flightDataId +'&altAirport=' + altAirport + '&altId='+ altId;
-        // ajax提交请求
-        $.ajax({
-            url:submiturl ,
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
-                // 若数据无效
-                if (!$.isValidVariable(data)) {
-                    thisProxy.showTableCellTipMessage(opt, "FAIL", "确定备降提交失败，请稍后重试");
-                };
-                //成功
-                if (data.status == 200) {
-                    // 取数据的altfFlights值
-                    var altfFlights = data.altfFlights;
-                    // 数据有效则更新单个数据
-                    if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
-                        thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '确定备降已提交成功');
-                    }
-                } else if (data.status == 202) { // 失败
-                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
-                } else if (data.status == 500) { // 失败
-                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
-                };
-            },
-            error: function ( status, error) {
-                console.error('ajax requset  fail, error:');
-                console.error(error);
-            }
-        })
-
-    });
-
+    thisProxy.table.parents(".ui-jqgrid-bdiv").off('scroll', position).on('scroll', position);
 };
 
 
@@ -637,19 +584,15 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     var thisProxy = this;
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.ALTERNATE_DOM;
-    // 校验DOM元素是否有效
-    if(!$.isValidVariable(collaboratorDom)){
-        return
-    }
     // 追加协调DOM至容器
-    thisProxy.table.append(collaboratorDom);
-
+    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
     // 定位协调DOM
     collaboratorDom.position({
         of: opt.cellObj,
         my: 'left top',
         at: 'right top'
     });
+    thisProxy.followTargetPosition(collaboratorDom, opt.cellObj)
 };
 
 
@@ -661,19 +604,15 @@ GridTable.prototype.collaborateOver = function (opt) {
     var thisProxy = this;
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.OVER_DOM;
-    // 校验DOM元素是否有效
-    if(!$.isValidVariable(collaboratorDom)){
-        return
-    }
     // 追加协调DOM至容器
-    thisProxy.table.append(collaboratorDom);
-
+    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
     // 定位协调DOM
     collaboratorDom.position({
         of: opt.cellObj,
         my: 'left top',
         at: 'right top'
     });
+    thisProxy.followTargetPosition(collaboratorDom, opt.cellObj)
 };
 
 
@@ -685,12 +624,8 @@ GridTable.prototype.collaborateDep = function (opt) {
     var thisProxy = this;
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.DEP_DOM;
-    // 校验DOM元素是否有效
-    if(!$.isValidVariable(collaboratorDom)){
-        return
-    }
     // 追加协调DOM至容器
-    thisProxy.table.append(collaboratorDom);
+    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
 
     // 定位协调DOM
     collaboratorDom.position({
@@ -698,6 +633,7 @@ GridTable.prototype.collaborateDep = function (opt) {
         my: 'left top',
         at: 'right top'
     });
+    thisProxy.followTargetPosition(collaboratorDom, opt.cellObj)
 };
 
 /**
@@ -712,7 +648,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
     // 获取单元格对象(因为更新数据是先删除再添加的，所以要重新获取一下新单元格对象)
     var cellObj =  thisProxy.getCellObject(opts.rowid, opts.iRow, opts.iCol);
     // 容器
-    $container = $('.ui-jqgrid-bdiv', thisProxy.canvas);
+       $container = $('.ui-jqgrid-bdiv', thisProxy.canvas);
     // 确定样式设置
     var styleClasses = 'qtip-green';
     if (type == 'SUCCESS') {
@@ -741,7 +677,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         // 隐藏配置
         hide: {
             target: $container, // 指定对象
-            event: ' unfocus click', // 失去焦点时隐藏
+            event: 'scroll unfocus click', // 失去焦点时隐藏
             effect: function () {
                 $(this).fadeOut(); // 隐藏动画
             }
@@ -751,7 +687,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
             my: 'bottom center', // 同jQueryUI Position
             at: 'top center',
             viewport: true, // 显示区域
-            container:  $container, // 限制显示容器，以此容器为边界
+            container: $container, // 限制显示容器，以此容器为边界
             adjust: {
                 resize: true, // 窗口改变时，重置位置
                 method: 'shift shift'  //flipinvert/flip(页面变化时，任意位置翻转)  shift(转变) none(无)

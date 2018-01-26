@@ -63,8 +63,7 @@ var app = function () {
                     colModel: GridTableConfig.common.colModel,
                     cmTemplate: GridTableConfig.colModelTemplate,
                     colTitle: GridTableConfig.common.colTitle,
-
-                    // colCollaborateUrl: CellOpreationUrl,
+                    colCollaborateUrl: CellOpreationUrl
                     // colConverter: FlightGridTableDataUtil,
                     // params: {
                     //  // scorll: true,
@@ -105,7 +104,8 @@ var app = function () {
                     colNames: GridTableConfig.alertnate.colName,
                     colModel: GridTableConfig.alertnate.colModel,
                     cmTemplate: GridTableConfig.colModelTemplate,
-                    colTitle: GridTableConfig.alertnate.colTitle
+                    colTitle: GridTableConfig.alertnate.colTitle,
+                    colCollaborateUrl: CellOpreationUrl
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
@@ -135,7 +135,8 @@ var app = function () {
                     colNames: GridTableConfig.common.colName,
                     colModel: GridTableConfig.common.colModel,
                     cmTemplate: GridTableConfig.colModelTemplate,
-                    colTitle: GridTableConfig.common.colTitle
+                    colTitle: GridTableConfig.common.colTitle,
+                    colCollaborateUrl: CellOpreationUrl
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
@@ -160,7 +161,8 @@ var app = function () {
                     colNames: GridTableConfig.common.colName,
                     colModel: GridTableConfig.common.colModel,
                     cmTemplate: GridTableConfig.colModelTemplate,
-                    colTitle: GridTableConfig.common.colTitle
+                    colTitle: GridTableConfig.common.colTitle,
+                    colCollaborateUrl: CellOpreationUrl
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
@@ -229,7 +231,8 @@ var app = function () {
                     colNames: GridTableConfig.alertnate.colName,
                     colModel: GridTableConfig.alertnate.colModel,
                     cmTemplate: GridTableConfig.colModelTemplate,
-                    colTitle: GridTableConfig.alertnate.colTitle
+                    colTitle: GridTableConfig.alertnate.colTitle,
+                    colCollaborateUrl: CellOpreationUrl
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
@@ -364,7 +367,7 @@ var app = function () {
             var type = item.type;
             var value = item.value;
             var name = item.name;
-            var node = '<li><a href="javascript:; " data-val="'+ value +'" class="'+ value +'">'+ name+'</a></li>';
+            var node = '<li data-val="'+ value +'" class="'+ value +'"><a href="javascript:; " >'+ name+'</a></li>';
 
             if(type ==1 ){
                 civil += node;
@@ -380,11 +383,11 @@ var app = function () {
         //拼接军民合用子菜单
         GridTableCollaborateDom.COMPLEX.append(complex);
         // 追加到二级菜单中的军民合用菜单项下
-        $('.complex', GridTableCollaborateDom.LEVEL2).parent().append(GridTableCollaborateDom.COMPLEX);
+        $('.complex', GridTableCollaborateDom.LEVEL2).append(GridTableCollaborateDom.COMPLEX);
         // 拼接其它子菜单
         GridTableCollaborateDom.OTHER.append(other);
         // 追加到二级菜单中的其它菜单项下
-        $('.other', GridTableCollaborateDom.LEVEL2).parent().append(GridTableCollaborateDom.OTHER);
+        $('.other', GridTableCollaborateDom.LEVEL2).append(GridTableCollaborateDom.OTHER);
         // 民用菜单项追加到二级菜单开头
         GridTableCollaborateDom.LEVEL2.prepend(civil);
 
@@ -414,7 +417,7 @@ var app = function () {
         // 克隆
         var $node = $template.clone();
         // 追加到被选菜单项下
-        $dom.parent().append($node);
+        $dom.append($node);
     };
 
     /**
@@ -423,7 +426,7 @@ var app = function () {
      * */
     var InquireDataByTimeInterval = function () {
         // 进港计划模块
-        arrObj.initInquireData(true); // true 开启下一次定时刷新
+        // arrObj.initInquireData(true); // true 开启下一次定时刷新
         // 备降计划模块
         // alternateObj.initInquireData(true);
         // 疆内飞越模块

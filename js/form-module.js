@@ -513,7 +513,6 @@ FormModule.prototype.clear = function () {
         thisProxy.table.clearCollaborateContainer();
     }
 
-
     // 隐藏表格容器
     thisProxy.isHiddenTableContainer(true);
 };

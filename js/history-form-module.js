@@ -379,7 +379,7 @@ HistoryFormModule.prototype.showMsg = function (type, content, clearTime) {
  * 清除提示信息
  *
  * */
-FormModule.prototype.clearMsg = function () {
+HistoryFormModule.prototype.clearMsg = function () {
     // 当前对象this代理
     var thisProxy = this;
     var $err = $('.alert',thisProxy.canvas);
@@ -556,7 +556,7 @@ HistoryFormModule.prototype.changeDate = function () {
  *
  * */
 
-FormModule.prototype.isHiddenTableContainer = function (bool) {
+HistoryFormModule.prototype.isHiddenTableContainer = function (bool) {
     // 当前对象this代理
     var thisProxy = this;
     var $tableContainer = $('.result-panel', thisProxy.canvas);

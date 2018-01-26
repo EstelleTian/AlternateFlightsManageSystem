@@ -48,7 +48,7 @@ var LOGIN = function () {
         if(isValidLogonInfo()){
             $.ajax({
                 type: "POST",
-                url: ipHost + "altf/logon/userLogon",
+                url: ipHost + "altf/logon/userLogon/",
                 data:{
                     username:userName,
                     password:passWord
@@ -58,11 +58,11 @@ var LOGIN = function () {
                    if($.isValidObject(data)){
                        if(data.status == 200){
                            loading.stop();
-                           localStorage.removeItem("userName","");
-                           localStorage.setItem("userName", data.user.description);
-                           localStorage.removeItem("loginTime","");
-                           localStorage.setItem("loginTime",data.generateTime);
-                           window.location = "../home.html";
+                           sessionStorage.removeItem("userName","");
+                           sessionStorage.setItem("userName", data.user.description);
+                           sessionStorage.removeItem("loginTime","");
+                           sessionStorage.setItem("loginTime",data.generateTime);
+                           window.location = "home.html";
                        }else{
                            if(data.status == 202){
                                loading.stop();

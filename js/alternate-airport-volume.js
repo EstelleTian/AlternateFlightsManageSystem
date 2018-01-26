@@ -720,14 +720,14 @@ var alternateAirport = function () {
     $(".user_logout").click(function () {
       $.ajax({
         type: "POST",
-        url: ipHost + "altf/logon/userLogout",
+        url: ipHost + "altf/logon/userLogout/",
         data: {
 
         },
         success: function (data) {
           if ($.isValidObject(data)&&data.status ==200) {
-            localStorage.removeItem("userName","");
-            localStorage.removeItem("loginTime","");
+            sessionStorage.removeItem("userName","");
+            sessionStorage.removeItem("loginTime","");
             window.location = "index.html";
           }
           if(data.status == 500){

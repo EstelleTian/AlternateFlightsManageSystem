@@ -38,6 +38,8 @@ var layoutEvent = function () {
             $('.main-area section').removeClass('active');
             $that.addClass('active');
             $('.main-area section').eq(index).addClass('active');
+            //处理表格自适应TODO
+            $(window).trigger('resize')
         });
     };
     /**

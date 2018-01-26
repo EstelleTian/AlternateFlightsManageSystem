@@ -127,18 +127,16 @@ ul, li {
 }
 
 .main-area section {
-    display: flex;
+    display: none;
     height: 100%;
     width: 100%;
     position: absolute;
     padding-right: 0.8rem;
-    visibility: hidden;
     z-index: -1;
 }
 .main-area section.active {
     display: flex;
     flex-direction: column;
-    visibility: visible;
     z-index: 9;
 }
 .main-area section.section-monitor {

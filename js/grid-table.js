@@ -301,9 +301,10 @@ GridTable.prototype.fireTableDataChange = function (dataObj) {
     if(!$.isValidObject(dataObj) || !$.isValidObject(dataObj.flights)){
         return;
     }
+    // deep copy 保存源数据
+    // thisProxy.data = $.extend(true, {}, dataObj);
     // 取得航班集合
     var data = dataObj.flights;
-    // thisProxy.data = {};
     thisProxy.tableDataMap = {};
     thisProxy.tableData = {};
     var tableData = [];
@@ -508,27 +509,37 @@ GridTable.prototype.collaborateArr = function (opt) {
         // 备降计划
         var altId = opt.flight.altId || '';
         // 操作请求地址
-        var submiturl = thisProxy.colCollaborateUrl.PRE_ALTERNATE + '?flightDataId=' + flightDataId +'&altAirport=' + altAirport + '&altId='+ altId ;
+        var submiturl = thisProxy.colCollaborateUrl.PRE_ALTERNATE;
+        // 校验操作请求地址是否有效，无效则不作任何操作
+        if(!$.isValidVariable(submiturl)){
+            return;
+        }
+        submiturl = submiturl +'?flightDataId=' + flightDataId +'&altAirport=' + altAirport + '&altId='+ altId;
         // ajax提交请求
         $.ajax({
             url:submiturl ,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
-                console.log(data);
-                return;
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
-                    thisProxy.showTableCellTipMessage(opts, "FAIL", "预选备降失败，请稍后重试");
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", "预选备降提交失败，请稍后重试");
                 };
-                //成功 else if 为失败
+                //成功
                 if (data.status == 200) {
-
-
-                } else if (data.status == 202) {
-                    thisProxy.showTableCellTipMessage(opts, "FAIL", data.error.message)
-                } else if (data.status == 500) {
-                    thisProxy.showTableCellTipMessage(opts, "FAIL", data.error.message)
+                    // 取数据的altfFlights值
+                    var altfFlights = data.altfFlights;
+                    // 数据有效则更新单个数据
+                    if($.isValidObject(altfFlights)){
+                        thisProxy.fireSingleDataChange(altfFlights);
+                        thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '预选备降已提交成功');
+                    }
+                } else if (data.status == 202) { // 失败
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                } else if (data.status == 500) { // 失败
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
                 };
             },
             error: function ( status, error) {
@@ -600,10 +611,136 @@ GridTable.prototype.collaborateDep = function (opt) {
     });
 };
 
+/**
+ * 显示单元格qtip信息
+ *
+ * @param cellObject 单元格对象
+ * @param type 信息类型
+ * @param content 信息内容
+ */
+GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
+    var thisProxy = this;
+    // 获取单元格对象(因为更新数据是先删除再添加的，所以要重新获取一下新单元格对象)
+    var cellObj =  thisProxy.getCellObject(opts.rowid, opts.iRow, opts.iCol);
+    // 确定样式设置
+    var styleClasses = 'qtip-green';
+    if (type == 'SUCCESS') {
+        styleClasses = 'qtip-green-custom qtip-rounded';
+    } else if (type == 'FAIL') {
+        styleClasses = 'qtip-red-custom qtip-rounded';
+    } else if (type == 'WARN') {
+        styleClasses = 'qtip-default-custom qtip-rounded';
+    }
+
+    // 显示提示信息
+    cellObj.qtip({
+        // 内容
+        content: {
+            text: content // 显示的文本信息
+        },
+        // 显示配置
+        show: {
+            delay: 0,
+            target: thisProxy.canvas,
+            ready: true, // 初始化完成后马上显示
+            effect: function () {
+                $(this).fadeIn(); // 显示动画
+            }
+        },
+        // 隐藏配置
+        hide: {
+            target: thisProxy.canvas, // 指定对象
+            event: 'scroll unfocus click', // 失去焦点时隐藏
+            effect: function () {
+                $(this).fadeOut(); // 隐藏动画
+            }
+        },
+        // 显示位置配置
+        position: {
+            my: 'bottom center', // 同jQueryUI Position
+            at: 'top center',
+            viewport: true, // 显示区域
+            container: thisProxy.canvas, // 限制显示容器，以此容器为边界
+            adjust: {
+                resize: true, // 窗口改变时，重置位置
+                method: 'shift shift'  //flipinvert/flip(页面变化时，任意位置翻转)  shift(转变) none(无)
+            }
+        },
+        // 样式配置
+        style: {
+            classes: styleClasses //
+        },
+        // 事件配置
+        events: {
+            hide: function (event, api) {
+                api.destroy(true); // 销毁提示信息
+            }
+        }
+    });
+};
+/**
+ * 触发表格单个数据更新
+ *
+ * @param flight
+ *
+ */
+GridTable.prototype.fireSingleDataChange = function (flight) {
+    var thisProxy = this;
+    // 更新源数据 (注意：源数据是没有id属性的，只有flightDataId属性)
+    // todo
+
+    // 转换数据
+    var rowData = thisProxy.convertData(flight);
+    // 更新数据
+    thisProxy.tableDataMap[flight.id] = rowData;
+    // 删除原数据行，加入新的数据行
+    // 表格数据ID集合
+    var ids = thisProxy.gridTableObject.jqGrid('getDataIDs');
+    // 当前所在行序列
+    var index = thisProxy.gridTableObject.jqGrid('getInd', flight.id, false);
+    // 删除原数据
+    var f = thisProxy.gridTableObject.jqGrid('delRowData', flight.id);
+    if (f) {
+        // 再原数据的前一位之后插入新数据
+        if (index >= 2) {
+            thisProxy.gridTableObject.jqGrid('addRowData', flight.id, rowData, 'after', ids[index - 2]);
+        } else {
+            thisProxy.gridTableObject.jqGrid('addRowData', flight.id, rowData, 'first');
+        }
+    }
+    thisProxy.resizeFrozenTable();
+};
+
+
+/**
+ * 获取单元格对象
+ *
+ * @param rowid
+ * @param iRow
+ * @param iCol
+ * @returns
+ */
+GridTable.prototype.getCellObject = function (rowid, iRow, iCol) {
+    if ($.type(iCol) === 'string') {
+        // 字符类型，计算列名在表格中的列index值
+        var colModel = this.gridTableObject.getGridParam('colModel');
+        var colIndex = null;
+        for (var index in colModel) {
+            if (colModel[index].name == iCol) {
+                colIndex = index;
+                break;
+            }
+        }
+        return this.gridTableObject.find('tr#' + rowid).find('td').eq(colIndex);
+    } else {
+        return this.gridTableObject.find('tr#' + rowid).find('td').eq(iCol);
+    }
+};
 
 /**
  * 转换数据
  * @param flight 航班数据
+ * 目标：给没有id属性的航班增加id属性，取值为flightDataId属性的值
  */
 GridTable.prototype.convertData = function (flight) {
     // 航班数据无id且有flightDataId

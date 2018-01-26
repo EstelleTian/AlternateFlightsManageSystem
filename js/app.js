@@ -63,14 +63,15 @@ var app = function () {
                     colModel: GridTableConfig.common.colModel,
                     cmTemplate: GridTableConfig.colModelTemplate,
                     colTitle: GridTableConfig.common.colTitle,
-                    colCollaborateUrl: CellOpreationUrl
+                    colCollaborateUrl: CellOpreationUrl,
+                    sortname: 'flightDataId',
+                    sortorder: 'asc'
                     // colConverter: FlightGridTableDataUtil,
                     // params: {
                     //  // scorll: true,
                     //  // shrinkToFit: false,
                     //  // rowNum: 999999,
-                    //  // sortname: 'FLOWCONTROL_POINT_PASSTIME',
-                    //  // sortorder: 'asc'
+
                     //  },
 
                     // afterCollaborate: fireAreaFlightSingleDataChange
@@ -105,7 +106,9 @@ var app = function () {
                     colModel: GridTableConfig.alertnate.colModel,
                     cmTemplate: GridTableConfig.colModelTemplate,
                     colTitle: GridTableConfig.alertnate.colTitle,
-                    colCollaborateUrl: CellOpreationUrl
+                    colCollaborateUrl: CellOpreationUrl,
+                    sortname: 'executeDate',
+                    sortorder: 'asc'
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
@@ -136,7 +139,9 @@ var app = function () {
                     colModel: GridTableConfig.common.colModel,
                     cmTemplate: GridTableConfig.colModelTemplate,
                     colTitle: GridTableConfig.common.colTitle,
-                    colCollaborateUrl: CellOpreationUrl
+                    colCollaborateUrl: CellOpreationUrl,
+                    sortname: 'flightDataId',
+                    sortorder: 'asc'
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
@@ -153,7 +158,7 @@ var app = function () {
             // 定时器时间
             timer : timer,
             // 默认选中的范围值
-            defaultScope : '1',
+            defaultScope : '2',
             initGridTable : function (table) {
                 var opt = {
                     tableId: 'dep-table',
@@ -162,7 +167,9 @@ var app = function () {
                     colModel: GridTableConfig.common.colModel,
                     cmTemplate: GridTableConfig.colModelTemplate,
                     colTitle: GridTableConfig.common.colTitle,
-                    colCollaborateUrl: CellOpreationUrl
+                    colCollaborateUrl: CellOpreationUrl,
+                    sortname: 'flightDataId',
+                    sortorder: 'asc'
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
@@ -232,7 +239,9 @@ var app = function () {
                     colModel: GridTableConfig.alertnate.colModel,
                     cmTemplate: GridTableConfig.colModelTemplate,
                     colTitle: GridTableConfig.alertnate.colTitle,
-                    colCollaborateUrl: CellOpreationUrl
+                    colCollaborateUrl: CellOpreationUrl,
+                    sortname: 'executeDate',
+                    sortorder: 'asc'
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();

@@ -234,10 +234,14 @@ HistoryFormModule.prototype.validateForm = function () {
     var s = regexp.test(thisProxy.start);
     // 若范围无效则提示
     if(!s){
+        // 清空相关数据信息
+        thisProxy.clear();
         // 展示提示
         thisProxy.showMsg('danger','开始日期无效');
         return false;
     }else if($.trim(thisProxy.end) != '' && !regexp.test(thisProxy.end)) {
+        // 清空相关数据信息
+        thisProxy.clear();
         // 展示提示
         thisProxy.showMsg('danger','结束日期无效');
         return false;
@@ -255,6 +259,8 @@ HistoryFormModule.prototype.inquireData = function () {
     var thisProxy = this;
     // 校验请求地址是否有效
     if(!$.isValidVariable(thisProxy.url)){
+        // 清空相关数据信息
+        thisProxy.clear();
         thisProxy.showMsg('danger','请求地址无效');
         // 启用表单事件
         thisProxy.desabledForm(false);
@@ -277,6 +283,8 @@ HistoryFormModule.prototype.inquireData = function () {
 
             // 数据无效
             if (!data) {
+                // 清空相关数据信息
+                thisProxy.clear();
                 thisProxy.showMsg('danger','请求接口错误');
             };
             // 成功
@@ -286,12 +294,30 @@ HistoryFormModule.prototype.inquireData = function () {
                 thisProxy.generateTime = data.generateTime;
                 // 更新数据生成时间并显示
                 thisProxy.updateTime();
-                // 初始化表格
-                thisProxy.initTable(data);
+                // 显示表格容器
+                thisProxy.isHiddenTableContainer(false);
+                // 清除提示信息
+                thisProxy.clearMsg();
+
+                if(!$.isValidObject(thisProxy.table.gridTableObject)){
+                    // 校验自定义的initGridTable方法是否有效
+                    if($.isValidVariable(thisProxy.initGridTable) && typeof thisProxy.initGridTable == 'function'){
+                        // 调用initGridTable方法,初始化表格
+                        thisProxy.table = thisProxy.initGridTable(thisProxy.table);
+                        thisProxy.table.fireTableDataChange(data);
+                    }
+                }else {
+                    // 更新表格数据
+                    thisProxy.table.fireTableDataChange(data);
+                }
             } else if (data.status == 400) {
+                // 清空相关数据信息
+                thisProxy.clear();
                 // 展示提示
                 thisProxy.showMsg('danger','data.error');
             } else if (data.status == 500) {
+                // 清空相关数据信息
+                thisProxy.clear();
                 // 展示提示
                 thisProxy.showMsg('danger','data.error');
             };
@@ -301,6 +327,8 @@ HistoryFormModule.prototype.inquireData = function () {
             thisProxy.desabledForm(false);
             // 停止按钮loading动画
             thisProxy.loading.stop();
+            // 清空相关数据信息
+            thisProxy.clear();
             // 展示提示
             thisProxy.showMsg('danger','请求接口错误');
             console.error('ajax requset  fail, error:');
@@ -348,6 +376,17 @@ HistoryFormModule.prototype.showMsg = function (type, content, clearTime) {
 };
 
 /**
+ * 清除提示信息
+ *
+ * */
+FormModule.prototype.clearMsg = function () {
+    // 当前对象this代理
+    var thisProxy = this;
+    var $err = $('.alert',thisProxy.canvas);
+    $err.html('').removeClass('active')
+};
+
+/**
  * 清空
  *
  * */
@@ -373,10 +412,8 @@ HistoryFormModule.prototype.clear = function () {
     // 清空提示
     $err.html('').removeClass('active');
 
-    // 若表格已经存在，则清空表格头及表格数据
-    if ($.isValidObject(thisProxy.table)) {
-        $.jgrid.gridUnload(thisProxy.tableId);
-    }
+    // 隐藏表格容器
+    thisProxy.isHiddenTableContainer(true);
 };
 
 /**
@@ -513,6 +550,22 @@ HistoryFormModule.prototype.changeDate = function () {
     });
 };
 
+/**
+ * 是否隐藏表格容器
+ * @param bool 布尔值  true隐藏 false 不隐藏，即显示
+ *
+ * */
+
+FormModule.prototype.isHiddenTableContainer = function (bool) {
+    // 当前对象this代理
+    var thisProxy = this;
+    var $tableContainer = $('.result-panel', thisProxy.canvas);
+    if(bool){
+        $tableContainer.addClass('hidden');
+    }else {
+        $tableContainer.removeClass('hidden');
+    }
+}
 
 
 

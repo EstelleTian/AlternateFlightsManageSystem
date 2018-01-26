@@ -64,8 +64,10 @@ var app = function () {
                     cmTemplate: GridTableConfig.colModelTemplate,
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
-                    sortname: 'flightDataId',
-                    sortorder: 'asc'
+                    params: {
+                        sortname: 'flightDataId',
+                        sortorder: 'asc'
+                    }
                     // colConverter: FlightGridTableDataUtil,
                     // params: {
                     //  // scorll: true,
@@ -107,8 +109,10 @@ var app = function () {
                     cmTemplate: GridTableConfig.colModelTemplate,
                     colTitle: GridTableConfig.alertnate.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
-                    sortname: 'executeDate',
-                    sortorder: 'asc'
+                    params: {
+                        sortname: 'executeDate',
+                        sortorder: 'asc'
+                    }
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
@@ -140,8 +144,10 @@ var app = function () {
                     cmTemplate: GridTableConfig.colModelTemplate,
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
-                    sortname: 'flightDataId',
-                    sortorder: 'asc'
+                    params: {
+                        sortname: 'flightDataId',
+                        sortorder: 'asc'
+                    }
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
@@ -168,8 +174,11 @@ var app = function () {
                     cmTemplate: GridTableConfig.colModelTemplate,
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
-                    sortname: 'flightDataId',
-                    sortorder: 'asc'
+                    params: {
+                        sortname: 'flightDataId',
+                        sortorder: 'asc'
+                    }
+
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
@@ -240,8 +249,10 @@ var app = function () {
                     cmTemplate: GridTableConfig.colModelTemplate,
                     colTitle: GridTableConfig.alertnate.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
-                    sortname: 'executeDate',
-                    sortorder: 'asc'
+                    params: {
+                        sortname: 'executeDate',
+                        sortorder: 'asc'
+                    }
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();

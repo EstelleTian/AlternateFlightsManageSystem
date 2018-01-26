@@ -52,7 +52,7 @@ var alternateAirport = function () {
   var initSystemParam = function () {
     var userName = sessionStorage.getItem('userName');
     var loginTime  = sessionStorage.getItem('loginTime');
-    $('.login-time').text('登陆时间：'+loginTime);
+    $('.login-time').text('登陆时间：'+formatterTime(loginTime));
     $('.user-name').text(userName);
   }
   /**
@@ -77,7 +77,7 @@ var alternateAirport = function () {
         url: url,
         data: "",
         dataType: "JSON",
-        async: false,
+        // async: false,
         success: function (data) {
           if ($.isValidObject(data) && data.status == 200) {
             airportConfig = data;
@@ -111,7 +111,7 @@ var alternateAirport = function () {
         url: url,
         data: "",
         dataType: "JSON",
-        async: false,
+        // async: false,
         success: function (data) {
           if ($.isValidObject(data) && data.status == 200) {
             tableData = data;
@@ -185,8 +185,8 @@ var alternateAirport = function () {
       },
       // 隐藏配置
       hide: {
-        target: opt.cellObj, // 指定对象
-        event: 'scroll unfocus click', // 失去焦点时隐藏
+        target:opt.positionContainer , // 指定对象
+        event: 'scroll  click', // 失去焦点时隐藏
         effect: function () {
           $(this).fadeOut(); // 隐藏动画
         },
@@ -328,6 +328,7 @@ var alternateAirport = function () {
    * @returns {*}
    */
   var dataConfigConvert = function (dataObj, config) {
+    config.data = [];
     //多条颜色数据转换
     if ($.isArray(dataObj)) {
       //data数据填充
@@ -492,7 +493,7 @@ var alternateAirport = function () {
         type: opt.type,
       },
       dataType: "JSON",
-      async: false,
+      // async: false,
       success: function (data) {
         if ($.isValidObject(data) && data.status == 200) {
           var generateTime = data.generateTime

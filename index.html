@@ -6,6 +6,7 @@
     <link rel="shortcut icon" href="favicon.ico"/>
     <link rel="stylesheet" href="plugins/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="plugins/bootstrap-validator/dist/css/bootstrapValidator.css">
+    <link rel="stylesheet" href="plugins/ladda/css/ladda.css">
     <link href="css/login.css" rel="stylesheet" type="text/css">
 </head>
 <body class="login" mycollectionplug="bind">
@@ -29,7 +30,7 @@
                 </div>
                 <p class="error_tip"></p>
                 <div class="form-group rem_sub row">
-                    <button type="button" name="submit" class="btn btn-primary sub_button" id="addAdminForm">
+                    <button type="button" name="submit" data-style="zoom-out"  class="btn btn-primary ladda-button sub_button addAdminForm" id="addAdminForm">
                         登录</button>
                 </div>
             </div>
@@ -37,9 +38,11 @@
     </div>
     <script type="text/javascript" src="plugins/jquery/js/jquery.min.js"></script>
     <script type="text/javascript" src="plugins/bootstrap-validator/dist/js/bootstrapValidator.js"></script>
+    <script src="plugins/ladda/js/spin.min.js"></script>
+    <script src="plugins/ladda/js/ladda.js"></script>
     <script src="plugins/jquery/js/jquery-custom-util.js"></script>
     <script>
-        var ipHost = '';
+        var ipHost = 'http://192.168.243.104:8085/';
     </script>
     <script type="text/javascript" src="js/login.js"></script>
 </body>

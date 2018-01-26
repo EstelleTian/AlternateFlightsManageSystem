@@ -35,14 +35,25 @@ var alternateAirport = function () {
   var cellObj = '';
   //定时刷新时间
   var refreshTime = 1000 * 30;
-  //初始化表格
+  /**
+   * 初始化表格
+   */
   var initDataBasic = function () {
     $.jgrid.gridUnload('alernate_flight_grid_table');
     //阻止右键点击默认事件
     preventDefaultEvent()
     Promise.all([
-      getTableColmodel(dataColConfig, isRefresh),getTableData(tableConfig, isRefresh)
+      getTableColmodel(dataColConfig, isRefresh), getTableData(tableConfig, isRefresh)
     ])
+  }
+  /**
+   * 初始化用户信息
+   */
+  var initSystemParam = function () {
+    var userName = localStorage.getItem('userName');
+    var loginTime  = localStorage.getItem('loginTime');
+    $('.login-time').text('登陆时间：'+loginTime);
+    $('.user-name').text(userName);
   }
   /**
    *设置表格下方文本
@@ -50,7 +61,7 @@ var alternateAirport = function () {
    */
   var setDownText = function (textObj) {
     $.each(textObj.postionCategoryAirtype, function (i, e) {
-      var str = '<p><span>' + e.remark + '：</span><span>' + e.value + '</span></p>';
+      var str = '<p><span class="total_count">' + e.remark + '：</span><span>' + e.value + '</span></p>';
       str = $(str);
       $('.des')[0].insertBefore(str[0], $('.tip_container')[0]);
     })
@@ -106,7 +117,7 @@ var alternateAirport = function () {
             tableData = data;
             var generateTime = data.generateTime
             $('.alter_volume_time').text('数据生成时间:' + formatterTime(generateTime))
-            $('.available_capacity').text(data.availableCapacity)
+            $('.available_capacity').text(data.availableCapacity).attr('title',data.availableCapacity)
             //data转换
             tableConfig = dataConfigConvert(data.airportMessage, tableConfig)
             if (!$.isValidObject(airVolumeTable)) {
@@ -137,7 +148,7 @@ var alternateAirport = function () {
    * @param cellObj
    * @param state
    */
-  var showQtip = function (opt, state,message) {
+  var showQtip = function (opt, state, message) {
     var styleClasses = 'qtip-green';
     var tipMesssage = ' '
     if (state) {
@@ -154,9 +165,9 @@ var alternateAirport = function () {
       position: {
         my: 'bottom center', // 同jQueryUI Position
         at: 'top center',
-        container:opt.positionContainer,
+        container: opt.positionContainer,
         adjust: {
-          resize: true ,
+          resize: true,
           scroll: true
         },
       },
@@ -179,11 +190,13 @@ var alternateAirport = function () {
         effect: function () {
           $(this).fadeOut(); // 隐藏动画
         },
+      },
+      events:{
+        hide: function (event, api) {
+          api.destroy(true); // 销毁提示信息
+        }
       }
     })
-    setTimeout(function () {
-      opt.cellObj.qtip('destroy', true);
-    }, 3000)
   }
   /**
    * 阻止右键点击默认事件
@@ -222,7 +235,8 @@ var alternateAirport = function () {
         align: 'center',
         resize: false,
         cellattr: setTableColor,
-        width: 120
+        width: 120,
+        sortfunc: sortNum
       },
       pager: pagerId,
       pgbuttons: false,
@@ -257,8 +271,8 @@ var alternateAirport = function () {
             airport: rowData.airport,
             type: type[0],
             cellObj: cellObj,
-            currentVal:currentVal,
-            positionContainer:$(".table-contianer .ui-jqgrid-bdiv")
+            currentVal: currentVal,
+            positionContainer: $(".table-contianer .ui-jqgrid-bdiv")
           }
           onRightClickRow(opt)
         }
@@ -315,7 +329,7 @@ var alternateAirport = function () {
    */
   var dataConfigConvert = function (dataObj, config) {
     //多条颜色数据转换
-    if($.isArray(dataObj)){
+    if ($.isArray(dataObj)) {
       //data数据填充
       $.each(dataObj, function (i, e) {
         var obj = {};
@@ -333,7 +347,7 @@ var alternateAirport = function () {
         })
         config.data.push(obj);
       })
-    }else{
+    } else {
       // 单条数据转换
       var obj = {};
       obj['airport'] = dataObj.airport;
@@ -427,7 +441,7 @@ var alternateAirport = function () {
           validators: {
             notEmpty: {},
             onlyNumber: {},
-            hunEffectiveNumber:{},
+            hunEffectiveNumber: {},
           }
         }
       }
@@ -441,7 +455,7 @@ var alternateAirport = function () {
       at: 'right top',
       collision: 'flipfit',
     });
-    followTargetPosition(collaboratorDom,opt.cellObj)
+    followTargetPosition(collaboratorDom, opt.cellObj)
     $('#modificate_volume').on('click', function () {
       //获取验证结果
       var bootstrapValidator = form.data('bootstrapValidator');
@@ -480,25 +494,25 @@ var alternateAirport = function () {
       dataType: "JSON",
       async: false,
       success: function (data) {
-        if ($.isValidObject(data)&&data.status == 200) {
+        if ($.isValidObject(data) && data.status == 200) {
           var generateTime = data.generateTime
           $('.alter_volume_time').text('数据生成时间:' + formatterTime(generateTime))
           $('.available_capacity').text(data.availableCapacity)
           loading.stop();
           var singleData = {
             data: [],
-            typeArr:tableConfig.typeArr
+            typeArr: tableConfig.typeArr
           };
           singleData = dataConfigConvert(data.airportMessage, singleData);
           fireSingleDataChange(airVolumeTable, opt, singleData)
         } else {
           clearCollaborateContainer()
-          showQtip(opt, false,data.error.message);
+          showQtip(opt, false, data.error.message);
         }
       },
       error: function (xhr, status, error) {
         clearCollaborateContainer()
-        showQtip(opt, false,"接口访问失败");
+        showQtip(opt, false, "接口访问失败");
       }
     });
   }
@@ -531,6 +545,32 @@ var alternateAirport = function () {
     // 调用表格修改高度宽度方法
     $('#' + tableId).jqGrid('setGridHeight', gridTableHeight);
     $('#' + tableId).jqGrid('setGridWidth', (gridTableWidth - 2));
+  }
+
+  /**
+   * 列排序规则
+   * @param a
+   * @param b
+   * @param direction
+   * @returns {number}
+   */
+  function sortNum(a, b, direction) {
+    // 若为升序排序，空值转换为最大的值进行比较
+    // 保证排序过程中，空值始终在最下方
+    a = a * 1;
+    b = b * 1;
+    var maxNum = Number.MAX_VALUE;
+    if (!$.isValidVariable(a) || a < 0) {
+      if (direction > 0) {
+        a = maxNum;
+      }
+    }
+    if (!$.isValidVariable(b) || b < 0) {
+      if (direction > 0) {
+        b = maxNum;
+      }
+    }
+    return (a > b ? 1 : -1) * direction;
   }
 
 
@@ -606,13 +646,13 @@ var alternateAirport = function () {
       if (index >= 2) {
         tableObj.jqGrid('addRowData', opt.rowid, rowData.data[0], 'after', ids[index - 2]);
         clearCollaborateContainer()
-        var newCellObj = getCellObject(opt.rowid,opt.iRow,opt.iCol)
+        var newCellObj = getCellObject(opt.rowid, opt.iRow, opt.iCol)
         opt.cellObj = newCellObj;
         showQtip(opt, true)
       } else {
         tableObj.jqGrid('addRowData', opt.rowid, rowData.data[0], 'first');
         clearCollaborateContainer()
-        var newCellObj = getCellObject(opt.rowid,opt.iRow,opt.iCol)
+        var newCellObj = getCellObject(opt.rowid, opt.iRow, opt.iCol)
         opt.cellObj = newCellObj;
         showQtip(opt, true)
       }
@@ -676,34 +716,40 @@ var alternateAirport = function () {
   /**
    * 用户登出
    */
-  // var userLogOut = function () {
-  //   $(".user_logout").click(function () {
-  //     // var userId = localStorage.getItem("userId");
-  //     $.ajax({
-  //       type: "POST",
-  //       url: ipHost + "crs_system/userLogout",
-  //       data: {
-  //
-  //       },
-  //       success: function (data) {
-  //         if ($.isValidObject(data)) {
-  //
-  //         }
-  //       },
-  //       error: function () {
-  //         console.error('retrieve statistic data failed, state:');
-  //         console.error(status);
-  //       }
-  //     })
-  //   })
-  // }
+  var userLogOut = function () {
+    $(".user_logout").click(function () {
+      $.ajax({
+        type: "POST",
+        url: ipHost + "altf/logon/userLogout",
+        data: {
+
+        },
+        success: function (data) {
+          if ($.isValidObject(data)&&data.status ==200) {
+            localStorage.removeItem("userName","");
+            localStorage.removeItem("loginTime","");
+            window.location = "index.html";
+          }
+          if(data.status == 500){
+            alert(data.error.message + '请稍候再试!')
+          }
+        },
+        error: function () {
+          console.error('retrieve statistic data failed, state:');
+          console.error(status);
+        }
+      })
+    })
+  }
 
   return {
     init: function () {
-      initDataBasic();
-      tableContainerFit();
+      initSystemParam();//初始化用户信息
+      tableContainerFit();//计算当前表格容器尺寸
+      initDataBasic();//初始化数据基础
+      userLogOut();//用户登出事件
     },
-    airportConfig: airportConfig
+    airportConfig: airportConfig //表格以及页面参数配置
   }
 }();
 $(document).ready(function () {

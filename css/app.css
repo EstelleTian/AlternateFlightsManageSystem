@@ -81,7 +81,7 @@ ul, li {
     margin: 1rem 2.5rem 0 1.8rem;
     min-height: 3rem;
     font-size: 1.6rem;
-    background: url(../img/nav-repeat2.jpg) repeat-x #305b7b !important;
+    background: url(../img/nav-repeat2.jpg) no-repeat #305b7b !important;
 
 }
 .menu-bar ul, .menu-bar ul li {

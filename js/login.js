@@ -43,10 +43,12 @@ var LOGIN = function () {
         return true;
     }
     function login(userName,passWord) {
+        var loading = Ladda.create($('.addAdminForm')[0])
+        loading.start();
         if(isValidLogonInfo()){
             $.ajax({
                 type: "POST",
-                url: ipHost + "crs_system/userLogon/",
+                url: ipHost + "altf/logon/userLogon",
                 data:{
                     username:userName,
                     password:passWord
@@ -55,17 +57,19 @@ var LOGIN = function () {
                 success:function (data) {
                    if($.isValidObject(data)){
                        if(data.status == 200){
+                           loading.stop();
                            localStorage.removeItem("userName","");
-                           localStorage.setItem("userName",userName);
-                           localStorage.removeItem("userId","");
-                           localStorage.setItem("userId",data.user.id);
-                           localStorage.removeItem("onlyValue","");
-                           localStorage.setItem("onlyValue",data.user.onlyValue);
+                           localStorage.setItem("userName", data.user.description);
+                           localStorage.removeItem("loginTime","");
+                           localStorage.setItem("loginTime",data.generateTime);
                            window.location = "../home.html";
                        }else{
-                           if(data.error.message == "密码错误"){
+                           if(data.status == 202){
+                               loading.stop();
                                $(".form-group").removeClass("has-success");
-                               $(".user").addClass("has-success")
+                               $(".user").addClass("error")
+                               $(".user").find(".form-control-feedback").removeClass("glyphicon-ok");
+                               $(".user").find(".form-control-feedback").addClass("glyphicon-remove");
                                $(".pwd").find(".form-control-feedback").removeClass("glyphicon-ok");
                                $(".pwd").find(".form-control-feedback").addClass("glyphicon-remove");
                                $(".pwd").addClass("error");
@@ -77,7 +81,6 @@ var LOGIN = function () {
                            $(".form-control-feedback").addClass("glyphicon-remove");
                            $(".form-group").addClass("has-error");
                            $(".error_tip").text(data.error.message).addClass("error");
-
                        }
                    }
                 },

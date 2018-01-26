@@ -1,5 +1,21 @@
 body{
   font-family: Calibri, 'Microsoft Yahei',"Helvetica Neue",Helvetica,Arial, sans-serif;
+  .app-transition{
+    .menu-bar{
+      font-size: 15px;
+      font-weight: bold;
+    }
+    .main-area{
+      section{
+        .panel-heading{
+          .poster{
+            font-size: 1.6rem;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
   .user_logout{
     display: inline-block;
     zoom: 1;
@@ -10,7 +26,7 @@ body{
     text-align: center;
     text-decoration: none;
     font: 14px/100% Arial, Helvetica, sans-serif;
-    padding: .5em 2em .55em;
+    padding: .5em 1em .55em;
     -webkit-border-radius: .5em;
     -moz-border-radius: .5em;
     border-radius: .5em;
@@ -31,9 +47,13 @@ body{
     padding-left: 15px;
     font-size: 15px;
   }
+  .total_count{
+    font-weight: 700;
+  }
   .alernate_flight_grid_table{
     width: 100%;
     flex: 1 0 auto;
+    user-select: none;
   }
   .table-contianer{
     .ui-jqgrid .ui-jqgrid-bdiv{
@@ -42,7 +62,11 @@ body{
   }
   .h120{
     font-size: 14px;
-    height: 140px;
+    height: 150px;
+    overflow: auto;
+  }
+  .des{
+    font-size: 14px;
   }
   .flight-grid-table-collaborate-container{
     max-width: 260px;
@@ -58,6 +82,7 @@ body{
     box-shadow: 0 0 10px 0px #222;
     border-radius: 5px;
     font-size: 16px;
+    user-select: none;
     .modal-close-btn{
       left: 105px;
       top: 3px;
@@ -70,5 +95,16 @@ body{
   .selected-cell {
     background: #39f !important;
     box-shadow: 0 0 10px 0px #222;
+  }
+}
+@media (max-width: 992px) {
+  html,body{
+    width: 992px;
+    .app-transition{
+      width: 992px;
+    }
+  }
+  html{
+    overflow: scroll;
   }
 }

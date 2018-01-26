@@ -53,7 +53,7 @@ var layoutEvent = function () {
         init : function () {
             initDefaultActiveModule();
             menu();
-            logout();
+            // logout();
         }
     }
 }();

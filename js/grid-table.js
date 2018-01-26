@@ -479,6 +479,10 @@ GridTable.prototype.collaborateArr = function (opt) {
     var thisProxy = this;
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.ARR_DOM;
+    // 校验DOM元素是否有效
+    if(!$.isValidVariable(collaboratorDom)){
+        return
+    }
     // 追加协调DOM至容器
     thisProxy.table.append(collaboratorDom);
     // thisProxy.canvas.append(collaboratorDom);
@@ -555,6 +559,73 @@ GridTable.prototype.collaborateArr = function (opt) {
         })
 
     });
+
+    // 确定备降协调菜单
+    var $conAlternate = $('.confirm-alternate', collaboratorDom);
+    // 采用事件委托，在该菜单上绑定事件，
+    // 并过滤触发事件的元素为只有data-val属性的菜单项,
+    // 这样该菜单下的复合菜单项就不会被绑定点击事件了
+    $conAlternate.on('click', 'li[data-val]', function (event) {
+        // 阻止事件冒泡
+        event.stopPropagation();
+        // 当前点击的菜单项
+        var $that = $(this);
+        // 获取data-val属性值,此值对应该菜单的code(备降机场四字码)
+        var altAirport = $that.attr('data-val');
+        // 校验code 是否有效，无效则不作任何操作
+        if(!$.isValidVariable(altAirport)){
+            return;
+        }
+        // 计划批号
+        var flightDataId = opt.flight.flightDataId;
+        // 校验code 是否有效，无效则不作任何操作
+        if(!$.isValidVariable(flightDataId)){
+            return;
+        }
+        // 备降计划
+        var altId = opt.flight.altId || '';
+        // 操作请求地址
+        var submiturl = thisProxy.colCollaborateUrl.CONFIRM_ALTERNATE;
+        // 校验操作请求地址是否有效，无效则不作任何操作
+        if(!$.isValidVariable(submiturl)){
+            return;
+        }
+        submiturl = submiturl +'?flightDataId=' + flightDataId +'&altAirport=' + altAirport + '&altId='+ altId;
+        // ajax提交请求
+        $.ajax({
+            url:submiturl ,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 若数据无效
+                if (!$.isValidVariable(data)) {
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", "确定备降提交失败，请稍后重试");
+                };
+                //成功
+                if (data.status == 200) {
+                    // 取数据的altfFlights值
+                    var altfFlights = data.altfFlights;
+                    // 数据有效则更新单个数据
+                    if($.isValidObject(altfFlights)){
+                        thisProxy.fireSingleDataChange(altfFlights);
+                        thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '确定备降已提交成功');
+                    }
+                } else if (data.status == 202) { // 失败
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                } else if (data.status == 500) { // 失败
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                };
+            },
+            error: function ( status, error) {
+                console.error('ajax requset  fail, error:');
+                console.error(error);
+            }
+        })
+
+    });
+
 };
 
 
@@ -566,6 +637,10 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     var thisProxy = this;
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.ALTERNATE_DOM;
+    // 校验DOM元素是否有效
+    if(!$.isValidVariable(collaboratorDom)){
+        return
+    }
     // 追加协调DOM至容器
     thisProxy.table.append(collaboratorDom);
 
@@ -586,6 +661,10 @@ GridTable.prototype.collaborateOver = function (opt) {
     var thisProxy = this;
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.OVER_DOM;
+    // 校验DOM元素是否有效
+    if(!$.isValidVariable(collaboratorDom)){
+        return
+    }
     // 追加协调DOM至容器
     thisProxy.table.append(collaboratorDom);
 
@@ -606,6 +685,10 @@ GridTable.prototype.collaborateDep = function (opt) {
     var thisProxy = this;
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.DEP_DOM;
+    // 校验DOM元素是否有效
+    if(!$.isValidVariable(collaboratorDom)){
+        return
+    }
     // 追加协调DOM至容器
     thisProxy.table.append(collaboratorDom);
 

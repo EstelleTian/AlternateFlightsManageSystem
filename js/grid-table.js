@@ -480,7 +480,7 @@ GridTable.prototype.collaborateArr = function (opt) {
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.ARR_DOM;
     // 追加协调DOM至容器
-    thisProxy.table.append(collaboratorDom);
+    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
 
     // 定位协调DOM
     collaboratorDom.position({
@@ -488,6 +488,7 @@ GridTable.prototype.collaborateArr = function (opt) {
         my: 'left top',
         at: 'right top'
     });
+     thisProxy.followTargetPosition(collaboratorDom, opt.cellObj)
     // 预选备降协调菜单
     var $preAlternate = $('.pre-alternate', collaboratorDom);
     // 采用事件委托，在该菜单上绑定事件，
@@ -554,6 +555,25 @@ GridTable.prototype.collaborateArr = function (opt) {
 
     });
 };
+/**
+ * 协调窗口跟随页面移动方法
+ * @param collaboratorDom 协调对象
+ * @param cellObj 选中单元格
+ */
+GridTable.prototype.followTargetPosition = function (collaboratorDom, cellObj) {
+    // 代理
+    var thisProxy = this;
+    function position() {
+        collaboratorDom.position({
+            of: cellObj,
+            my: 'left top',
+            at: 'right top',
+            collision: 'flipfit',
+        });
+    }
+
+    thisProxy.table.parents(".ui-jqgrid-bdiv").off('scroll', position).on('scroll', position);
+};
 
 
 /**
@@ -565,14 +585,14 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.ALTERNATE_DOM;
     // 追加协调DOM至容器
-    thisProxy.table.append(collaboratorDom);
-
+    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
     // 定位协调DOM
     collaboratorDom.position({
         of: opt.cellObj,
         my: 'left top',
         at: 'right top'
     });
+    thisProxy.followTargetPosition(collaboratorDom, opt.cellObj)
 };
 
 
@@ -585,14 +605,14 @@ GridTable.prototype.collaborateOver = function (opt) {
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.OVER_DOM;
     // 追加协调DOM至容器
-    thisProxy.table.append(collaboratorDom);
-
+    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
     // 定位协调DOM
     collaboratorDom.position({
         of: opt.cellObj,
         my: 'left top',
         at: 'right top'
     });
+    thisProxy.followTargetPosition(collaboratorDom, opt.cellObj)
 };
 
 
@@ -605,7 +625,7 @@ GridTable.prototype.collaborateDep = function (opt) {
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.DEP_DOM;
     // 追加协调DOM至容器
-    thisProxy.table.append(collaboratorDom);
+    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
 
     // 定位协调DOM
     collaboratorDom.position({
@@ -613,6 +633,7 @@ GridTable.prototype.collaborateDep = function (opt) {
         my: 'left top',
         at: 'right top'
     });
+    thisProxy.followTargetPosition(collaboratorDom, opt.cellObj)
 };
 
 /**

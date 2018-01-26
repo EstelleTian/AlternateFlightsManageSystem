@@ -145,8 +145,9 @@ var alternateAirport = function () {
   }
   /**
    * 修改机场容量qtip提示
-   * @param cellObj
+   * @param opt
    * @param state
+   * @param message
    */
   var showQtip = function (opt, state, message) {
     var styleClasses = 'qtip-green';
@@ -244,8 +245,8 @@ var alternateAirport = function () {
       colNames: config.colName,
       colModel: config.colModel,
       rowNum: 999999, // 一页显示多少条
-      // sortname: 'aircraftType', // 初始化的时候排序的字段
-      // sortorder: 'asc', //排序方式,可选desc,asc
+      sortname: 'airport', // 初始化的时候排序的字段
+      sortorder: 'asc', //排序方式,可选desc,asc
       viewrecords: true,
       loadComplete: function (xhr) {
         var colTitle = config.colTitle;

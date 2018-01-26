@@ -246,8 +246,6 @@ GridTable.prototype.initGridTableObject = function () {
     });
     // 绑定右键协调窗口事件,用于显隐菜单层级效果
     thisProxy.canvas.on('mouseover', '.grid-table-collaborate-container li', function (event) {
-        // 阻止事件冒泡
-        // event.stopPropagation();
         $that = $(this);
         // 添加class 若有子菜单则子菜单会显示
         $that.addClass('hover');
@@ -258,14 +256,14 @@ GridTable.prototype.initGridTableObject = function () {
             $sub.position({
                 of: $that,
                 my: 'left top',
-                at: 'right top'
+                at: 'right top',
+                collision : "fit"
             });
         }
-
-
     }).on('mouseout', '.grid-table-collaborate-container li', function () {
-        // 添加class 若有子菜单则子菜单会隐藏
+        // 移除class 若有子菜单则子菜单会隐藏
         $(this).removeClass('hover');
+
     });
 
     // 绑定Window事件，窗口变化时重新调整表格大小
@@ -448,6 +446,8 @@ GridTable.prototype.clearCollaborateContainer = function () {
     var thisProxy = this;
     // 清理
     // 取得对应表格的冻结列表格
+    // 将协调窗口的被选菜单的class名 hover 去掉
+    $('.grid-table-collaborate-container li.hover', thisProxy.canvas).removeClass('hover');
     var $frozenTable  = $('#'+thisProxy.tableId+'_frozen', thisProxy.canvas);
     // 移除表格中被选中单元格的特殊class
     $('.' + GridTable.SELECTED_CELL_CLASS, thisProxy.table).removeClass(GridTable.SELECTED_CELL_CLASS);
@@ -477,12 +477,14 @@ GridTable.prototype.collaborateArr = function (opt) {
     var collaboratorDom = GridTableCollaborateDom.ARR_DOM;
     // 追加协调DOM至容器
     thisProxy.table.append(collaboratorDom);
+    // thisProxy.canvas.append(collaboratorDom);
 
     // 定位协调DOM
     collaboratorDom.position({
         of: opt.cellObj,
         my: 'left top',
-        at: 'right top'
+        at: 'right top',
+        collision : "fit"
     });
     // 预选备降协调菜单
     var $preAlternate = $('.pre-alternate', collaboratorDom);

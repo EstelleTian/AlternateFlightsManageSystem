@@ -107,10 +107,10 @@ FormModule.prototype.initFormModuleObject = function () {
     thisProxy.bindEventOnButton();
 
     // 绑定窗口调整时
-    $(window).resize(function () {
-        // 使窗口调整时表格容器大小自适应
-        thisProxy.resizeTableContainer();
-    });
+    // $(window).resize(function () {
+    //     // 使窗口调整时表格容器大小自适应
+    //     thisProxy.resizeTableContainer();
+    // });
 
 };
 
@@ -146,7 +146,7 @@ FormModule.prototype.resizeTableContainer = function () {
     // 求得模块内数据结果可视化区高度:(模块体高度-模块头-模块内的表单栏-模块内的当前查询条件栏)
     var h =bodyHeight - $head.outerHeight() - $form.outerHeight() - $condition .outerHeight();
     // 设置模块内数据结果可视化区高度
-    $result.height(h);
+    // $result.height(h);
 };
 
 /**

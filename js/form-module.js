@@ -274,7 +274,7 @@ FormModule.prototype.bindEventOnButton = function () {
     // 查询按钮绑定事件
     $('.inquire', thisProxy.canvas).on('click',function () {
         // 初始化数据查询
-        thisProxy.initInquireData();
+        thisProxy.initInquireData(false);
     });
 };
 
@@ -507,9 +507,12 @@ FormModule.prototype.clear = function () {
     $condition.addClass('hidden');
     // 清空提示
     $err.html('').removeClass('active');
+    // 若表格已经初始化，则清除协调窗口
+    if($.isValidObject(thisProxy.table.gridTableObject)){
+        // 清除协调窗口
+        thisProxy.table.clearCollaborateContainer();
+    }
 
-    // 清除协调窗口
-    thisProxy.table.clearCollaborateContainer();
 
     // 隐藏表格容器
     thisProxy.isHiddenTableContainer(true);

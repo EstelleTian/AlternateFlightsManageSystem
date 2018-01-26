@@ -230,7 +230,7 @@ FormModule.prototype.changeKeyword = function () {
 /**
  * 格式化数据生成时间
  * */
-FormModule.prototype.formaterGenerateTimeTime = function (time) {
+FormModule.prototype.formaterGenerateTime = function (time) {
     var year = time.substring(0, 4);
     var mon = time.substring(4, 6);
     var date = time.substring(6, 8);
@@ -545,7 +545,7 @@ FormModule.prototype.updateTime = function () {
         // 取得数据生成时间节点
         var $node = $('.panel-heading .time', thisProxy.canvas);
         // 格式化处理时间
-        var time = thisProxy.formaterGenerateTimeTime(thisProxy.generateTime);
+        var time = thisProxy.formaterGenerateTime(thisProxy.generateTime);
         // 显示数据生成时间
         $node.text('数据生成时间: ' + time).attr('title','数据生成时间: '+time);
     }

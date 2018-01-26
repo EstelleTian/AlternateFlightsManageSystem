@@ -139,7 +139,7 @@ HistoryFormModule.prototype.setDefaultScope = function () {
 /**
  * 格式化数据生成时间
  * */
-HistoryFormModule.prototype.formaterGenerateTimeTime = function (time) {
+HistoryFormModule.prototype.formaterGenerateTime = function (time) {
     var year = time.substring(0, 4);
     var mon = time.substring(4, 6);
     var date = time.substring(6, 8);
@@ -459,7 +459,7 @@ HistoryFormModule.prototype.updateTime = function () {
         var $node = $('.condition-panel .time', thisProxy.canvas);
         var $tip = $('.condition-panel .time-tip', thisProxy.canvas);
         // 格式化处理时间
-        var time = thisProxy.formaterGenerateTimeTime(thisProxy.generateTime);
+        var time = thisProxy.formaterGenerateTime(thisProxy.generateTime);
         // 显示数据生成时间
         $node.text(time).attr('title','数据生成时间: '+time).removeClass('hidden');
         var $tip = $('.condition-panel .time-tip', thisProxy.canvas).removeClass('hidden');

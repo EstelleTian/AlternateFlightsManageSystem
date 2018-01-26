@@ -363,7 +363,7 @@ GridTable.prototype.onRightClickRow = function (rowid, iRow, iCol, e) {
     // 记录当前选中的单元格对象
     cellObj.addClass(GridTable.SELECTED_CELL_CLASS);
 
-    // 获取航班计划
+    // 获取计划航班数据
     var flight = this.tableDataMap[rowid];
     if(!flight){
         return null;
@@ -448,6 +448,9 @@ GridTable.prototype.clearCollaborateContainer = function () {
 
 /**
  * 进港模块协调
+ *
+ * @param opt 参数
+ *
  */
 GridTable.prototype.collaborateArr = function (opt) {
     // 代理
@@ -462,6 +465,61 @@ GridTable.prototype.collaborateArr = function (opt) {
         of: opt.cellObj,
         my: 'left top',
         at: 'right top'
+    });
+    // 预选备降协调菜单
+    var $preAlternate = $('.pre-alternate', collaboratorDom);
+    // 采用事件委托，在该菜单上绑定事件，
+    // 并过滤触发事件的元素为只有data-val属性的菜单项,
+    // 这样该菜单下的复合菜单项就不会被绑定点击事件了
+    $preAlternate.on('click', 'li[data-val]', function (event) {
+        // 阻止事件冒泡
+        event.stopPropagation();
+        // 当前点击的菜单项
+        var $that = $(this);
+        // 获取data-val属性值,此值对应该菜单的code(备降机场四字码)
+        var altAirport = $that.attr('data-val');
+        // 校验code 是否有效，无效则不作任何操作
+        if(!$.isValidVariable(altAirport)){
+            return;
+        }
+        // 计划批号
+        var flightDataId = opt.flight.flightDataId;
+        // 校验code 是否有效，无效则不作任何操作
+        if(!$.isValidVariable(flightDataId)){
+            return;
+        }
+        // 备降计划
+        var altId = opt.flight.altId || '';
+        // 操作请求地址
+        var submiturl = thisProxy.colCollaborateUrl.PRE_ALTERNATE + '?flightDataId=' + flightDataId +'&altAirport=' + altAirport + '&altId='+ altId ;
+        // ajax提交请求
+        $.ajax({
+            url:submiturl ,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                return;
+                // 若数据无效
+                if (!$.isValidVariable(data)) {
+                    thisProxy.showTableCellTipMessage(opts, "FAIL", "预选备降失败，请稍后重试");
+                };
+                //成功 else if 为失败
+                if (data.status == 200) {
+
+
+                } else if (data.status == 202) {
+                    thisProxy.showTableCellTipMessage(opts, "FAIL", data.error.message)
+                } else if (data.status == 500) {
+                    thisProxy.showTableCellTipMessage(opts, "FAIL", data.error.message)
+                };
+            },
+            error: function ( status, error) {
+                console.error('ajax requset  fail, error:');
+                console.error(error);
+            }
+        })
+
     });
 };
 

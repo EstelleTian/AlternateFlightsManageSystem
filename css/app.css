@@ -187,7 +187,7 @@ ul, li {
     display: flex;
     /*justify-content: center;*/
     width: 100%;
-    min-height: 5rem;
+    /*min-height: 5rem;*/
     font-size: 1.5rem;
 }
 .panel-body .form-panel, .alternate-history-module .form-panel {

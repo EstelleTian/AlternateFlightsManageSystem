@@ -270,7 +270,7 @@ GridTable.prototype.initGridTableObject = function () {
 
     // 绑定Window事件，窗口变化时重新调整表格大小
     $(window).resize(function () {
-        thisProxy.resizeToFitContainer();
+        thisProxy.gridTableObject.jqGrid('resizeSize')
         thisProxy.frozenHeight = $('#'+thisProxy.tableId+'_frozen').parent().height();
         thisProxy.resizeFrozenTable();
     });
@@ -322,7 +322,8 @@ GridTable.prototype.fireTableDataChange = function (dataObj) {
     // 绘制表格数据
     thisProxy.drawGridTableData();
     // 调整表格大小以适应所在容器
-    thisProxy.resizeToFitContainer();
+    thisProxy.gridTableObject.jqGrid('resizeSize')
+    // thisProxy.resizeToFitContainer();
 };
 
 

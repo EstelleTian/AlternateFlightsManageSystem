@@ -285,8 +285,8 @@ var alternateAirport = function () {
   };
 
   $(window).resize(function () {
-    tableContainerFit();
-    resizeToFitContainer('alernate_flight_grid_table');
+    // tableContainerFit();
+    // resizeToFitContainer('alernate_flight_grid_table');
   })
   /**
    * 表格高度计算

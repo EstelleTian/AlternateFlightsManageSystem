@@ -278,49 +278,15 @@ var alternateAirport = function () {
         }
       }
     })
-    resizeToFitContainer('alernate_flight_grid_table')
+    airVolumeTable.jqGrid('resizeSize');
     //数据填充
     $('#' + tableId).jqGrid('setGridParam', {datatype: 'local', data: config.data}).trigger('reloadGrid')
     // $('#' + tableId).jqGrid('setFrozenColumns')
   };
 
   $(window).resize(function () {
-    // tableContainerFit();
-    // resizeToFitContainer('alernate_flight_grid_table');
+    airVolumeTable.jqGrid('resizeSize');
   })
-  /**
-   * 表格高度计算
-   */
-  var tableContainerFit = function () {
-    var thisProxy = $('.alter_volume');
-    // 容器
-    var $container = $('.app-transition');
-    // 导航栏
-    var $nav = $('.navbar', $container);
-    // 菜单栏
-    var $menu = $('.menu-bar', $container);
-    // 主显示区
-    var $main = $('.main-area');
-    // 模块头部
-    var $head = $('.panel-heading', thisProxy);
-    // 模块体
-    var $body = $('.panel-body', thisProxy);
-    // 模块内的合计可用
-    var $form = $('.sub_title', thisProxy);
-    // 模块内的底部模块
-    var $condition = $('.des', thisProxy);
-    // 模块内数据结果可视化区
-    var $result = $('.table-contianer', thisProxy);
-    // 求得主显示区高度:(总高度-导航栏-菜单栏-主显示区外边距)
-    var mainHeight = $container.outerHeight() - $nav.outerHeight(true) - $menu.outerHeight(true) - $main.css('marginTop').replace('px', '') * 1 - $main.css('marginBottom').replace('px', '') * 1;
-    // 求得模块体高度:(主显示区高度-模块体内边距)
-    var bodyHeight = mainHeight - $body.css('paddingTop').replace('px', '') * 1 - $body.css('paddingBottom').replace('px', '') * 1;
-    // 求得模块内数据结果可视化区高度:(模块体高度-模块头-模块内的表单栏-模块内的当前查询条件栏)
-    var h = bodyHeight - $head.outerHeight() - $head.css('marginBottom').replace('px', '') * 1 - $form.outerHeight() - $condition.outerHeight();
-    // 设置模块内数据结果可视化区高度
-    $result.height(h);
-  }
-
   /**
    * 表格配置以及参数数据转换
    * @param dataObj
@@ -525,29 +491,6 @@ var alternateAirport = function () {
     $('.selected-cell').removeClass('selected-cell');
     $('.flight-grid-table-collaborate-container').remove();
   }
-
-  /**
-   *表格适配尺寸方法
-   * @param tableId
-   */
-  function resizeToFitContainer(tableId) {
-    // 获取表格结构下元素
-    var gridTableGBox = $('#gbox_' + tableId);
-    var gridTableGView = $('#gview_' + tableId);
-    var gridTableBDiv = gridTableGView.find('.ui-jqgrid-bdiv');
-
-    // 获取容器高度
-    var container = gridTableGBox.parent();
-
-    // 计算表格高度
-    var gridTableHeight = gridTableBDiv.outerHeight() - (gridTableGBox.outerHeight() - container.height());
-    var gridTableWidth = container.width();
-
-    // 调用表格修改高度宽度方法
-    $('#' + tableId).jqGrid('setGridHeight', gridTableHeight);
-    $('#' + tableId).jqGrid('setGridWidth', (gridTableWidth - 2));
-  }
-
   /**
    * 列排序规则
    * @param a
@@ -666,13 +609,15 @@ var alternateAirport = function () {
    * @returns {string}
    */
   var formatterTime = function (time) {
-    var year = time.substring(0, 4);
-    var mon = time.substring(4, 6);
-    var date = time.substring(6, 8);
-    var hour = time.substring(8, 10);
-    var min = time.substring(10, 12);
-    var str = year + '-' + mon + '-' + date + ' ' + hour + ":" + min;
-    return str;
+    if($.isValidVariable(time)){
+      var year = time.substring(0, 4);
+      var mon = time.substring(4, 6);
+      var date = time.substring(6, 8);
+      var hour = time.substring(8, 10);
+      var min = time.substring(10, 12);
+      var str = year + '-' + mon + '-' + date + ' ' + hour + ":" + min;
+      return str;
+    }
   }
   /**
    * 获取单元格对象
@@ -742,11 +687,9 @@ var alternateAirport = function () {
       })
     })
   }
-
   return {
     init: function () {
       initSystemParam();//初始化用户信息
-      tableContainerFit();//计算当前表格容器尺寸
       initDataBasic();//初始化数据基础
       userLogOut();//用户登出事件
     },

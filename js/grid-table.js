@@ -1041,8 +1041,10 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfAlternate)){
-                        thisProxy.fireSingleDataChange(altfAlternate);
-                        thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '取消备降已提交成功');
+                        thisProxy.deleteSingleData(altfAlternate);
+                        var id = altfAlternate.id;
+                        var flightDataId = altfAlternate.flightDataId;
+                        thisProxy.showMsg('success',''+'计划航班('+ flightDataId +')取消备降成功', 1000*5);
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
@@ -1216,6 +1218,28 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     thisProxy.scrollToRow(flight.id);
 };
 
+/**
+ * 删除单个数据
+ *
+ * @param flight
+ *
+ */
+GridTable.prototype.deleteSingleData = function (flight) {
+    var thisProxy = this;
+    // 更新源数据 (注意：源数据是没有id属性的，只有flightDataId属性)
+    // todo
+
+    // 转换数据
+    var rowData = thisProxy.convertData(flight);
+    //清除冻结列
+    thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
+    // 删除原数据
+    var f = thisProxy.gridTableObject.jqGrid('delRowData', flight.id);
+    //激活冻结列
+    thisProxy.gridTableObject.jqGrid("setFrozenColumns");
+    thisProxy.resizeFrozenTable();
+};
+
 
 /**
  * 获取单元格对象
@@ -1335,6 +1359,37 @@ GridTable.prototype.highlightRow = function () {
         this.gridTableObject.jqGrid('setSelection', rowid, false);
         // 滚动到指定id对应的行
         this.scrollToRow(rowid);
+    }
+
+};
+
+GridTable.prototype.showMsg = function (type, content, clearTime) {
+    // 当前对象this代理
+    var thisProxy = this;
+    var $err = thisProxy.canvas.siblings('.form-panel').find('.alert');
+    var cont = '';
+    switch (type){
+        case 'success' : {
+            cont = '成功: ' + content;
+            $err.addClass('alert-success');
+            break
+        }
+        case 'warning' : {
+            cont = '警告: ' + content;
+            $err.addClass('alert-warning');
+            break
+        }
+        case 'danger' : {
+            cont = '错误: ' + content;
+            $err.addClass('alert-danger');
+            break
+        }
+    }
+    $err.html(cont).addClass('active');
+    if(clearTime*1){
+        setTimeout(function () {
+            $err.html('').removeClass('active')
+        }, clearTime)
     }
 
 };

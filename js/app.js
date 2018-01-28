@@ -224,6 +224,12 @@ var app = function () {
      * 切换活动模块
      * */
     var activeModuleToggle = function (index) {
+        var len = moduleObjs.length;
+        // 校验点击模块
+        if(index > len-1){
+            return
+        }
+
         // 取消所有模块活动
         moduleObjs.map(function (item, index, arr) {
             item.setActive(false);

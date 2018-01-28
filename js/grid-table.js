@@ -1168,6 +1168,8 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     var rowData = thisProxy.convertData(flight);
     // 更新数据
     thisProxy.tableDataMap[flight.id] = rowData;
+    //清除冻结列
+    thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
     // 删除原数据行，加入新的数据行
     // 表格数据ID集合
     var ids = thisProxy.gridTableObject.jqGrid('getDataIDs');
@@ -1183,6 +1185,8 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
             thisProxy.gridTableObject.jqGrid('addRowData', flight.id, rowData, 'first');
         }
     }
+    //激活冻结列
+    thisProxy.gridTableObject.jqGrid("setFrozenColumns");
     thisProxy.resizeFrozenTable();
 };
 

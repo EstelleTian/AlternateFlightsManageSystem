@@ -127,7 +127,7 @@ var alternateAirport = function () {
               initGridTable(tableConfig, 'alernate_flight_grid_table', 'ale-datas-pager')
             } else {
               // 数据更新
-              airVolumeTable.jqGrid('setGridParam', tableConfig.data);
+              airVolumeTable.jqGrid('setGridParam', tableConfig.data).trigger('reload');
             }
             resolve(tableConfig);
             if (isRefresh) {
@@ -394,7 +394,11 @@ var alternateAirport = function () {
    */
   var collaborateAlter = function (opt) {
     // 获取协调DOM元素
-    var collaboratorDom = $(CollaborateDom.CAPACITY);
+    var dom = GridTableCollaborateDom.CAPACITY;
+    if(!$.isValidVariable(dom)){
+      return;
+    }
+    var collaboratorDom = $(dom);
     //表单验证绑定
     var form = collaboratorDom.find('form');
     form.find('input').val(opt.currentVal);

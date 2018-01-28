@@ -774,11 +774,11 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                 };
                 //成功
                 if (data.status == 200) {
-                    // 取数据的altfFlights值
-                    var altfFlights = data.altfFlights;
+                    // 取数据的altfAlternate值
+                    var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
-                    if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
+                    if($.isValidObject(altfAlternate)){
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '更改备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -840,11 +840,11 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                 };
                 //成功
                 if (data.status == 200) {
-                    // 取数据的altfFlights值
-                    var altfFlights = data.altfFlights;
+                    // 取数据的altfAlternate值
+                    var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
-                    if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
+                    if($.isValidObject(altfAlternate)){
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '更改备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -904,11 +904,11 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                 };
                 //成功
                 if (data.status == 200) {
-                    // 取数据的altfFlights值
-                    var altfFlights = data.altfFlights;
+                    // 取数据的altfAlternate值
+                    var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
-                    if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
+                    if($.isValidObject(altfAlternate)){
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '确定备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -958,11 +958,11 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                 };
                 //成功
                 if (data.status == 200) {
-                    // 取数据的altfFlights值
-                    var altfFlights = data.altfFlights;
+                    // 取数据的altfAlternate值
+                    var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
-                    if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
+                    if($.isValidObject(altfAlternate)){
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '释放停机位已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -1012,11 +1012,11 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                 };
                 //成功
                 if (data.status == 200) {
-                    // 取数据的altfFlights值
-                    var altfFlights = data.altfFlights;
+                    // 取数据的altfAlternate值
+                    var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
-                    if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
+                    if($.isValidObject(altfAlternate)){
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '取消备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败

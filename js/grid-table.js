@@ -698,6 +698,27 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     if(!$.isValidVariable(collaboratorDom)){
         return
     }
+    // 处理右键协调菜单显隐
+    //获取航班状态
+    var status = opt.flight.status;
+    if($.isValidVariable(status)){
+        // 预选
+        if(status == 1){
+            // 更改预先和确定备降菜单项显示
+            $('.update-pre-alternate', collaboratorDom).show();
+            $('.confirm-alternate', collaboratorDom).show();
+            // 更改备降菜单项隐藏
+            $('.update-alternate', collaboratorDom).hide();
+
+        }else if(status == 2) {  // 备降
+            // 确定备降和更改备降菜单项显示
+            $('.confirm-alternate', collaboratorDom).show();
+            $('.update-alternate', collaboratorDom).show();
+            // 更改预先菜单项隐藏
+            $('.update-pre-alternate', collaboratorDom).hide();
+        }
+    }
+
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
     // 定位协调DOM

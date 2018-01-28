@@ -272,11 +272,7 @@ GridTable.prototype.initGridTableObject = function () {
     $(window).resize(function () {
         if( thisProxy.gridTableObject.parents('section').is(":visible") ){
             thisProxy.gridTableObject.jqGrid('resizeSize');
-            //清除冻结列
-            thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
-            //激活冻结列
-            thisProxy.gridTableObject.jqGrid("setFrozenColumns");
-            // thisProxy.frozenHeight = $('#'+thisProxy.tableId+'_frozen').parent().height();
+            thisProxy.frozenHeight = $('#'+thisProxy.tableId+'_frozen').parent().height();
             thisProxy.resizeFrozenTable();
         }
 
@@ -1192,6 +1188,7 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     //激活冻结列
     thisProxy.gridTableObject.jqGrid("setFrozenColumns");
     thisProxy.resizeFrozenTable();
+    thisProxy.scrollToRow(flight.id);
 };
 
 
@@ -1262,4 +1259,36 @@ GridTable.prototype.resizeFrozenTable = function(){
     var frozenDom = $('#'+thisProxy.tableId+'_frozen').parent();
     frozenDom.height( thisProxy.frozenHeight  + 'px');
 
+};
+
+/**
+ * 滚动到指定行id
+ *
+ * @param rowid
+ * @param num 可选
+ */
+GridTable.prototype.scrollToRow = function (rowid, num) {
+    var rowTr = this.gridTableObject.find('tr#' + rowid);
+    var iCol = rowTr.find('td').first().text();
+    if (!$.isValidVariable(num)) {
+        num = 5;
+    }
+    var rowFirstTd = rowTr.find('td').first()[0];
+    if ($.isValidVariable(rowFirstTd)) {
+        var offsetHeight = rowFirstTd.offsetHeight;
+        var offsetTop = rowFirstTd.offsetTop;
+        var scrollHeight = 0;
+        if ($.isValidVariable(iCol)) {
+            if (iCol > 5) {
+                // 留一定空间给相同时间的航班数据
+                iCol = iCol - 5;
+                scrollHeight = offsetTop - offsetHeight * num;
+            } else {
+                scrollHeight = offsetTop;
+            }
+            this.canvas.find("div.ui-jqgrid-bdiv").each(function(){
+                $(this).scrollTop(scrollHeight);
+            });
+        }
+    }
 };

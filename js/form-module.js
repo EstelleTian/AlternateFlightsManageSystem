@@ -77,6 +77,18 @@ var FormModule = function (params) {
     this.interval = params.interval;
 
     /**
+     *  自定义定时器时间
+     * */
+    this.customeInterval = params.customeInterval;
+
+
+    /**
+     *  是否启用自定义定时器时间
+     *  默认不开启
+     * */
+    this.enableCustomeIntervalFlag = false;
+
+    /**
      * ajax请求
      * */
     this.xhr = null;
@@ -108,8 +120,8 @@ FormModule.prototype.initFormModuleObject = function () {
     // 绑定关键字录入
     thisProxy.changeKeyword();
 
-    // 切换过滤条件开关
-    thisProxy.changeFilter();
+    //  切换复杂天气模式
+    thisProxy.changeWeatherModel();
 
     //初始化查询按钮loading
     thisProxy.initLoading();
@@ -253,25 +265,63 @@ FormModule.prototype.formaterGenerateTime = function (time) {
 
 
 /**
- * 切换过滤条件开关
+ * 切换复杂天气模式
  * */
-FormModule.prototype.changeFilter = function () {
+FormModule.prototype.changeWeatherModel = function () {
     // 当前对象this代理
     var thisProxy = this;
-    // 取得过滤html节点
-    var $valve = $('.limit-option', thisProxy.canvas);
-    // 若节点有效，则绑定点击事件切换过滤开关
-    if($.isValidVariable($valve) && $valve.length > 0){
-        // 取得checkbox
-        var $box = $('input.magic-checkbox', $valve);
-        // checkbox绑定点击事件
-        $box.on('click',function () {
-            // 取得checkbox勾选状态
-            var bool = $box.prop('checked');
-            // 更新到filter属性，用于查询数据时使用
-            thisProxy.filter = bool;
-        })
+    // 取得checkbox
+    var $box = $('input#change-weather-model', thisProxy.canvas);
+
+    if($.isValidVariable($box) && $box.length < 1){
+        return;
     }
+    // checkbox绑定点击事件
+    $box.on('click',function () {
+        // 取得checkbox勾选状态
+        var bool = $box.prop('checked');
+        // 若勾选
+        if(bool){
+            // 启用自定义定时器时间
+            thisProxy.enableCustomeIntervalFlag = true;
+        }else {
+            // 关闭自定义定时器时间
+            thisProxy.enableCustomeIntervalFlag = false;
+        }
+        // 清除定时器
+        clearTimeout(thisProxy.timer);
+        // 初始化数据查询并开启定时器(将会按指定的自定义定时器时间间隔进行)
+        thisProxy.initInquireData(true);
+        // 向后端提交此次天气模式的切换
+        var url = DataUrl.WEATHER_MODEL;
+        if(!$.isValidVariable(url)){
+            return;
+        }
+        url = url + '?isCheck='+ bool;
+
+        $.ajax({
+            url:url,
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+
+                // 数据无效
+                if (!data) {
+
+                };
+                // 成功
+                if (data.status == 200) {
+
+                }
+            },
+            error: function ( status, error) {
+                console.error('ajax requset  fail, error:');
+                console.error(error);
+            }
+        });
+
+
+    });
 
 };
 
@@ -325,7 +375,13 @@ FormModule.prototype.initInquireData = function (refresh) {
 
     //定时刷新
     if (refresh) {
-        thisProxy.startTimer(thisProxy.initInquireData, true, thisProxy.interval);
+        // 若开启自定义定时刷新时间
+        if(thisProxy.enableCustomeIntervalFlag && $.isValidVariable(thisProxy.customeInterval)){
+            thisProxy.startTimer(thisProxy.initInquireData, true, thisProxy.customeInterval);
+        }else {
+
+            thisProxy.startTimer(thisProxy.initInquireData, true, thisProxy.interval);
+        }
     }
 
 };

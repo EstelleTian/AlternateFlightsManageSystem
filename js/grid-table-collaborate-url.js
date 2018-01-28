@@ -18,3 +18,7 @@ var CellOpreationUrl = {
 
 
 };
+
+var DataUrl = {
+    WEATHER_MODEL : 'http://192.168.243.104:8085/altf/airport/changeWeatherModel'
+}

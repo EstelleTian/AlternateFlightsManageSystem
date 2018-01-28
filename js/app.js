@@ -55,6 +55,8 @@ var app = function () {
             url : 'http://192.168.243.104:8085/altf/airport/retrieveArrFlights',
             // 定时器时间
             interval : interval,
+            // 自定义定时器时间 (用于开启复杂天气模式),数字 毫秒
+            customeInterval : 1000*60*0.2,
             // 默认选中的范围值
             defaultScope : '1',
             // 初始化表格

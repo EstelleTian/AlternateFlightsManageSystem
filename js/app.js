@@ -35,8 +35,11 @@ var app = function () {
     // 出港计划模块
     var depObj = {};
 
+    // 各模块对象集合
+    var moduleObjs = [];
+
     // 定时器时间,用于设置每个模块定时间隔时间 ms
-    var timer = 1000*60*0.2;
+    var interval = 1000*60*1;
     // 活动模块所在模块下标
     var index = 0;
 
@@ -51,7 +54,7 @@ var app = function () {
             // 数据查询请求地址
             url : 'http://192.168.243.104:8085/altf/airport/retrieveArrFlights',
             // 定时器时间
-            timer : timer,
+            interval : interval,
             // 默认选中的范围值
             defaultScope : '1',
             // 初始化表格
@@ -85,11 +88,12 @@ var app = function () {
             // 自定义过滤规则
             customFilterFunc : function () {
                 // 设置定时器时间为1分钟
-                this.timer = 1000*60*1;
+                this.interval = 1000*60*1;
             }
 
         });
         arrObj.initFormModuleObject();
+        moduleObjs.push(arrObj);
 
         // 备降计划模块
         alternateObj = new FormModule({
@@ -97,7 +101,7 @@ var app = function () {
             tableId: 'alternate-table',
             url : 'http://192.168.243.104:8085/altf/airport/retrieveAlternateFlights',
             // 定时器时间
-            timer : timer,
+            interval : interval,
             // 默认选中的范围值
             defaultScope : 'ALL',
             initGridTable : function (table) {
@@ -125,14 +129,14 @@ var app = function () {
             }
         });
         alternateObj.initFormModuleObject();
-
+        moduleObjs.push(alternateObj);
         // 疆内飞越模块
         overObj = new FormModule({
             canvasId: 'over-module',
             tableId: 'over-table',
             url : 'http://192.168.243.104:8085/altf/airport/retrieveOverFlights',
             // 定时器时间
-            timer : timer,
+            interval : interval,
             // 默认选中的范围值
             defaultScope : '1',
             initGridTable : function (table) {
@@ -155,14 +159,14 @@ var app = function () {
             }
         });
         overObj.initFormModuleObject();
-
+        moduleObjs.push(overObj);
         // 出港计划模块
         depObj = new FormModule({
             canvasId: 'dep-module',
             tableId: 'dep-table',
             url : 'http://192.168.243.104:8085/altf/airport/retrieveDepFlights',
             // 定时器时间
-            timer : timer,
+            interval : interval,
             // 默认选中的范围值
             defaultScope : '2',
             initGridTable : function (table) {
@@ -186,18 +190,44 @@ var app = function () {
             }
         });
         depObj.initFormModuleObject();
+        moduleObjs.push(depObj);
     };
 
+
     /**
-     * 初始化index，绑定菜单栏点击更新index
+     *  菜单栏事件
      * */
-    var initIndex = function () {
-        index = $('.main-area section.active').index();
-        app.index = index;
+    var initActiveModule = function () {
+
         $('.menu-bar li').on('click',function () {
-            index = $('.main-area section.active').index();
-            app.index = index;
+            // 取得当前点击对象
+            var $that = $(this);
+
+            var i = $that.index();
+            if(index == i){
+                return;
+            }
+            index = i;
+            // 切换活动模块
+            activeModuleToggle(index);
+            $('.menu-bar li').removeClass('active');
+            $('.main-area section').removeClass('active');
+            $that.addClass('active');
+            $('.main-area section').eq(index).addClass('active');
+            //处理表格自适应TODO
+            $(window).trigger('resize')
         });
+    };
+    /**
+     * 切换活动模块
+     * */
+    var activeModuleToggle = function (index) {
+        // 取消所有模块活动
+        moduleObjs.map(function (item, index, arr) {
+            item.setActive(false);
+        });
+        // 设置当前活动
+        moduleObjs[index].setActive(true);
     };
 
     /**
@@ -280,7 +310,11 @@ var app = function () {
             // 拼接各模块协调窗口列表项
             concatCollaborateDom();
             // 开启各模块定时刷新数据(按各自指定的默认范围为查询条件)
-            InquireDataByTimeInterval();
+            // InquireDataByTimeInterval();//初始化活动模块
+            // 初始化活动模块
+            index = $('.main-area section.active').index();
+            // 切换活动模块
+            activeModuleToggle(index);
         }else {
             // 数据无效则开启延时回调自身
             var timer = setTimeout(function () {
@@ -458,13 +492,11 @@ var app = function () {
     return {
         index : index,
         init : function () {
-            initIndex();
             initModule();
             initHistory();
-            /*initScopeList(1000);
-            initCollaborateDom(1000);*/
             // 初始化所需各项基本参数
             initBasicData(1000);
+            initActiveModule();
         }
     }
 }();

@@ -125,6 +125,17 @@ function GridTable(params) {
      * 冻结列高度（用以处理冻结列和滚动条中间缝隙）
      */
     this.frozenHeight = 0;
+
+    /**
+     * 记录当前点击的航班,用于表格数据刷新后表格滚动到当前航班位置
+     * */
+
+    this.activeFlight = null;
+
+    /**
+     *  是否允许更新表格数据 默认允许
+     * */
+    this.fireDataFlag = true;
 }
 
 
@@ -272,11 +283,7 @@ GridTable.prototype.initGridTableObject = function () {
     $(window).resize(function () {
         if( thisProxy.gridTableObject.parents('section').is(":visible") ){
             thisProxy.gridTableObject.jqGrid('resizeSize');
-            //清除冻结列
-            thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
-            //激活冻结列
-            thisProxy.gridTableObject.jqGrid("setFrozenColumns");
-            // thisProxy.frozenHeight = $('#'+thisProxy.tableId+'_frozen').parent().height();
+            thisProxy.frozenHeight = $('#'+thisProxy.tableId+'_frozen').parent().height();
             thisProxy.resizeFrozenTable();
         }
 
@@ -304,10 +311,20 @@ GridTable.prototype.resizeToFitContainer = function () {
 GridTable.prototype.fireTableDataChange = function (dataObj) {
     // 当前对象this代理
     var thisProxy = this;
+    // 表格数据刷新开关是否开启
+    if(!thisProxy.fireDataFlag){
+        return
+    }
+    // 清除协调窗口
+    thisProxy.clearCollaborateContainer();
+
     // 校验数据是否有效
     if(!$.isValidObject(dataObj) || !$.isValidObject(dataObj.flights)){
+        // 清空表格数据
+        thisProxy.gridTableObject.jqGrid('clearGridData');
         return;
     }
+
     // deep copy 保存源数据
     // thisProxy.data = $.extend(true, {}, dataObj);
     // 取得航班集合
@@ -325,12 +342,13 @@ GridTable.prototype.fireTableDataChange = function (dataObj) {
     }
     thisProxy.tableDataMap = tableMap;
     thisProxy.tableData = tableData;
-
     // 绘制表格数据
     thisProxy.drawGridTableData();
     // 调整表格大小以适应所在容器
     thisProxy.gridTableObject.jqGrid('resizeSize')
     // thisProxy.resizeToFitContainer();
+    // 定位并高亮显示指定rowid的航班
+    thisProxy.highlightRow();
 };
 
 
@@ -361,6 +379,9 @@ GridTable.prototype.drawGridTableData = function () {
 GridTable.prototype.onCellSelect = function (rowid, iCol, cellcontent, e) {
     // 代理
     var thisProxy = this;
+
+    thisProxy.activeFlight = rowid;
+
     // 清除单元格样式
     thisProxy.clearCollaborateContainer();
     // 调整冻结列高度
@@ -778,11 +799,11 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                 };
                 //成功
                 if (data.status == 200) {
-                    // 取数据的altfFlights值
-                    var altfFlights = data.altfFlights;
+                    // 取数据的altfAlternate值
+                    var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
-                    if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
+                    if($.isValidObject(altfAlternate)){
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '更改备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -844,11 +865,11 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                 };
                 //成功
                 if (data.status == 200) {
-                    // 取数据的altfFlights值
-                    var altfFlights = data.altfFlights;
+                    // 取数据的altfAlternate值
+                    var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
-                    if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
+                    if($.isValidObject(altfAlternate)){
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '更改备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -908,11 +929,11 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                 };
                 //成功
                 if (data.status == 200) {
-                    // 取数据的altfFlights值
-                    var altfFlights = data.altfFlights;
+                    // 取数据的altfAlternate值
+                    var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
-                    if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
+                    if($.isValidObject(altfAlternate)){
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '确定备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -962,11 +983,11 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                 };
                 //成功
                 if (data.status == 200) {
-                    // 取数据的altfFlights值
-                    var altfFlights = data.altfFlights;
+                    // 取数据的altfAlternate值
+                    var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
-                    if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
+                    if($.isValidObject(altfAlternate)){
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '释放停机位已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -1016,11 +1037,11 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                 };
                 //成功
                 if (data.status == 200) {
-                    // 取数据的altfFlights值
-                    var altfFlights = data.altfFlights;
+                    // 取数据的altfAlternate值
+                    var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
-                    if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
+                    if($.isValidObject(altfAlternate)){
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '取消备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -1192,6 +1213,7 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     //激活冻结列
     thisProxy.gridTableObject.jqGrid("setFrozenColumns");
     thisProxy.resizeFrozenTable();
+    thisProxy.scrollToRow(flight.id);
 };
 
 
@@ -1261,5 +1283,58 @@ GridTable.prototype.resizeFrozenTable = function(){
     var thisProxy = this;
     var frozenDom = $('#'+thisProxy.tableId+'_frozen').parent();
     frozenDom.height( thisProxy.frozenHeight  + 'px');
+
+};
+
+/**
+ * 滚动到指定行id
+ *
+ * @param rowid
+ * @param num 可选
+ */
+GridTable.prototype.scrollToRow = function (rowid, num) {
+    var rowTr = this.gridTableObject.find('tr#' + rowid);
+    var iCol = rowTr.find('td').first().text();
+    if (!$.isValidVariable(num)) {
+        num = 5;
+    }
+    var rowFirstTd = rowTr.find('td').first()[0];
+    if ($.isValidVariable(rowFirstTd)) {
+        var offsetHeight = rowFirstTd.offsetHeight;
+        var offsetTop = rowFirstTd.offsetTop;
+        var scrollHeight = 0;
+        if ($.isValidVariable(iCol)) {
+            if (iCol > 5) {
+                // 留一定空间给相同时间的航班数据
+                iCol = iCol - 5;
+                scrollHeight = offsetTop - offsetHeight * num;
+            } else {
+                scrollHeight = offsetTop;
+            }
+            this.canvas.find("div.ui-jqgrid-bdiv").each(function(){
+                $(this).scrollTop(scrollHeight);
+            });
+        }
+    }
+};
+
+/**
+ * 定位并高亮显示指定rowid的航班
+ *
+ * @param rowid
+ */
+GridTable.prototype.highlightRow = function () {
+    // 代理
+    var thisProxy = this;
+    // 清空所有选中行
+    this.gridTableObject.jqGrid('resetSelection');
+
+    if($.isValidVariable(thisProxy.activeFlight)){
+        var rowid = thisProxy.activeFlight;
+        // 选中行
+        this.gridTableObject.jqGrid('setSelection', rowid, false);
+        // 滚动到指定id对应的行
+        this.scrollToRow(rowid);
+    }
 
 };

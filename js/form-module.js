@@ -290,6 +290,8 @@ FormModule.prototype.initInquireData = function (refresh) {
     thisProxy.desabledForm(true);
     // 启用loading动画
     thisProxy.loading.start();
+    // 清空相关数据信息
+    thisProxy.clear();
 
     // 更新当前查询条件
     thisProxy.updateCondition();

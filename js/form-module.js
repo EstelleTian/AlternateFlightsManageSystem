@@ -369,6 +369,10 @@ FormModule.prototype.inquireData = function () {
     }
     // 拼接参数,拼接完整的请求地址
     var url = thisProxy.url + '?scope='+ thisProxy.scope +'&keyWord='+ thisProxy.keyword;
+    // 备降模块无关键字参数
+    if(thisProxy.tableId == 'alternate-table'){
+        url = thisProxy.url + '?scope='+ thisProxy.scope;
+    }
     // 请求获取数据
     $.ajax({
         url:url,

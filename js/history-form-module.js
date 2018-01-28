@@ -396,16 +396,13 @@ HistoryFormModule.prototype.clear = function () {
     // 当前查询条件栏
     var $condition = $('.condition-panel', thisProxy.canvas);
     // 数据生成时间
-    var $time = $('.time', $condition);
-    // 数据生成时间提示
-    var $tip = $('.time-tip', $condition);
+    var $time = $('.form-panel .time', thisProxy.canvas);
     // 起止日期
     var $Date = $('.date-scope', $condition);
     // 提示信息
     var $err = $('.alert',thisProxy.canvas);
     // 清空数据生成时间
-    $time.html('').removeAttr('title').addClass('hidden');
-    $tip.addClass('hidden');
+    $time.html('').removeAttr('title');
     $Date.addClass('hidden');
     // 隐藏当前查询条件栏
     $condition.addClass('hidden');
@@ -434,20 +431,6 @@ HistoryFormModule.prototype.desabledForm = function (bool) {
 };
 
 /**
- * 初始化表格
- * */
-HistoryFormModule.prototype.initTable = function (data) {
-    // 当前对象this代理
-    var thisProxy = this;
-    // 校验自定义的initGridTable方法是否有效
-    if($.isValidVariable(thisProxy.initGridTable) && typeof thisProxy.initGridTable == 'function'){
-        // 调用initGridTable方法
-        thisProxy.initGridTable(data,thisProxy.table);
-    }
-};
-
-
-/**
  * 更新数据生成时间并显示
  * */
 HistoryFormModule.prototype.updateTime = function () {
@@ -456,13 +439,11 @@ HistoryFormModule.prototype.updateTime = function () {
     // 校验时间是否有效
     if($.isValidVariable(thisProxy.generateTime)){
         // 取得数据生成时间节点
-        var $node = $('.condition-panel .time', thisProxy.canvas);
-        var $tip = $('.condition-panel .time-tip', thisProxy.canvas);
+        var $node = $('.form-panel .time', thisProxy.canvas);
         // 格式化处理时间
         var time = thisProxy.formaterGenerateTime(thisProxy.generateTime);
         // 显示数据生成时间
-        $node.text(time).attr('title','数据生成时间: '+time).removeClass('hidden');
-        var $tip = $('.condition-panel .time-tip', thisProxy.canvas).removeClass('hidden');
+        $node.text('数据生成时间: '+time).attr('title','数据生成时间: '+time);
     }
 
 };

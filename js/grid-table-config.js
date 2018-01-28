@@ -56,23 +56,27 @@ var GridTableConfig = function () {
             // 计划ETD
             {
                 name: 'petd',
-                index: 'petd'
+                index: 'petd',
+                formatter : formatterDateTime
             },
             // 动态ETD
             {
                 name: 'detd',
-                index: 'detd'
+                index: 'detd',
+                formatter : formatterDateTime
             },
             // ATD
             {
                 name: 'atd',
                 index: 'atd',
-                width:120
+                width:120,
+                formatter : formatterDateTime
             },
             // 计划ETA
             {
                 name: 'peta',
-                index: 'peta'
+                index: 'peta',
+                formatter : formatterDateTime
             },
             // 降落机场
             {
@@ -184,32 +188,38 @@ var GridTableConfig = function () {
             // 计划ETD
             {
                 name: 'petd',
-                index: 'petd'
+                index: 'petd',
+                formatter : formatterDateTime
             },
             // 动态ETD
             {
                 name: 'detd',
-                index: 'detd'
+                index: 'detd',
+                formatter : formatterDateTime
             },
             // ATD
             {
                 name: 'atd',
-                index: 'atd'
+                index: 'atd',
+                formatter : formatterDateTime
             },
             // 动态ETA
             {
                 name: 'deta',
-                index: 'deta'
+                index: 'deta',
+                formatter : formatterDateTime
             },
             // ATA
             {
                 name: 'ata',
-                index: 'ata'
+                index: 'ata',
+                formatter : formatterDateTime
             },
             // 计划ETA
             {
                 name: 'peta',
-                index: 'peta'
+                index: 'peta',
+                formatter : formatterDateTime
             },
             // 降落机场
             {
@@ -244,7 +254,8 @@ var GridTableConfig = function () {
             // 修改时间
             {
                 name: 'updateTime',
-                index: 'updateTime'
+                index: 'updateTime',
+                formatter : formatterDateTime
             },
             // 备注
             {
@@ -257,55 +268,96 @@ var GridTableConfig = function () {
     // ......
     // colModel模板
     var colModelTemplate = {
-            width: 100,
-            align: 'center',
-            sortable: true,
-            search: true,
-            searchoptions: {
-                sopt: ['cn', 'nc', 'eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en'],
-                dataEvents: [{
-                    type: 'keyup',
-                    fn: GridTableUtil.searchToUpperCase
-                }]
-            },
-            // cellattr:FlightGridTableCellConfigcellattrCustom,
-            sortfunc : function (a, b, direction) {
-                // 若为升序排序，空值转换为最大的值进行比较
-                // 保证排序过程中，空值始终在最下方
-                if ($.type(a) === "number" || $.type(b) === "number") {
-                    // 数字类型
-                    var maxNum = Number.MAX_VALUE;
-                    if (!$.isValidVariable(a) || a < 0) {
-                        if (direction > 0) {
-                            a = maxNum;
-                        }
-                    }
-                    if (!$.isValidVariable(b) || b < 0) {
-                        if (direction > 0) {
-                            b = maxNum;
-                        }
-                    }
-                    return (a > b ? 1 : -1) * direction;
-                } else {
-                    // 字符串类型
-                    var maxStr = 'ZZZZZZZZZZZZ';
-                    if (!$.isValidVariable(a)) {
-                        if (direction > 0) {
-                            a = maxStr;
-                        } else {
-                            a = '';
-                        }
-                    }
-                    if (!$.isValidVariable(b)) {
-                        if (direction > 0) {
-                            b = maxStr;
-                        } else {
-                            b = '';
-                        }
-                    }
-                    return a.localeCompare(b) * direction;
-                }
+        width: 100,
+        align: 'center',
+        sortable: true,
+        search: true,
+        searchoptions: {
+            sopt: ['cn', 'nc', 'eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en'],
+            dataEvents: [{
+                type: 'keyup',
+                fn: GridTableUtil.searchToUpperCase
+            }]
+        },
+        // 单元格相关属性处理
+        cellattr: function (rowId, value, rowObject, colModel, arrData) {
+            // 需要赋予表格的属性
+            var attrs = '';
+            // 无效数值不做处理
+            if (!$.isValidVariable(value)) {
+                return attrs;
             }
+            // 单元格原始值,未formatter
+            var cellcontent = rowObject[colModel.name];
+            // 若单元格值无效
+            if (!$.isValidVariable(cellcontent)) {
+                cellcontent = '';
+            }
+            // 单元格值长度
+            var len = cellcontent.length;
+            //时间格式
+            var regexp = /(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})(((0[13578]|1[02])(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)(0[1-9]|[12][0-9]|30))|(02(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))0229)/;
+            //12位有效时间
+            if (regexp.test(cellcontent) && len == 12) {
+                cellcontent = cellcontent.substring(0, 8) + ' ' + cellcontent.substring(8, 10) + ":" + cellcontent.substring(10, 12);
+            } else if (regexp.test(cellcontent) && len == 14) { //14位有效时间
+                cellcontent = cellcontent.substring(0, 8) + ' ' + cellcontent.substring(8, 10) + ":" + cellcontent.substring(10, 12) + ':' + cellcontent.substring(12, 14);
+            }
+            // 设置title属性
+            attrs = ' title="' + cellcontent + '"';
+            return attrs;
+        },
+        sortfunc: function (a, b, direction) {
+            // 若为升序排序，空值转换为最大的值进行比较
+            // 保证排序过程中，空值始终在最下方
+            if ($.type(a) === "number" || $.type(b) === "number") {
+                // 数字类型
+                var maxNum = Number.MAX_VALUE;
+                if (!$.isValidVariable(a) || a < 0) {
+                    if (direction > 0) {
+                        a = maxNum;
+                    }
+                }
+                if (!$.isValidVariable(b) || b < 0) {
+                    if (direction > 0) {
+                        b = maxNum;
+                    }
+                }
+                return (a > b ? 1 : -1) * direction;
+            } else {
+                // 字符串类型
+                var maxStr = 'ZZZZZZZZZZZZ';
+                if (!$.isValidVariable(a)) {
+                    if (direction > 0) {
+                        a = maxStr;
+                    } else {
+                        a = '';
+                    }
+                }
+                if (!$.isValidVariable(b)) {
+                    if (direction > 0) {
+                        b = maxStr;
+                    } else {
+                        b = '';
+                    }
+                }
+                return a.localeCompare(b) * direction;
+            }
+        }
+    };
+    // 单元格时间格式化
+    function formatterDateTime (cellvalue, options, rowObject) {
+        var val = cellvalue * 1;
+        if ($.isValidVariable(cellvalue) && !isNaN(val)) {
+            // 12位时间
+            if (cellvalue.length == 12) {
+                return cellvalue.substring(6, 8) + ' ' + cellvalue.substring(8, 10) + ':' + cellvalue.substring(10, 12);
+            }else if(cellvalue.length == 14){  // 14位时间
+                return cellvalue.substring(6, 8) + ' ' + cellvalue.substring(8, 10) + ':' + cellvalue.substring(10, 12) + ':' + cellvalue.substring(12, 14);
+            }
+        }else {
+            return '';
+        }
     };
 
     return {

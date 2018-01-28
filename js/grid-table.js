@@ -125,6 +125,17 @@ function GridTable(params) {
      * 冻结列高度（用以处理冻结列和滚动条中间缝隙）
      */
     this.frozenHeight = 0;
+
+    /**
+     * 记录当前点击的航班,用于表格数据刷新后表格滚动到当前航班位置
+     * */
+
+    this.activeFlight = null;
+
+    /**
+     *  是否允许更新表格数据 默认允许
+     * */
+    this.fireDataFlag = true;
 }
 
 
@@ -300,10 +311,20 @@ GridTable.prototype.resizeToFitContainer = function () {
 GridTable.prototype.fireTableDataChange = function (dataObj) {
     // 当前对象this代理
     var thisProxy = this;
+    // 表格数据刷新开关是否开启
+    if(!thisProxy.fireDataFlag){
+        return
+    }
+    // 清除协调窗口
+    thisProxy.clearCollaborateContainer();
+
     // 校验数据是否有效
     if(!$.isValidObject(dataObj) || !$.isValidObject(dataObj.flights)){
+        // 清空表格数据
+        thisProxy.gridTableObject.jqGrid('clearGridData');
         return;
     }
+
     // deep copy 保存源数据
     // thisProxy.data = $.extend(true, {}, dataObj);
     // 取得航班集合
@@ -321,12 +342,13 @@ GridTable.prototype.fireTableDataChange = function (dataObj) {
     }
     thisProxy.tableDataMap = tableMap;
     thisProxy.tableData = tableData;
-
     // 绘制表格数据
     thisProxy.drawGridTableData();
     // 调整表格大小以适应所在容器
     thisProxy.gridTableObject.jqGrid('resizeSize')
     // thisProxy.resizeToFitContainer();
+    // 定位并高亮显示指定rowid的航班
+    thisProxy.highlightRow();
 };
 
 
@@ -357,6 +379,9 @@ GridTable.prototype.drawGridTableData = function () {
 GridTable.prototype.onCellSelect = function (rowid, iCol, cellcontent, e) {
     // 代理
     var thisProxy = this;
+
+    thisProxy.activeFlight = rowid;
+
     // 清除单元格样式
     thisProxy.clearCollaborateContainer();
     // 调整冻结列高度
@@ -1291,4 +1316,25 @@ GridTable.prototype.scrollToRow = function (rowid, num) {
             });
         }
     }
+};
+
+/**
+ * 定位并高亮显示指定rowid的航班
+ *
+ * @param rowid
+ */
+GridTable.prototype.highlightRow = function () {
+    // 代理
+    var thisProxy = this;
+    // 清空所有选中行
+    this.gridTableObject.jqGrid('resetSelection');
+
+    if($.isValidVariable(thisProxy.activeFlight)){
+        var rowid = thisProxy.activeFlight;
+        // 选中行
+        this.gridTableObject.jqGrid('setSelection', rowid, false);
+        // 滚动到指定id对应的行
+        this.scrollToRow(rowid);
+    }
+
 };

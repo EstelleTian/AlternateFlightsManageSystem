@@ -20,6 +20,8 @@ var app = function () {
     var scopeListData = null;
     // 右键协调窗口子菜单项数据集合
     var subCollaborateDomData = null;
+    // 航班状态码
+    var statusCode = {};
 
     /**
      * 各模块对象
@@ -42,6 +44,19 @@ var app = function () {
     var interval = 1000*60*1;
     // 活动模块所在模块下标
     var index = 0;
+
+    /** 设置默认活动模块
+     *
+     *  确保第一个模块为活动模块
+     * */
+    var initDefaultActiveModule = function () {
+        $('.menu-bar li:first').addClass('active');
+        $('.main-area section:first').addClass('active');
+        // 下标大于0的移除active class
+        $('.menu-bar li:gt(0)').removeClass('active');
+        $('.main-area section:gt(0)').removeClass('active');
+
+    };
 
     // 初始化模块
     var initModule = function () {
@@ -197,7 +212,7 @@ var app = function () {
 
 
     /**
-     *  菜单栏事件
+     *  绑定菜单栏事件，切换模块显隐及活动模块
      * */
     var initActiveModule = function () {
 
@@ -317,9 +332,11 @@ var app = function () {
             setScopeList();
             // 拼接各模块协调窗口列表项
             concatCollaborateDom();
+            // 更新状态列数值参数
+            setStatusCode();
             // 开启各模块定时刷新数据(按各自指定的默认范围为查询条件)
             // InquireDataByTimeInterval();//初始化活动模块
-            // 初始化活动模块
+            // 获取活动模块下标
             index = $('.main-area section.active').index();
             // 切换活动模块
             activeModuleToggle(index);
@@ -497,13 +514,33 @@ var app = function () {
         // depObj.initInquireData(true);
     };
 
+    /**
+     * 更新状态列数值参数
+     * */
+    var setStatusCode = function () {
+        if($.isValidObject(basicData.airportConfig) && $.isValidObject(basicData.airportConfig.alternateStatus)){
+            var alternateStatus = basicData.airportConfig.alternateStatus;
+            statusCode = {};
+            alternateStatus.map(function (item, index, arr) {
+                var val = item.value;
+                statusCode[val] = item;
+            });
+            app.statusCode = statusCode;
+        }
+    };
+
     return {
-        index : index,
+        statusCode : statusCode,
         init : function () {
+            // 设置默认活动模块
+            initDefaultActiveModule();
+            // 初始化模块
             initModule();
+            // 初始化备降历史数据查询模块
             initHistory();
             // 初始化所需各项基本参数
             initBasicData(1000);
+            // 绑定菜单栏事件，切换模块显隐及活动模块
             initActiveModule();
         }
     }

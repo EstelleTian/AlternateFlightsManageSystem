@@ -26,7 +26,8 @@ var GridTableConfig = function () {
             // 状态
             {
                 name: 'status',
-                index: 'status'
+                index: 'status',
+                formatter : formatterStatus
             },
             // 航班号
             {
@@ -234,7 +235,8 @@ var GridTableConfig = function () {
             // 状态
             {
                 name: 'status',
-                index: 'status'
+                index: 'status',
+                formatter : formatterStatus
             },
             // 备降起飞
             {
@@ -293,6 +295,9 @@ var GridTableConfig = function () {
             if (!$.isValidVariable(cellcontent)) {
                 cellcontent = '';
             }
+            /**
+             *  处理时间单元格
+             * */
             // 单元格值长度
             var len = cellcontent.length;
             //时间格式
@@ -305,6 +310,20 @@ var GridTableConfig = function () {
             }
             // 设置title属性
             attrs = ' title="' + cellcontent + '"';
+
+            /**
+             * 处理状态列
+             * */
+            // 取得列值
+            var colName = colModel.name;
+            // 限制状态列
+            if(colName == 'status'){
+                // 取得单元格内容转换后的值
+                var matter = formatterStatus(cellcontent);
+                // 设置title属性为转换后的值
+                attrs = ' title="' + matter + '"'
+            }
+
             return attrs;
         },
         sortfunc: function (a, b, direction) {
@@ -359,6 +378,16 @@ var GridTableConfig = function () {
             return '';
         }
     };
+    // 航班状态列数值格式化转换
+    function formatterStatus(cellvalue, options, rowObject) {
+        var code = app.statusCode;
+        if($.isValidObject(code) && $.isValidVariable(code[cellvalue])){
+           return code[cellvalue].text;
+        }else {
+            return cellvalue;
+        }
+
+    }
 
     return {
         common : common,

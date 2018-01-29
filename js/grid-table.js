@@ -196,6 +196,8 @@ GridTable.prototype.initGridTableObject = function () {
         multiselect: false,
         // 是否限制仅通过checkbox进行行多选（在“伪”关闭多选模式时开启，默认“伪”关闭）
         multiboxonly: false,
+        //当排序时是否取消选择当前行
+        deselectAfterSort : false,
         // 绑定左键单击事件
         onCellSelect: function (rowid, iCol, cellcontent, e) {
             thisProxy.onCellSelect(rowid, iCol, cellcontent, e);
@@ -239,6 +241,13 @@ GridTable.prototype.initGridTableObject = function () {
         del: false,
         search: false,
         refresh: false
+    });
+    // 列排序时触发表格滚动条向上移动1px,用于解决排序后冻结列错位问题
+    thisProxy.gridTableObject.bind('jqGridSortCol',function(index, iCol, sortorder) {
+            var $bdiv = $('.ui-jqgrid-bdiv',thisProxy.canvas);
+            var h = $bdiv.scrollTop();
+            $bdiv.scrollTop(h-1);
+
     });
 
     // 绑定Canvas事件，屏蔽表格区域内浏览器右键菜单

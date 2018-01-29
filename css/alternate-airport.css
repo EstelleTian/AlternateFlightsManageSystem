@@ -9,6 +9,9 @@ body .app-transition .main-area section .panel-heading .poster {
   font-size: 1.6rem;
   font-weight: bold;
 }
+body .app-transition .main-area section .panel-heading .alter_volume_time {
+  font-size: 15px;
+}
 body .user_logout {
   display: inline-block;
 }

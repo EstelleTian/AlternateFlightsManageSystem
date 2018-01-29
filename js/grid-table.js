@@ -259,8 +259,6 @@ GridTable.prototype.initGridTableObject = function () {
     });
     // 绑定右键协调窗口事件,用于显隐菜单层级效果
     thisProxy.canvas.on('mouseover', '.grid-table-collaborate-container li', function (event) {
-        // 阻止事件冒泡
-        // event.stopPropagation();
         $that = $(this);
         // 添加class 若有子菜单则子菜单会显示
         $that.addClass('hover');
@@ -348,7 +346,7 @@ GridTable.prototype.fireTableDataChange = function (dataObj) {
     thisProxy.drawGridTableData();
     // 调整表格大小以适应所在容器
     thisProxy.gridTableObject.jqGrid('resizeSize')
-    // thisProxy.resizeToFitContainer();
+    thisProxy.resizeToFitContainer();
     // 定位并高亮显示指定rowid的航班
     thisProxy.highlightRow();
 };
@@ -383,11 +381,8 @@ GridTable.prototype.onCellSelect = function (rowid, iCol, cellcontent, e) {
     var thisProxy = this;
 
     thisProxy.activeFlight = rowid;
-
     // 清除单元格样式
     thisProxy.clearCollaborateContainer();
-    // 调整冻结列高度
-    thisProxy.resizeFrozenTable();
     // 获取当前表格的协调窗口
     var $conatainer = $('#gbox_' + thisProxy.tableId);
     // 若协调窗口无效则开启定时刷新数据开关
@@ -483,12 +478,22 @@ GridTable.prototype.onSortCol = function (index, iCol, sortorder) {
     var thisProxy = this;
     // 清除协调窗口
     thisProxy.clearCollaborateContainer();
-
+    thisProxy.scrollToFixForzen();
+};
+/**
+ *  列排序事件
+ * */
+GridTable.prototype.scrollToFixForzen = function (index, iCol, sortorder) {
+    // 代理
+    var thisProxy = this;
     var $bdiv = $('.ui-jqgrid-bdiv',thisProxy.canvas);
     var h = $bdiv.scrollTop();
     $bdiv.scrollTop(h-1);
     $bdiv.scrollTop(h);
 };
+
+
+
 
 /**
  * 清除协调窗口
@@ -499,7 +504,8 @@ GridTable.prototype.clearCollaborateContainer = function () {
     // 清理
     // 将协调窗口的被选菜单的class名 hover 去掉
     $('.grid-table-collaborate-container li.hover', thisProxy.canvas).removeClass('hover');
-    var $conatainer = $('#gbox_' + thisProxy.tableId);
+    // var $conatainer = $('#gbox_' + thisProxy.tableId);
+    var $conatainer = thisProxy.canvas;
 
     // 取得对应表格的冻结列表格
     var $frozenTable  = $('#'+thisProxy.tableId+'_frozen', thisProxy.canvas);
@@ -779,6 +785,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
 
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
+    // thisProxy.canvas.append(collaboratorDom);
     // 定位协调DOM
     collaboratorDom.position({
         of: opt.cellObj,
@@ -1174,15 +1181,11 @@ GridTable.prototype.collaborateDep = function (opt) {
 GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
     var thisProxy = this;
     // 获取单元格对象
-    var cellObj =  opts.cellObj;
-    // 若单元格对象无效(可能被删掉了)
-    if(!$.isValidObject(opts.cellObj) || opts.cellObj.length == 0){
-        // 重新获取单元格对象
-        cellObj =  thisProxy.getCellObject(opts.rowid, opts.iRow, opts.iCol);
-    }
+    // var cellObj =  opts.cellObj;
+    var cellObj =  thisProxy.getCellObject(opts.rowid, opts.iRow, opts.iCol);
 
     // 容器
-       $container = $('.ui-jqgrid-bdiv', thisProxy.canvas);
+    $container = cellObj.parents('.ui-jqgrid-bdiv');
     // 确定样式设置
     var styleClasses = 'qtip-green';
     if (type == 'SUCCESS') {
@@ -1275,9 +1278,14 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     thisProxy.gridTableObject.jqGrid("setFrozenColumns");
     thisProxy.resizeFrozenTable();*/
     // thisProxy.scrollToRow(flight.id);
+    //清除冻结列
+    // thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
     // 更新表格数据
     thisProxy.gridTableObject.jqGrid('setRowData',flight.id, rowData);
-    thisProxy.resizeFrozenTable();
+    thisProxy.scrollToFixForzen();
+    //激活冻结列
+    // thisProxy.gridTableObject.jqGrid("setFrozenColumns");
+    // thisProxy.resizeFrozenTable();
 };
 
 /**
@@ -1299,7 +1307,7 @@ GridTable.prototype.deleteSingleData = function (flight) {
     var f = thisProxy.gridTableObject.jqGrid('delRowData', flight.id);
     //激活冻结列
     thisProxy.gridTableObject.jqGrid("setFrozenColumns");
-    thisProxy.resizeFrozenTable();
+    // thisProxy.resizeFrozenTable();
 };
 
 

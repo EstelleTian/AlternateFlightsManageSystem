@@ -1345,6 +1345,13 @@ GridTable.prototype.followTargetPosition = function (collaboratorDom, cellObj) {
     // 代理
     var thisProxy = this;
     function position() {
+        var $container = $('#gbox_' + thisProxy.tableId);
+        // 获取协调窗口DOM
+        var collaborator =  $('.grid-table-collaborate-container',$container);
+        // 若取协调窗口DOM无效
+        if(!$.isValidVariable(collaborator) || collaborator.length == 0){
+            return
+        }
         collaboratorDom.position({
             of: cellObj,
             my: 'left top',

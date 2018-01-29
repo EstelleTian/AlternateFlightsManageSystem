@@ -417,9 +417,7 @@ GridTable.prototype.onCellSelect = function (rowid, iCol, cellcontent, e) {
  * @param iCol
  * @param e
  */
-GridTable.prototype.onRightClickRow = function (event, rowid, iRow, iCol, e) {
-    // 阻止事件冒泡
-    event.stopPropagation();
+GridTable.prototype.onRightClickRow = function ( rowid, iRow, iCol, e) {
     // 代理
     var thisProxy = this;
 
@@ -1177,8 +1175,14 @@ GridTable.prototype.collaborateDep = function (opt) {
  */
 GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
     var thisProxy = this;
-    // 获取单元格对象(因为更新数据是先删除再添加的，所以要重新获取一下新单元格对象)
-    var cellObj =  thisProxy.getCellObject(opts.rowid, opts.iRow, opts.iCol);
+    // 获取单元格对象
+    var cellObj =  opts.cellObj;
+    // 若单元格对象无效(可能被删掉了)
+    if(!$.isValidObject(opts.cellObj) || opts.cellObj.length == 0){
+        // 重新获取单元格对象
+        cellObj =  thisProxy.getCellObject(opts.rowid, opts.iRow, opts.iCol);
+    }
+
     // 容器
        $container = $('.ui-jqgrid-bdiv', thisProxy.canvas);
     // 确定样式设置

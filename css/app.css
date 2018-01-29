@@ -180,6 +180,7 @@ ul, li {
     display: flex;
     flex: 1 0 auto;
     flex-direction: column;
+    padding-top: 0px;
 }
 .main-area section .time {
     font-size: 1.5rem;

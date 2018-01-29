@@ -417,7 +417,9 @@ GridTable.prototype.onCellSelect = function (rowid, iCol, cellcontent, e) {
  * @param iCol
  * @param e
  */
-GridTable.prototype.onRightClickRow = function (rowid, iRow, iCol, e) {
+GridTable.prototype.onRightClickRow = function (event, rowid, iRow, iCol, e) {
+    // 阻止事件冒泡
+    event.stopPropagation();
     // 代理
     var thisProxy = this;
 

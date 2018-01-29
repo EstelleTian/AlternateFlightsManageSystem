@@ -395,6 +395,17 @@ GridTable.prototype.onCellSelect = function (rowid, iCol, cellcontent, e) {
     thisProxy.clearCollaborateContainer();
     // 调整冻结列高度
     thisProxy.resizeFrozenTable();
+    // 获取当前表格的协调窗口
+    var $conatainer = $('#gbox_' + thisProxy.tableId);
+    // 若协调窗口无效则开启定时刷新数据开关
+    var $Collaborate =  $('.' + GridTable.SELECTED_CELL_CLASS, $conatainer);
+    if(!$.isValidVariable($Collaborate) || $Collaborate.length < 1){
+        // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
+        if(!thisProxy.fireDataFlag){
+
+            thisProxy.fireDataFlag = true;
+        }
+    }
 };
 
 
@@ -409,6 +420,9 @@ GridTable.prototype.onCellSelect = function (rowid, iCol, cellcontent, e) {
 GridTable.prototype.onRightClickRow = function (rowid, iRow, iCol, e) {
     // 代理
     var thisProxy = this;
+
+    // 关闭表格数据刷新开关,阻止定时更新的数据绘制到表格
+    thisProxy.fireDataFlag = false;
 
     // 清除单元格样式
     this.clearCollaborateContainer();
@@ -570,6 +584,10 @@ GridTable.prototype.collaborateArr = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
+                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
+                if(!thisProxy.fireDataFlag){
+                    thisProxy.fireDataFlag = true;
+                }
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "预选备降提交失败，请稍后重试");
@@ -636,6 +654,10 @@ GridTable.prototype.collaborateArr = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
+                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
+                if(!thisProxy.fireDataFlag){
+                    thisProxy.fireDataFlag = true;
+                }
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "确定备降提交失败，请稍后重试");
@@ -691,6 +713,10 @@ GridTable.prototype.collaborateArr = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
+                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
+                if(!thisProxy.fireDataFlag){
+                    thisProxy.fireDataFlag = true;
+                }
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "正班占用提交失败，请稍后重试");
@@ -802,6 +828,10 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
+                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
+                if(!thisProxy.fireDataFlag){
+                    thisProxy.fireDataFlag = true;
+                }
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "更改预选提交失败，请稍后重试");
@@ -868,6 +898,10 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
+                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
+                if(!thisProxy.fireDataFlag){
+                    thisProxy.fireDataFlag = true;
+                }
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "更改备降提交失败，请稍后重试");
@@ -932,6 +966,10 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
+                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
+                if(!thisProxy.fireDataFlag){
+                    thisProxy.fireDataFlag = true;
+                }
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "确定备降提交失败，请稍后重试");
@@ -986,6 +1024,10 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
+                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
+                if(!thisProxy.fireDataFlag){
+                    thisProxy.fireDataFlag = true;
+                }
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "释放停机位提交失败，请稍后重试");
@@ -1040,6 +1082,10 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
+                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
+                if(!thisProxy.fireDataFlag){
+                    thisProxy.fireDataFlag = true;
+                }
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "取消备降提交失败，请稍后重试");

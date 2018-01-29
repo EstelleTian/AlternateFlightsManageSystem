@@ -463,8 +463,7 @@ FormModule.prototype.inquireData = function () {
                 /****todo***/
                 // 取得数据生成时间
                 thisProxy.generateTime = data.generateTime;
-                // 更新数据生成时间并显示
-                thisProxy.updateTime();
+
                 // 显示表格容器
                 thisProxy.isHiddenTableContainer(false);
                 // 清除提示信息
@@ -476,10 +475,20 @@ FormModule.prototype.inquireData = function () {
                         // 调用initGridTable方法,初始化表格
                         thisProxy.table = thisProxy.initGridTable(thisProxy.table);
                         thisProxy.table.fireTableDataChange(data);
+                        // 若表格定时器更新数据开关开启则更新数据生成时间，用于表格数据与时间保持一致
+                        if(thisProxy.table.fireDataFlag){
+                            // 更新数据生成时间并显示
+                            thisProxy.updateTime();
+                        }
                     }
                 }else {
                     // 更新表格数据
                     thisProxy.table.fireTableDataChange(data);
+                    // 若表格定时器更新数据开关开启则更新数据生成时间，用于表格数据与时间保持一致
+                    if(thisProxy.table.fireDataFlag){
+                        // 更新数据生成时间并显示
+                        thisProxy.updateTime();
+                    }
                 }
 
             } else if (data.status == 400) {

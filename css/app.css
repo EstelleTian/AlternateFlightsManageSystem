@@ -210,6 +210,7 @@ ul, li {
     /*width: 12rem;*/
     margin: 1rem;
     padding: 0 1rem;
+    font-weight: 600;
 }
 .form-panel .form-item .alert {
     display: none;
@@ -226,7 +227,7 @@ ul, li {
 .panel-body .form-panel .form-item > label, .alternate-history-module .form-panel .form-item > label{
     display: inline-block;
     max-width: 100%;
-    margin-bottom: 5px;
+    margin: 0px;
     margin-right: 1.5rem;
     font-weight: normal;
     color: #4a4a4a;
@@ -363,7 +364,9 @@ ul, li {
 .modal-header .close {
     font-size: 3rem;
 }
-
+.modal-body {
+    padding-top: 0;
+}
 
 @media (max-width: 768px) {
     .menu-bar ul{

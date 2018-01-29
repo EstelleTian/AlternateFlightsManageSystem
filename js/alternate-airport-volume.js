@@ -42,9 +42,10 @@ var alternateAirport = function () {
     $.jgrid.gridUnload('alernate_flight_grid_table');
     //阻止右键点击默认事件
     preventDefaultEvent()
-    Promise.all([
-      getTableColmodel(dataColConfig, isRefresh), getTableData(tableConfig, isRefresh)
-    ])
+    getTableColmodel(dataColConfig, isRefresh)
+    $('.alternate-airport').on('click',function () {
+      getTableData(tableConfig, false);
+    })
   }
   /**
    * 初始化用户信息
@@ -90,7 +91,6 @@ var alternateAirport = function () {
    *获取表格列配置
    */
   var getTableColmodel = function () {
-    return new Promise(function (resolve, reject) {
       var url = ipHost + 'altf/airport/retrieveAirportConfig'
       $.ajax({
         type: "GET",
@@ -104,18 +104,21 @@ var alternateAirport = function () {
             alternateAirport.airportConfig = data;
             colConfigConvert(airportConfig.airportConfig, tableConfig)
             setDownText(airportConfig.airportConfig)
+            if(tableConfig.colModel.length > 3) {
+              getTableData(tableConfig, isRefresh)
+            }else{
+              setTimeout(getTableData(tableConfig, isRefresh),3000);
+            }
           } else if (data.status == 500) {
             console.warn(data.error.message)
           } else {
             console.warn('获取机场配置为空')
           }
-          resolve(tableConfig);
         },
         error: function (xhr, status, error) {
           console.error(error)
         }
       });
-    })
 
   }
   /**
@@ -124,7 +127,6 @@ var alternateAirport = function () {
    * @param isRefresh
    */
   var getTableData = function (tableConfig, isRefresh) {
-    return new Promise(function (resolve, reject) {
       var url = ipHost + 'altf/airport/retrieveAirport'
       $.ajax({
         type: "GET",
@@ -151,9 +153,10 @@ var alternateAirport = function () {
               }
             } else {
               // 数据更新
-              airVolumeTable.jqGrid('setGridParam', tableConfig.data).trigger('reload');
+              airVolumeTable.jqGrid('clearGridData');
+              var params = {data: tableConfig.data};
+              airVolumeTable.jqGrid('setGridParam', params).trigger('reloadGrid');
             }
-            //resolve(tableConfig);
             if (isRefresh) {
               startTimer(getTableData, tableConfig, isRefresh, refreshTime);
             }
@@ -165,7 +168,6 @@ var alternateAirport = function () {
           console.warn(error)
         }
       });
-    })
   }
   /**
    * 修改机场容量qtip提示
@@ -190,10 +192,13 @@ var alternateAirport = function () {
       position: {
         my: 'bottom center', // 同jQueryUI Position
         at: 'top center',
+        collision: 'flipfit flipfit',
+        viewport: true, // 显示区域
         container: opt.positionContainer,
         adjust: {
           resize: true,
-          scroll: true
+          scroll: true,
+          method: 'shift shift'
         },
       },
       style: {
@@ -211,7 +216,7 @@ var alternateAirport = function () {
       // 隐藏配置
       hide: {
         target:opt.positionContainer , // 指定对象
-        event: 'scroll  click', // 失去焦点时隐藏
+        event: 'unfocus  click', // 失去焦点时隐藏
         effect: function () {
           $(this).fadeOut(); // 隐藏动画
         },
@@ -310,7 +315,9 @@ var alternateAirport = function () {
   };
 
   $(window).resize(function () {
-    airVolumeTable.jqGrid('resizeSize');
+    if($('.alter_volume').is(':visible')){
+      airVolumeTable.jqGrid('resizeSize');
+    }
   })
   /**
    * 表格配置以及参数数据转换
@@ -326,7 +333,7 @@ var alternateAirport = function () {
       $.each(dataObj, function (i, e) {
         var obj = {};
         obj['airport'] = e.airport;
-        obj['total'] = e.total;
+        obj['total'] = e.available;
         obj['remark'] = e.remark;
         $.each(e.positionCapInfo, function (index, ele) {
           $.each(config.typeArr, function (j, m) {
@@ -343,7 +350,7 @@ var alternateAirport = function () {
       // 单条数据转换
       var obj = {};
       obj['airport'] = dataObj.airport;
-      obj['total'] = dataObj.total;
+      obj['total'] = dataObj.available;
       obj['remark'] = dataObj.remark;
       $.each(dataObj.positionCapInfo, function (index, ele) {
         $.each(config.typeArr, function (j, m) {

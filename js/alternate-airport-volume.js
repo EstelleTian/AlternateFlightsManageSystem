@@ -52,6 +52,26 @@ var alternateAirport = function () {
   var initSystemParam = function () {
     var userName = sessionStorage.getItem('userName');
     var loginTime  = sessionStorage.getItem('loginTime');
+    if(userName == undefined || loginTime == undefined){
+      var option = {
+        title: '警告',
+        content: '用户未登录,请登录！',
+        showCancelBtn: false,
+        status: 2,
+        buttons: [
+          {
+            name: '确定',
+            isHidden: false,
+            status: 2,
+            callback:function () {
+              window.location = "index.html";
+            }
+          }
+        ]
+      }
+      BootstrapDialogFactory.dialog(option)
+      return
+    }
     $('.login-time').text('登陆时间：'+formatterTime(loginTime));
     $('.user-name').text(userName);
   }
@@ -124,12 +144,16 @@ var alternateAirport = function () {
               //列配置设置
               dataColConfig = tableConfig.colModel;
               // 初始化表格
-              initGridTable(tableConfig, 'alernate_flight_grid_table', 'ale-datas-pager')
+              if(tableConfig.colModel.length > 3){
+                initGridTable(tableConfig, 'alernate_flight_grid_table', 'ale-datas-pager')
+              }else{
+                setTimeout(initGridTable(tableConfig, 'alernate_flight_grid_table', 'ale-datas-pager'),500)
+              }
             } else {
               // 数据更新
               airVolumeTable.jqGrid('setGridParam', tableConfig.data).trigger('reload');
             }
-            resolve(tableConfig);
+            //resolve(tableConfig);
             if (isRefresh) {
               startTimer(getTableData, tableConfig, isRefresh, refreshTime);
             }

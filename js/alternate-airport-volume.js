@@ -165,6 +165,7 @@ var alternateAirport = function () {
           }
         },
         error: function (xhr, status, error) {
+          setTimeout(getTableData(tableConfig,isRefresh),1000*30*5);
           console.warn(error)
         }
       });
@@ -339,6 +340,7 @@ var alternateAirport = function () {
           $.each(config.typeArr, function (j, m) {
             if (m == ele.positionType) {
               obj[m + 'total'] = ele.capacity;
+              obj[m + 'total_style'] = 'background:#efffef;color:#000';
               obj[m + 'available'] = ele.available;
               obj[m + 'occupy'] = ele.occupy;
             }
@@ -356,6 +358,7 @@ var alternateAirport = function () {
         $.each(config.typeArr, function (j, m) {
           if (m == ele.positionType) {
             obj[m + 'total'] = ele.capacity;
+            obj[m + 'total_style'] = 'background:#efffef;color:#000';
             obj[m + 'available'] = ele.available;
             obj[m + 'occupy'] = ele.occupy;
           }
@@ -450,6 +453,14 @@ var alternateAirport = function () {
       }
     });
     $('#gbox_' + opt.tableId).append(collaboratorDom);
+    $('.alter_volume .flight-grid-table-collaborate-container').on('click',function (e) {
+      e.stopPropagation();
+    })
+    $('.alter_volume').on('click',function (event) {
+      if($('.flight-grid-table-collaborate-container').is(':visible')){
+        clearCollaborateContainer()
+      }
+    })
     $('#flightId').focus().select()
     // 定位协调DOM
     collaboratorDom.position({

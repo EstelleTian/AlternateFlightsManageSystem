@@ -1269,7 +1269,7 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     }
     //激活冻结列
     thisProxy.gridTableObject.jqGrid("setFrozenColumns");
-    thisProxy.resizeFrozenTable();
+    // thisProxy.resizeFrozenTable();
     thisProxy.scrollToRow(flight.id);
 };
 

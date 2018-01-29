@@ -242,13 +242,6 @@ GridTable.prototype.initGridTableObject = function () {
         search: false,
         refresh: false
     });
-    // 列排序时触发表格滚动条向上移动1px,用于解决排序后冻结列错位问题
-    thisProxy.gridTableObject.bind('jqGridSortCol',function(index, iCol, sortorder) {
-            var $bdiv = $('.ui-jqgrid-bdiv',thisProxy.canvas);
-            var h = $bdiv.scrollTop();
-            $bdiv.scrollTop(h-1);
-
-    });
 
     // 绑定Canvas事件，屏蔽表格区域内浏览器右键菜单
     thisProxy.canvas.on('mouseenter', function () {
@@ -490,6 +483,11 @@ GridTable.prototype.onSortCol = function (index, iCol, sortorder) {
     var thisProxy = this;
     // 清除协调窗口
     thisProxy.clearCollaborateContainer();
+
+    var $bdiv = $('.ui-jqgrid-bdiv',thisProxy.canvas);
+    var h = $bdiv.scrollTop();
+    $bdiv.scrollTop(h-1);
+    $bdiv.scrollTop(h);
 };
 
 /**
@@ -1256,7 +1254,7 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     var rowData = thisProxy.convertData(flight);
     // 更新数据
     thisProxy.tableDataMap[flight.id] = rowData;
-    //清除冻结列
+   /* //清除冻结列
     thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
     // 删除原数据行，加入新的数据行
     // 表格数据ID集合
@@ -1275,8 +1273,11 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     }
     //激活冻结列
     thisProxy.gridTableObject.jqGrid("setFrozenColumns");
-    // thisProxy.resizeFrozenTable();
-    thisProxy.scrollToRow(flight.id);
+    thisProxy.resizeFrozenTable();*/
+    // thisProxy.scrollToRow(flight.id);
+    // 更新表格数据
+    thisProxy.gridTableObject.jqGrid('setRowData',flight.id, rowData);
+    thisProxy.resizeFrozenTable();
 };
 
 /**

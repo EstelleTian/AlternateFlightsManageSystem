@@ -165,6 +165,7 @@ var alternateAirport = function () {
           }
         },
         error: function (xhr, status, error) {
+          setTimeout(getTableData(tableConfig,isRefresh),1000*30*5);
           console.warn(error)
         }
       });

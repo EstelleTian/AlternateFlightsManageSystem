@@ -181,6 +181,9 @@ ul, li {
     flex: 1 0 auto;
     flex-direction: column;
 }
+.main-area section .time {
+    font-size: 1.5rem;
+}
 .panel-body .form-panel, .panel-body .condition-panel, .alternate-history-module .condition-panel, .alternate-history-module .form-panel{
     display: flex;
     /*justify-content: center;*/
@@ -352,6 +355,13 @@ ul, li {
 
 .atfm-btn {
     line-height: 1.42857143;
+}
+
+.modal-header {
+    background: #E6F0F3;
+}
+.modal-header .close {
+    font-size: 3rem;
 }
 
 

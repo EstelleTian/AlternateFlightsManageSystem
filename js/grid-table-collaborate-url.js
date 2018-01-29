@@ -14,7 +14,7 @@ var CellOpreationUrl = {
     // 释放停机位
     RELEASE_POSTION : 'http://192.168.243.104:8085/altf/airport/releasePosition',
     // 取消备降
-    CANCEL_ALTERNATE : 'http://192.168.243.104:8085/altf/airport/releasePosition',
+    CANCEL_ALTERNATE : 'http://192.168.243.104:8085/altf/airport/cancleAlternate',
 
 
 };

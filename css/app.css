@@ -360,10 +360,10 @@ ul, li {
 
 .modal-header {
     background: #E6F0F3;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
-.modal-header .close {
-    font-size: 3rem;
-}
+
 .modal-body {
     padding-top: 0;
 }

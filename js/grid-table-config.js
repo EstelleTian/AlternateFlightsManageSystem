@@ -300,7 +300,7 @@ var GridTableConfig = function () {
                 var finished = rowObject.finished;
                 if($.isValidVariable(finished)){
                     if(finished == '1'){
-                        attrs += ' style= "background: #9fd4ec;"';
+                        attrs += ' style= "background: #c2d0d6;"';
                     }
                 }
                 return attrs;
@@ -346,7 +346,7 @@ var GridTableConfig = function () {
             var finished = rowObject.finished;
             if($.isValidVariable(finished)){
                 if(finished == '1'){
-                    attrs += ' style= "background: #9fd4ec;"';
+                    attrs += ' style= "background: #c2d0d6;"';
                 }
             }
 

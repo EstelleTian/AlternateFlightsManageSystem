@@ -180,6 +180,7 @@ ul, li {
     display: flex;
     flex: 1 0 auto;
     flex-direction: column;
+    padding-top: 0px;
 }
 .main-area section .time {
     font-size: 1.5rem;
@@ -360,10 +361,10 @@ ul, li {
 
 .modal-header {
     background: #E6F0F3;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
-.modal-header .close {
-    font-size: 3rem;
-}
+
 .modal-body {
     padding-top: 0;
 }

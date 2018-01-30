@@ -73,7 +73,7 @@ var alternateAirport = function () {
       BootstrapDialogFactory.dialog(option)
       return
     }
-    $('.login-time').text('登陆时间：'+formatterTime(loginTime));
+    $('.login-time').text('登录时间：'+formatterTime(loginTime));
     $('.user-name').text(userName);
   }
   /**

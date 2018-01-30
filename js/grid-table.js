@@ -420,6 +420,16 @@ GridTable.prototype.onRightClickRow = function ( rowid, iRow, iCol, e) {
     var cellObj = $(e.target);
     // 记录当前选中的单元格对象
     cellObj.addClass(GridTable.SELECTED_CELL_CLASS);
+    // 获取到选中单元格所在表格的容器
+    var container = cellObj.parents('.ui-jqgrid-bdiv');
+    //记录当前选中的单元格对象是否是在冻结列表格中
+    var isFrozen = false;
+    // 若选中单元格所在表格的容器有效且有frozen-bdiv class名，即为冻结表格
+    if($.isValidVariable(container) && container.length > 0 && container.hasClass('frozen-bdiv')){
+       isFrozen = true;
+    }else  {
+        isFrozen = false;
+    }
 
     // 获取计划航班数据
     var flight = this.tableDataMap[rowid];
@@ -446,7 +456,8 @@ GridTable.prototype.onRightClickRow = function ( rowid, iRow, iCol, e) {
         iRow : iRow,
         iCol : iCol,
         flight : flight,
-        cellObj : cellObj
+        cellObj : cellObj,
+        isFrozen : isFrozen
     };
     // 获取表格id
     var tableId = thisProxy.tableId;
@@ -539,6 +550,39 @@ GridTable.prototype.collaborateArr = function (opt) {
     if(!$.isValidVariable(collaboratorDom)){
         return
     }
+    /**
+     * 菜单项显隐处理
+     * */
+        //获取航班状态
+    var status = opt.flight.status;
+    if($.isValidVariable(status)){
+        // 状态为预选
+        if(status == 1){
+            // 预选备降菜单项显示
+            $('.pre-alternate', collaboratorDom).show();
+            // 确定备降和正班占用菜单项隐藏
+            $('.confirm-alternate', collaboratorDom).hide();
+            $('.occupied', collaboratorDom).hide();
+
+        }else if(status == 2) {  // 状态为备降
+            // 确定备降菜单项显示
+            $('.confirm-alternate', collaboratorDom).show();
+            // 预选备降和正班占用菜单项隐藏
+            $('.pre-alternate', collaboratorDom).hide();
+            $('.occupied', collaboratorDom).hide();
+        }else if(status == 4){ // 状态为正班占用
+            // 预选备降、确定备降和正班占用菜单项隐藏
+            $('.pre-alternate', collaboratorDom).hide();
+            $('.confirm-alternate', collaboratorDom).hide();
+            $('.occupied', collaboratorDom).hide();
+        }else {
+            // 预选备降、确定备降和正班占用菜单项显示
+            $('.pre-alternate', collaboratorDom).show();
+            $('.confirm-alternate', collaboratorDom).show();
+            $('.occupied', collaboratorDom).show();
+        }
+    }
+
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
 
@@ -602,7 +646,7 @@ GridTable.prototype.collaborateArr = function (opt) {
                     var altfFlights = data.altfFlights;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
+                        thisProxy.fireSingleDataChange(opt,altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '预选备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -672,7 +716,7 @@ GridTable.prototype.collaborateArr = function (opt) {
                     var altfFlights = data.altfFlights;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
+                        thisProxy.fireSingleDataChange(opt, altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '确定备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -731,7 +775,7 @@ GridTable.prototype.collaborateArr = function (opt) {
                     var altfFlights = data.altfFlights;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(altfFlights);
+                        thisProxy.fireSingleDataChange(opt, altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '正班占用已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -847,7 +891,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfAlternate)){
-                        thisProxy.fireSingleDataChange(altfAlternate);
+                        thisProxy.fireSingleDataChange(opt, altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '更改备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -917,7 +961,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfAlternate)){
-                        thisProxy.fireSingleDataChange(altfAlternate);
+                        thisProxy.fireSingleDataChange(opt, altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '更改备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -985,7 +1029,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfAlternate)){
-                        thisProxy.fireSingleDataChange(altfAlternate);
+                        thisProxy.fireSingleDataChange(opt, altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '确定备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -1043,7 +1087,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfAlternate)){
-                        thisProxy.fireSingleDataChange(altfAlternate);
+                        thisProxy.fireSingleDataChange(opt, altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '释放停机位已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -1182,7 +1226,13 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
     var thisProxy = this;
     // 获取单元格对象
     // var cellObj =  opts.cellObj;
-    var cellObj =  thisProxy.getCellObject(opts.rowid, opts.iRow, opts.iCol);
+    var cellObj = null;
+    if(opts.isFrozen){
+        cellObj =  thisProxy.getCellObjectFormFrozen(opts.rowid, opts.iRow, opts.iCol);
+    }else {
+        cellObj =  thisProxy.getCellObject(opts.rowid, opts.iRow, opts.iCol);
+    }
+    // var cellObj =  thisProxy.getCellObject(opts.rowid, opts.iRow, opts.iCol);
 
     // 容器
     $container = cellObj.parents('.ui-jqgrid-bdiv');
@@ -1213,7 +1263,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         },
         // 隐藏配置
         hide: {
-            target: thisProxy.canvas, // 指定对象
+            target: thisProxy.canvascanvas, // 指定对象
             event: 'unfocus click', // 失去焦点时隐藏
             effect: function () {
                 $(this).fadeOut(); // 隐藏动画
@@ -1248,7 +1298,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
  * @param flight
  *
  */
-GridTable.prototype.fireSingleDataChange = function (flight) {
+GridTable.prototype.fireSingleDataChange = function (opt, flight) {
     var thisProxy = this;
     // 更新源数据 (注意：源数据是没有id属性的，只有flightDataId属性)
     // todo
@@ -1320,6 +1370,7 @@ GridTable.prototype.deleteSingleData = function (flight) {
  * @returns
  */
 GridTable.prototype.getCellObject = function (rowid, iRow, iCol) {
+    var thisProxy = this;
     if ($.type(iCol) === 'string') {
         // 字符类型，计算列名在表格中的列index值
         var colModel = this.gridTableObject.getGridParam('colModel');
@@ -1337,6 +1388,35 @@ GridTable.prototype.getCellObject = function (rowid, iRow, iCol) {
 };
 
 /**
+ * 获取冻结列单元格对象
+ *
+ * @param rowid
+ * @param iRow
+ * @param iCol
+ * @returns
+ */
+GridTable.prototype.getCellObjectFormFrozen = function (rowid, iRow, iCol) {
+    var thisProxy = this;
+    // 获取到冻结表格
+    var $frozenTable  = $('#'+thisProxy.tableId+'_frozen', thisProxy.canvas);
+    if ($.type(iCol) === 'string') {
+
+        // 字符类型，计算列名在表格中的列index值
+        var colModel = this.gridTableObject.getGridParam('colModel');
+        var colIndex = null;
+        for (var index in colModel) {
+            if (colModel[index].name == iCol) {
+                colIndex = index;
+                break;
+            }
+        }
+        return $frozenTable.find('tr#' + rowid).find('td').eq(colIndex);
+    } else {
+        return $frozenTable.find('tr#' + rowid).find('td').eq(iCol);
+    }
+};
+
+/**
  * 协调窗口跟随页面移动方法
  * @param collaboratorDom 协调对象
  * @param cellObj 选中单元格
@@ -1345,6 +1425,13 @@ GridTable.prototype.followTargetPosition = function (collaboratorDom, cellObj) {
     // 代理
     var thisProxy = this;
     function position() {
+        var $container = $('#gbox_' + thisProxy.tableId);
+        // 获取协调窗口DOM
+        var collaborator =  $('.grid-table-collaborate-container',$container);
+        // 若取协调窗口DOM无效
+        if(!$.isValidVariable(collaborator) || collaborator.length == 0){
+            return
+        }
         collaboratorDom.position({
             of: cellObj,
             my: 'left top',

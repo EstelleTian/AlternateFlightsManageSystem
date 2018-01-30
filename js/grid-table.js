@@ -651,7 +651,7 @@ GridTable.prototype.collaborateArr = function (opt) {
                     var altfFlights = data.altfFlights;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(opt,altfFlights);
+                        thisProxy.fireSingleDataChange(altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '预选备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -721,7 +721,7 @@ GridTable.prototype.collaborateArr = function (opt) {
                     var altfFlights = data.altfFlights;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(opt, altfFlights);
+                        thisProxy.fireSingleDataChange( altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '确定备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -782,7 +782,7 @@ GridTable.prototype.collaborateArr = function (opt) {
                     var altfFlights = data.altfFlights;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(opt, altfFlights);
+                        thisProxy.fireSingleDataChange(altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '正班占用已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -918,7 +918,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfAlternate)){
-                        thisProxy.fireSingleDataChange(opt, altfAlternate);
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '更改备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -988,7 +988,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfAlternate)){
-                        thisProxy.fireSingleDataChange(opt, altfAlternate);
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '更改备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -1046,7 +1046,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfAlternate)){
-                        thisProxy.fireSingleDataChange(opt, altfAlternate);
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '确定备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -1104,7 +1104,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     var altfAlternate = data.altfAlternate;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfAlternate)){
-                        thisProxy.fireSingleDataChange(opt, altfAlternate);
+                        thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '释放停机位已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -1295,7 +1295,7 @@ GridTable.prototype.collaborateOver = function (opt) {
                     var altfFlights = data.altfFlights;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(opt,altfFlights);
+                        thisProxy.fireSingleDataChange(altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '预选备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -1365,7 +1365,7 @@ GridTable.prototype.collaborateOver = function (opt) {
                     var altfFlights = data.altfFlights;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(opt, altfFlights);
+                        thisProxy.fireSingleDataChange(altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '确定备降已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -1426,7 +1426,7 @@ GridTable.prototype.collaborateOver = function (opt) {
                     var altfFlights = data.altfFlights;
                     // 数据有效则更新单个数据
                     if($.isValidObject(altfFlights)){
-                        thisProxy.fireSingleDataChange(opt, altfFlights);
+                        thisProxy.fireSingleDataChange(altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '正班占用已提交成功');
                     }
                 } else if (data.status == 202) { // 失败
@@ -1547,7 +1547,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         },
         // 隐藏配置
         hide: {
-            target: thisProxy.canvas, // 指定对象
+            target: cellObj, // 指定对象
             event: 'unfocus click', // 失去焦点时隐藏
             effect: function () {
                 $(this).fadeOut(); // 隐藏动画
@@ -1558,7 +1558,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
             my: 'bottom center', // 同jQueryUI Position
             at: 'top center',
             viewport: true, // 显示区域
-            container: $container, // 限制显示容器，以此容器为边界
+            container: thisProxy.canvas, // 限制显示容器，以此容器为边界
             adjust: {
                 resize: true, // 窗口改变时，重置位置
                 method: 'shift shift'  //flipinvert/flip(页面变化时，任意位置翻转)  shift(转变) none(无)
@@ -1582,7 +1582,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
  * @param flight
  *
  */
-GridTable.prototype.fireSingleDataChange = function (opt, flight) {
+GridTable.prototype.fireSingleDataChange = function (flight) {
     var thisProxy = this;
     // 更新源数据 (注意：源数据是没有id属性的，只有flightDataId属性)
     // todo

@@ -632,7 +632,7 @@ GridTable.prototype.collaborateArr = function (opt) {
         // ajax提交请求
         $.ajax({
             url:submiturl ,
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             success: function (data) {
                 // 清除协调窗口
@@ -702,7 +702,7 @@ GridTable.prototype.collaborateArr = function (opt) {
         // ajax提交请求
         $.ajax({
             url:submiturl ,
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             success: function (data) {
                 // 清除协调窗口
@@ -761,7 +761,7 @@ GridTable.prototype.collaborateArr = function (opt) {
         // ajax提交请求
         $.ajax({
             url:submiturl ,
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             success: function (data) {
                 // 清除协调窗口
@@ -897,7 +897,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
         // ajax提交请求
         $.ajax({
             url:submiturl ,
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             success: function (data) {
                 // 清除协调窗口
@@ -967,7 +967,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
         // ajax提交请求
         $.ajax({
             url:submiturl ,
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             success: function (data) {
                 // 清除协调窗口
@@ -1025,7 +1025,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
         // ajax提交请求
         $.ajax({
             url:submiturl ,
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             success: function (data) {
                 // 清除协调窗口
@@ -1274,7 +1274,7 @@ GridTable.prototype.collaborateOver = function (opt) {
         // ajax提交请求
         $.ajax({
             url:submiturl ,
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             success: function (data) {
                 // 清除协调窗口
@@ -1344,7 +1344,7 @@ GridTable.prototype.collaborateOver = function (opt) {
         // ajax提交请求
         $.ajax({
             url:submiturl ,
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             success: function (data) {
                 // 清除协调窗口
@@ -1403,7 +1403,7 @@ GridTable.prototype.collaborateOver = function (opt) {
         // ajax提交请求
         $.ajax({
             url:submiturl ,
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             success: function (data) {
                 // 清除协调窗口
@@ -1587,7 +1587,7 @@ GridTable.prototype.fireSingleDataChange = function (opt, flight) {
     var rowData = thisProxy.convertData(flight);
     // 更新数据
     thisProxy.tableDataMap[flight.id] = rowData;
-   /* //清除冻结列
+    //清除冻结列
     thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
     // 删除原数据行，加入新的数据行
     // 表格数据ID集合
@@ -1606,16 +1606,11 @@ GridTable.prototype.fireSingleDataChange = function (opt, flight) {
     }
     //激活冻结列
     thisProxy.gridTableObject.jqGrid("setFrozenColumns");
-    thisProxy.resizeFrozenTable();*/
-    // thisProxy.scrollToRow(flight.id);
-    //清除冻结列
-    // thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
-    // 更新表格数据
-    thisProxy.gridTableObject.jqGrid('setRowData',flight.id, rowData);
     thisProxy.scrollToFixForzen();
-    //激活冻结列
-    // thisProxy.gridTableObject.jqGrid("setFrozenColumns");
-    // thisProxy.resizeFrozenTable();
+    // 更新表格数据
+    // thisProxy.gridTableObject.jqGrid('setRowData',flight.id, rowData);
+    // thisProxy.scrollToFixForzen();
+
 };
 
 /**

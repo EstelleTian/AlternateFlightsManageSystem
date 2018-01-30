@@ -533,12 +533,12 @@ ul, li {
     border: #c9e2f9;
     background: #c9e2f9; }
 /********************进港计划,疆内飞越,出港计划宽度自适应****************************/
-.arr-module .ui-jqgrid-bdiv{
+.arr-module .ui-jqgrid-bdiv div:first-child {
     overflow-x: hidden;
 }
-.over-module .ui-jqgrid-bdiv{
+.over-module .ui-jqgrid-bdiv div:first-child {
     overflow-x: hidden;
 }
-.dep-module .ui-jqgrid-bdiv{
+.dep-module .ui-jqgrid-bdiv div:first-child {
     overflow-x: hidden;
 }

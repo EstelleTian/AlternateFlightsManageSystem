@@ -71,9 +71,9 @@ var app = function () {
             // 定时器时间
             interval : interval,
             // 自定义定时器时间 (用于开启复杂天气模式),数字 毫秒
-            customeInterval : 1000*60*0.2,
+            customeInterval : 1000*60*1,
             // 默认选中的范围值
-            defaultScope : '1',
+            defaultScope : '2',
             // 初始化表格
             initGridTable : function (table) {
                 var opt = {
@@ -85,9 +85,9 @@ var app = function () {
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
-                        sortname: 'ata',
+                        sortname: 'deta',
                         shrinkToFit: true,
-                        sortorder: 'desc'
+                        sortorder: 'asc'
                     }
                     // colConverter: FlightGridTableDataUtil,
                     // params: {
@@ -103,13 +103,7 @@ var app = function () {
                 table.initGridTableObject();
                 table.gridTableObject.jqGrid("destroyFrozenColumns");
                 return table;
-            },
-            // 自定义过滤规则
-            customFilterFunc : function () {
-                // 设置定时器时间为1分钟
-                this.interval = 1000*60*1;
             }
-
         });
         arrObj.initFormModuleObject();
         moduleObjs.push(arrObj);
@@ -140,11 +134,6 @@ var app = function () {
                 table = new GridTable(opt);
                 table.initGridTableObject();
                 return table;
-            },
-            // 自定义过滤规则
-            customFilterFunc : function () {
-                // todo
-                //
             }
         });
         alternateObj.initFormModuleObject();
@@ -168,9 +157,9 @@ var app = function () {
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
-                        sortname: 'ata',
+                        sortname: 'deta',
                         shrinkToFit: true,
-                        sortorder: 'desc'
+                        sortorder: 'asc'
                     }
                 };
                 table = new GridTable(opt);
@@ -200,9 +189,9 @@ var app = function () {
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
-                        sortname: 'ata',
+                        sortname: 'detd',
                         shrinkToFit: true,
-                        sortorder: 'desc'
+                        sortorder: 'asc'
                     }
 
                 };

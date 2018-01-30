@@ -17,6 +17,10 @@ var CellOpreationUrl = {
     CANCEL_ALTERNATE : 'http://192.168.243.104:8085/altf/airport/cancleAlternate',
     // 备降计划列表的确认备降
     CHANGETOCONFIRM_ALTERNATE : 'http://192.168.243.104:8085/altf/airport/changeToConfirm',
+    // 出港预选备降
+    PRE_ALTERNATE_DEP :'http://192.168.243.104:8085/altf/airport/preSelectAlternateDep',
+    // 出港确认备降
+    CONFIRM_ALTERNATE_DEP :'http://192.168.243.104:8085/altf/airport/confirmAlternateDep'
 
 };
 

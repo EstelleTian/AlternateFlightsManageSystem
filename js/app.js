@@ -85,7 +85,7 @@ var app = function () {
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
-                        sortname: 'flightDataId',
+                        sortname: 'peta',
                         shrinkToFit: true,
                         sortorder: 'desc'
                     }
@@ -168,9 +168,9 @@ var app = function () {
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
-                        sortname: 'flightDataId',
+                        sortname: 'peta',
                         shrinkToFit: true,
-                        sortorder: 'asc'
+                        sortorder: 'desc'
                     }
                 };
                 table = new GridTable(opt);
@@ -200,9 +200,9 @@ var app = function () {
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
-                        sortname: 'flightDataId',
+                        sortname: 'peta',
                         shrinkToFit: true,
-                        sortorder: 'asc'
+                        sortorder: 'desc'
                     }
 
                 };

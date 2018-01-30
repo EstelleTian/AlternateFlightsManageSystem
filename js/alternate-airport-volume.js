@@ -383,11 +383,11 @@ var alternateAirport = function () {
     // 表格样式转化
     $.each(config.data, function (i, e) {
       if (parseInt(e.total) > 3) {
-        e['total_style'] = 'background:#fff;color:#000'
+        // e['total_style'] = 'background:#fff;color:#000'
       } else if (parseInt(e.total) <= 3 && parseInt(config.data.total) != 0) {
         e['total_style'] = 'background:#ee7948;color:#fff'
       } else if (parseInt(e.total) == 0) {
-        e['total_style'] = 'background:#ee7948;color:#000'
+        // e['total_style'] = 'background:#ee7948;color:#000'
       }
       // e['C2total_style'] = 'background:#dff0d8;color:#000'
       // e['C1total_style'] = 'background:#dff0d8;color:#000'

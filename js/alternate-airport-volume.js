@@ -157,9 +157,17 @@ var alternateAirport = function () {
               airVolumeTable.jqGrid('clearGridData');
               var params = {data: tableConfig.data};
               airVolumeTable.jqGrid('setGridParam', params).trigger('reloadGrid');
+              //当右键协调显示时  刷新当前选中单元格 以及position方法
               if($.isValidObject(cellObj) && $('.flight-grid-table-collaborate-container').is(':visible')){
                 var currnetCellObj = getCellObject(cellObj.rowid, cellObj.iRow, cellObj.iCol)
                 currnetCellObj.addClass('selected-cell')
+                $('.flight-grid-table-collaborate-container').position({
+                  of: currnetCellObj,
+                  my: 'left top',
+                  at: 'right top',
+                  collision: 'flipfit',
+                });
+                followTargetPosition($('.flight-grid-table-collaborate-container'), currnetCellObj)
               }
             }
             if (isRefresh) {

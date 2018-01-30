@@ -15,7 +15,8 @@ var CellOpreationUrl = {
     RELEASE_POSTION : 'http://192.168.243.104:8085/altf/airport/releasePosition',
     // 取消备降
     CANCEL_ALTERNATE : 'http://192.168.243.104:8085/altf/airport/cancleAlternate',
-
+    // 备降计划列表的确认备降
+    CHANGETOCONFIRM_ALTERNATE : 'http://192.168.243.104:8085/altf/airport/changeToConfirm',
 
 };
 

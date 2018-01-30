@@ -488,6 +488,11 @@ var app = function () {
         cloneCollaborateDom($('.update-pre-alternate',GridTableCollaborateDom.ALTERNATE_DOM), GridTableCollaborateDom.LEVEL2);
         // 备降计划模块 更改备降
         cloneCollaborateDom($('.update-alternate',GridTableCollaborateDom.ALTERNATE_DOM), GridTableCollaborateDom.LEVEL2);
+
+        // 疆内飞越计划模块 预选备降项
+        cloneCollaborateDom($('.pre-alternate',GridTableCollaborateDom.OVER_DOM), GridTableCollaborateDom.LEVEL2);
+        // 疆内飞越计划模块 确定备降项
+        cloneCollaborateDom($('.confirm-alternate',GridTableCollaborateDom.OVER_DOM), GridTableCollaborateDom.LEVEL2);
         // cloneCollaborateDom(GridTableCollaborateDom.OVER_DOM, GridTableCollaborateDom.LEVEL2);
         // cloneCollaborateDom(GridTableCollaborateDom.ARR_DOM, GridTableCollaborateDom.LEVEL2);
     };

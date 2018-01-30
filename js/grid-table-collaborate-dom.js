@@ -17,7 +17,7 @@ var GridTableCollaborateDom = function () {
         '<li class="pre-alternate"><a href="javascript:;" >预选备降<span class="glyphicon glyphicon-play"></span></a></li>' +
         '<li class="confirm-alternate"><a href="javascript:; " >确定备降<span class="glyphicon glyphicon-play"></span></a></li>' +
         '<li data-val="occupied" class="occupied"><a href="javascript:;" >正班占用</a></li>' +
-        '<li data-val="manual-add" class="manual-add"><a href="javascript:;" >手工添加计划</a></li>' +
+        // '<li data-val="manual-add" class="manual-add"><a href="javascript:;" >手工添加计划</a></li>' +
         '</ul>' +
         '</div>');
     // 备降
@@ -36,8 +36,6 @@ var GridTableCollaborateDom = function () {
         '<ul class="collaborate-menu">' +
         '<li class="pre-alternate"><a href="javascript:;" >预选备降<span class="glyphicon glyphicon-play"></span></a></li>' +
         '<li class="confirm-alternate"><a href="javascript:; " >确定备降<span class="glyphicon glyphicon-play"></span></a></li>' +
-        '<li data-val="occupied" class="occupied"><a href="javascript:;" >正班占用</a></li>' +
-        '<li data-val="manual-add" class="manual-add"><a href="javascript:;" >手工添计划</a></li>' +
         '</ul>' +
         '</div>');
 
@@ -81,7 +79,7 @@ var GridTableCollaborateDom = function () {
     return {
         ARR_DOM: ARR_DOM,
         ALTERNATE_DOM: ALTERNATE_DOM,
-        // OVER_DOM: OVER_DOM,
+        OVER_DOM: OVER_DOM,
         DEP_DOM: DEP_DOM,
         LEVEL2 : LEVEL2,
         OTHER : OTHER,

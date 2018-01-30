@@ -136,6 +136,7 @@ var alternateAirport = function () {
         // async: false,
         success: function (data) {
           if ($.isValidObject(data) && data.status == 200) {
+            $('.error_tip').hide();
             tableData = data;
             var generateTime = data.generateTime
             $('.alter_volume_time').text('数据生成时间:' + formatterTime(generateTime))
@@ -156,6 +157,10 @@ var alternateAirport = function () {
               airVolumeTable.jqGrid('clearGridData');
               var params = {data: tableConfig.data};
               airVolumeTable.jqGrid('setGridParam', params).trigger('reloadGrid');
+              if($.isValidObject(cellObj) && $('.flight-grid-table-collaborate-container').is(':visible')){
+                var currnetCellObj = getCellObject(cellObj.rowid, cellObj.iRow, cellObj.iCol)
+                currnetCellObj.addClass('selected-cell')
+              }
             }
             if (isRefresh) {
               startTimer(getTableData, tableConfig, isRefresh, refreshTime);
@@ -165,6 +170,7 @@ var alternateAirport = function () {
           }
         },
         error: function (xhr, status, error) {
+          $('.error_tip').show();
           setTimeout(getTableData(tableConfig,isRefresh),1000*30*5);
           console.warn(error)
         }
@@ -292,7 +298,6 @@ var alternateAirport = function () {
           var rowData = airVolumeTable.jqGrid().getRowData(rowid);
           var currentVal = rowData[colName];
           // 获取触发事件的单元格对象
-          cellObj = $(e.target);
           var type = colName.split('total');
           var opt = {
             rowid: rowid,
@@ -301,10 +306,11 @@ var alternateAirport = function () {
             tableId: tableId,
             airport: rowData.airport,
             type: type[0],
-            cellObj: cellObj,
+            cellObj: $(e.target),
             currentVal: currentVal,
             positionContainer: $(".table-contianer .ui-jqgrid-bdiv")
           }
+          cellObj = opt;
           onRightClickRow(opt)
         }
       }

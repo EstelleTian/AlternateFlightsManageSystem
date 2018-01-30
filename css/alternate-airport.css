@@ -26,6 +26,9 @@ body .sub_title {
   padding-left: 15px;
   font-size: 15px;
 }
+body .error_tip {
+  display: none;
+}
 body .total_count {
   font-weight: 700;
 }

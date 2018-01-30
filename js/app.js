@@ -67,7 +67,7 @@ var app = function () {
             // 表格ID
             tableId: 'arr-table',
             // 数据查询请求地址
-            url : 'http://192.168.243.104:8085/altf/airport/retrieveArrFlights',
+            url : DataUrl.ARR,
             // 定时器时间
             interval : interval,
             // 自定义定时器时间 (用于开启复杂天气模式),数字 毫秒
@@ -112,7 +112,7 @@ var app = function () {
         alternateObj = new FormModule({
             canvasId: 'alternate-module',
             tableId: 'alternate-table',
-            url : 'http://192.168.243.104:8085/altf/airport/retrieveAlternateFlights',
+            url : DataUrl.ALTERNATE,
             // 定时器时间
             interval : interval,
             // 默认选中的范围值
@@ -142,7 +142,7 @@ var app = function () {
         overObj = new FormModule({
             canvasId: 'over-module',
             tableId: 'over-table',
-            url : 'http://192.168.243.104:8085/altf/airport/retrieveOverFlights',
+            url : DataUrl.OVER,
             // 定时器时间
             interval : interval,
             // 默认选中的范围值
@@ -174,7 +174,7 @@ var app = function () {
         depObj = new FormModule({
             canvasId: 'dep-module',
             tableId: 'dep-table',
-            url : 'http://192.168.243.104:8085/altf/airport/retrieveDepFlights',
+            url : DataUrl.DEP,
             // 定时器时间
             interval : interval,
             // 默认选中的范围值
@@ -287,7 +287,7 @@ var app = function () {
         alternateHistoryObj = new HistoryFormModule({
             canvasId: 'alternate-history-module',
             tableId: 'alternate-history-table',
-            url: 'http://192.168.243.104:8085/altf/airport/retrieveAlternateHistory',
+            url: DataUrl.ALTERNATE_HISTORY,
             initGridTable: function (table) {
                 var opt = {
                     tableId: 'alternate-history-table',

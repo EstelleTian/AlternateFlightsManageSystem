@@ -1476,8 +1476,10 @@ GridTable.prototype.collaborateDep = function (opt) {
             $('.pre-alternate', collaboratorDom).hide();
             $('.occupied', collaboratorDom).hide();
         }else if(status == 2) {  // 状态为备降
+            // 预选、备降、正班占用菜单项隐藏
            return;
         }else if(status == 4){ // 状态为正班占用
+            // 预选、备降、正班占用菜单项隐藏
             return
         }
     }else {
@@ -1496,7 +1498,193 @@ GridTable.prototype.collaborateDep = function (opt) {
         my: 'left top',
         at: 'right top'
     });
-    thisProxy.followTargetPosition(collaboratorDom, opt.cellObj)
+    thisProxy.followTargetPosition(collaboratorDom, opt.cellObj);
+    // 预选协调菜单
+    var $preAlternate = $('.pre-alternate', collaboratorDom);
+    // 采用事件委托，在该菜单上绑定事件，
+    // 并过滤触发事件的元素为只有data-val属性的菜单项,
+    // 这样该菜单下的复合菜单项就不会被绑定点击事件了
+    $preAlternate.on('click', 'li[data-val]', function (event) {
+        // 阻止事件冒泡
+        event.stopPropagation();
+
+        // 计划批号
+        var flightDataId = opt.flight.flightDataId;
+        // 校验code 是否有效，无效则不作任何操作
+        if(!$.isValidVariable(flightDataId)){
+            return;
+        }
+        // 备降计划
+        var altId = opt.flight.altId || '';
+        // 操作请求地址
+        var submiturl = thisProxy.colCollaborateUrl.PRE_ALTERNATE_DEP;
+        // 校验操作请求地址是否有效，无效则不作任何操作
+        if(!$.isValidVariable(submiturl)){
+            return;
+        }
+        submiturl = submiturl +'?flightDataId=' + flightDataId + '&altId='+ altId;
+        // ajax提交请求
+        $.ajax({
+            url:submiturl ,
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
+                if(!thisProxy.fireDataFlag){
+                    thisProxy.fireDataFlag = true;
+                }
+                // 若数据无效
+                if (!$.isValidVariable(data)) {
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", "预选提交失败，请稍后重试");
+                };
+                //成功
+                if (data.status == 200) {
+                    // 取数据的altfFlights值
+                    var altfFlights = data.altfFlights;
+                    // 数据有效则更新单个数据
+                    if($.isValidObject(altfFlights)){
+                        thisProxy.fireSingleDataChange(altfFlights);
+                        thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '预选已提交成功');
+                    }
+                } else if (data.status == 202) { // 失败
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                } else if (data.status == 500) { // 失败
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                };
+            },
+            error: function ( status, error) {
+                console.error('ajax requset  fail, error:');
+                console.error(error);
+            }
+        })
+
+    });
+
+    // 备降协调菜单
+    var $alternate = $('.alternate', collaboratorDom);
+    // 采用事件委托，在该菜单上绑定事件，
+    // 并过滤触发事件的元素为只有data-val属性的菜单项,
+    // 这样该菜单下的复合菜单项就不会被绑定点击事件了
+    $alternate.on('click', 'li[data-val]', function (event) {
+        // 阻止事件冒泡
+        event.stopPropagation();
+
+        // 计划批号
+        var flightDataId = opt.flight.flightDataId;
+        // 校验code 是否有效，无效则不作任何操作
+        if(!$.isValidVariable(flightDataId)){
+            return;
+        }
+        // 备降计划
+        var altId = opt.flight.altId || '';
+        // 操作请求地址
+        var submiturl = thisProxy.colCollaborateUrl.CONFIRM_ALTERNATE_DEP;
+        // 校验操作请求地址是否有效，无效则不作任何操作
+        if(!$.isValidVariable(submiturl)){
+            return;
+        }
+        submiturl = submiturl +'?flightDataId=' + flightDataId  + '&altId='+ altId;
+        // ajax提交请求
+        $.ajax({
+            url:submiturl ,
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
+                if(!thisProxy.fireDataFlag){
+                    thisProxy.fireDataFlag = true;
+                }
+                // 若数据无效
+                if (!$.isValidVariable(data)) {
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", "备降提交失败，请稍后重试");
+                };
+                //成功
+                if (data.status == 200) {
+                    // 取数据的altfFlights值
+                    var altfFlights = data.altfFlights;
+                    // 数据有效则更新单个数据
+                    if($.isValidObject(altfFlights)){
+                        thisProxy.fireSingleDataChange( altfFlights);
+                        thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '备降已提交成功');
+                    }
+                } else if (data.status == 202) { // 失败
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                } else if (data.status == 500) { // 失败
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                };
+            },
+            error: function ( status, error) {
+                console.error('ajax requset  fail, error:');
+                console.error(error);
+            }
+        })
+
+    });
+
+    // 正班占用协调菜单
+    var $occupied = $('.occupied', collaboratorDom);
+
+    $occupied.on('click', function (event) {
+        // 阻止事件冒泡
+        event.stopPropagation();
+
+        // 计划批号
+        var flightDataId = opt.flight.flightDataId;
+        // 校验code 是否有效，无效则不作任何操作
+        if(!$.isValidVariable(flightDataId)){
+            return;
+        }
+        // 降落机场
+        var airport = opt.flight.arrap || '';
+        // 操作请求地址
+        var submiturl = thisProxy.colCollaborateUrl.OCCUPIED;
+        // 校验操作请求地址是否有效，无效则不作任何操作
+        if(!$.isValidVariable(submiturl)){
+            return;
+        }
+        submiturl = submiturl +'?flightDataId=' + flightDataId + '&airport=' + airport;
+        // ajax提交请求
+        $.ajax({
+            url:submiturl ,
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
+                if(!thisProxy.fireDataFlag){
+                    thisProxy.fireDataFlag = true;
+                }
+                // 若数据无效
+                if (!$.isValidVariable(data)) {
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", "正班占用提交失败，请稍后重试");
+                };
+                //成功
+                if (data.status == 200) {
+                    // 取数据的altfFlights值
+                    var altfFlights = data.altfFlights;
+                    // 数据有效则更新单个数据
+                    if($.isValidObject(altfFlights)){
+                        thisProxy.fireSingleDataChange(altfFlights);
+                        thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '正班占用已提交成功');
+                    }
+                } else if (data.status == 202) { // 失败
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                } else if (data.status == 500) { // 失败
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                };
+            },
+            error: function ( status, error) {
+                console.error('ajax requset  fail, error:');
+                console.error(error);
+            }
+        })
+
+    });
 };
 
 /**

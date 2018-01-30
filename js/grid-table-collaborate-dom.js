@@ -36,6 +36,7 @@ var GridTableCollaborateDom = function () {
         '<ul class="collaborate-menu">' +
         '<li class="pre-alternate"><a href="javascript:;" >预选备降<span class="glyphicon glyphicon-play"></span></a></li>' +
         '<li class="confirm-alternate"><a href="javascript:; " >确定备降<span class="glyphicon glyphicon-play"></span></a></li>' +
+        '<li data-val="occupied" class="occupied"><a href="javascript:;" >正班占用</a></li>' +
         '</ul>' +
         '</div>');
 

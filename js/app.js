@@ -87,7 +87,7 @@ var app = function () {
                     params: {
                         sortname: 'flightDataId',
                         shrinkToFit: true,
-                        sortorder: 'asc'
+                        sortorder: 'desc'
                     }
                     // colConverter: FlightGridTableDataUtil,
                     // params: {
@@ -195,7 +195,7 @@ var app = function () {
                     tableId: 'dep-table',
                     pagerId: 'dep-table-pager',
                     colNames: GridTableConfig.common.colName,
-                    colModel: GridTableConfig.common.colModel,
+                    colModel: isHiddenCol(GridTableConfig.common.colModel,['position'], false) ,
                     cmTemplate: GridTableConfig.colModelTemplate,
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
@@ -538,6 +538,30 @@ var app = function () {
             });
             app.statusCode = statusCode;
         }
+    };
+
+    /**
+     * 设置colModel指定项是否隐藏
+     *
+     * @data colModel arr
+     *
+     * @ 指定项 arr
+     *
+     * @ bool 是否隐藏
+     * */
+    var isHiddenCol = function (data,name,bool) {
+        if($.isValidObject(data) && $.isValidObject(name)){
+            name.map(function (i, index, arr) {
+
+                data.map(function (item, p2, p3) {
+                    if(item.name == i){
+                        item.hidden = bool;
+                    }
+                })
+            })
+
+        }
+        return data;
     };
 
     return {

@@ -371,8 +371,10 @@ FormModule.prototype.bindEventOnButton = function () {
     var thisProxy = this;
     // 查询按钮绑定事件
     $('.inquire', thisProxy.canvas).on('click',function () {
-        // 初始化数据查询
-        thisProxy.initInquireData(false);
+        // 清除定时器
+        clearTimeout(thisProxy.timer);
+        // 初始化数据查询并开启定时器(将会按指定的自定义定时器时间间隔进行)
+        thisProxy.initInquireData(true);
     });
 };
 

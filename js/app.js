@@ -86,6 +86,7 @@ var app = function () {
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
                         sortname: 'flightDataId',
+                        shrinkToFit: true,
                         sortorder: 'asc'
                     }
                     // colConverter: FlightGridTableDataUtil,
@@ -100,6 +101,7 @@ var app = function () {
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
+                table.gridTableObject.jqGrid("destroyFrozenColumns");
                 return table;
             },
             // 自定义过滤规则
@@ -167,11 +169,13 @@ var app = function () {
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
                         sortname: 'flightDataId',
+                        shrinkToFit: true,
                         sortorder: 'asc'
                     }
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
+                table.gridTableObject.jqGrid("destroyFrozenColumns");
                 return table;
             }
         });
@@ -197,12 +201,14 @@ var app = function () {
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
                         sortname: 'flightDataId',
+                        shrinkToFit: true,
                         sortorder: 'asc'
                     }
 
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
+                table.gridTableObject.jqGrid("destroyFrozenColumns");
                 return table;
             }
         });

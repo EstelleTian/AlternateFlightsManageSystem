@@ -137,7 +137,7 @@ var GridTableConfig = function () {
             registeNum: '机号',
             aircraftType: '机型',
             aircraftTypeCategory: '机型分类',
-            occupyPostion: '占用机位',
+            occupyPosition: '占用机位',
             task: '任务',
             depap: '起飞机场',
             petd: '计划ETD',
@@ -194,8 +194,8 @@ var GridTableConfig = function () {
             },
             // 占用机位
             {
-                name: 'occupyPostion',
-                index: 'occupyPostion'
+                name: 'occupyPosition',
+                index: 'occupyPosition'
             },
             // 任务
             {

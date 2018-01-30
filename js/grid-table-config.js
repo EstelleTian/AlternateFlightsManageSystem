@@ -7,7 +7,7 @@
 var GridTableConfig = function () {
     // 通用表(进港计划表 出港计划表 疆内飞越表)
     var common = {
-        colName : ['计划批号','备降场', '状态', '航班号', '机号','机型', '任务', '起飞机场','计划ETD', '动态ETD', 'ATD','计划ETA','降落机场','备注' ],
+        colName : ['计划批号','备降场', '状态', '航班号', '机号','机型', '任务', '起飞机场','停机位','计划ETD', '动态ETD', 'ATD','计划ETA','降落机场','备注' ],
         colModel: [
             // 计划批号
             {
@@ -54,6 +54,12 @@ var GridTableConfig = function () {
                 name: 'depap',
                 index: 'depap'
             },
+            // 停机位
+            {
+                name: 'position',
+                index: 'position',
+                hidden : true
+            },
             // 计划ETD
             {
                 name: 'petd',
@@ -98,6 +104,7 @@ var GridTableConfig = function () {
             aircraftType:'机型',
             task:'任务',
             depap:'起飞机场',
+            position:'停机位',
             petd:'计划ETD',
             detd:'动态ETD',
             atd:'ATD',

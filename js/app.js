@@ -157,7 +157,7 @@ var app = function () {
             // 定时器时间
             interval : interval,
             // 默认选中的范围值
-            defaultScope : '1',
+            defaultScope : '2',
             initGridTable : function (table) {
                 var opt = {
                     tableId: 'over-table',

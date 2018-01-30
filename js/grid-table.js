@@ -751,13 +751,15 @@ GridTable.prototype.collaborateArr = function (opt) {
         if(!$.isValidVariable(flightDataId)){
             return;
         }
+        // 降落机场
+        var airport = opt.flight.arrap || '';
         // 操作请求地址
         var submiturl = thisProxy.colCollaborateUrl.OCCUPIED;
         // 校验操作请求地址是否有效，无效则不作任何操作
         if(!$.isValidVariable(submiturl)){
             return;
         }
-        submiturl = submiturl +'?flightDataId=' + flightDataId;
+        submiturl = submiturl +'?flightDataId=' + flightDataId + '&airport=' + airport;
         // ajax提交请求
         $.ajax({
             url:submiturl ,
@@ -1393,13 +1395,15 @@ GridTable.prototype.collaborateOver = function (opt) {
         if(!$.isValidVariable(flightDataId)){
             return;
         }
+        // 降落机场
+        var airport = opt.flight.arrap || '';
         // 操作请求地址
         var submiturl = thisProxy.colCollaborateUrl.OCCUPIED;
         // 校验操作请求地址是否有效，无效则不作任何操作
         if(!$.isValidVariable(submiturl)){
             return;
         }
-        submiturl = submiturl +'?flightDataId=' + flightDataId;
+        submiturl = submiturl +'?flightDataId=' + flightDataId + '&airport=' + airport;
         // ajax提交请求
         $.ajax({
             url:submiturl ,

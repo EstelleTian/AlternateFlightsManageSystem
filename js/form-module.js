@@ -123,6 +123,9 @@ FormModule.prototype.initFormModuleObject = function () {
     //  切换复杂天气模式
     thisProxy.changeWeatherModel();
 
+    // 切换过滤条件(任务类型为X)
+    thisProxy.changeFilter();
+
     //初始化查询按钮loading
     thisProxy.initLoading();
 
@@ -326,6 +329,40 @@ FormModule.prototype.changeWeatherModel = function () {
 };
 
 /**
+ * 切换复杂天气模式
+ * */
+FormModule.prototype.changeFilter = function () {
+    // 当前对象this代理
+    var thisProxy = this;
+    // 取得checkbox
+    var $box = $('input#set-filter', thisProxy.canvas);
+
+    if($.isValidVariable($box) && $box.length < 1){
+        return;
+    }
+    // checkbox绑定点击事件
+    $box.on('click',function () {
+        // 取得checkbox勾选状态
+        var bool = $box.prop('checked');
+        // 若勾选
+        if (bool) {
+            // 标记过滤是否开启
+            thisProxy.filter = true;
+        } else {
+            // 标记过滤是否开启
+            thisProxy.filter = false;
+        }
+        // 清除定时器
+        clearTimeout(thisProxy.timer);
+        // 初始化数据查询并开启定时器(将会按指定的自定义定时器时间间隔进行)
+        thisProxy.initInquireData(true);
+    })
+
+};
+
+
+
+/**
  *  绑定查询按钮事件
  *
  * */
@@ -439,6 +476,13 @@ FormModule.prototype.inquireData = function () {
     // 备降模块无关键字参数
     if(thisProxy.tableId == 'alternate-table'){
         url = thisProxy.url + '?scope='+ thisProxy.scope;
+    }else if (thisProxy.tableId == 'over-table'){ // 疆内飞越模块要添加exceptX参数
+        // 若filter为true,则是勾选了'任务为X不显示'，exceptX参数值为'1',反之为'0'
+        if(thisProxy.filter){
+            url = thisProxy.url + '?scope='+ thisProxy.scope +'&keyWord='+ thisProxy.keyword + '&exceptX=' + '1';
+        }else {
+            url = thisProxy.url + '?scope='+ thisProxy.scope +'&keyWord='+ thisProxy.keyword + '&exceptX=' + '0';
+        }
     }
     // 请求获取数据
     thisProxy.xhr = $.ajax({

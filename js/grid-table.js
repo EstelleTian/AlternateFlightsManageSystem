@@ -581,6 +581,11 @@ GridTable.prototype.collaborateArr = function (opt) {
             $('.confirm-alternate', collaboratorDom).show();
             $('.occupied', collaboratorDom).show();
         }
+    }else {
+        // 预选备降、确定备降和正班占用菜单项显示
+        $('.pre-alternate', collaboratorDom).show();
+        $('.confirm-alternate', collaboratorDom).show();
+        $('.occupied', collaboratorDom).show();
     }
 
     // 追加协调DOM至容器
@@ -806,27 +811,47 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     if(!$.isValidVariable(collaboratorDom)){
         return
     }
-    // 处理右键协调菜单显隐
-    //获取航班状态
+    // 若航班结束,则右键不可用
+    if(opt.flight.finished == '1') {
+        return
+    };
+
+    /**
+     * 菜单项显隐处理
+     * */
+        //获取航班状态
     var status = opt.flight.status;
     if($.isValidVariable(status)){
-        // 预选
+        // 状态为预选
         if(status == 1){
-            // 更改预先和确定备降菜单项显示
+            // 更改预选、确定备降、释放停机位、取消备降菜单项显示
             $('.update-pre-alternate', collaboratorDom).show();
             $('.confirm-alternate', collaboratorDom).show();
+            $('.release-postion', collaboratorDom).show();
+            $('.cancel-alternate', collaboratorDom).show();
             // 更改备降菜单项隐藏
             $('.update-alternate', collaboratorDom).hide();
-
-        }else if(status == 2) {  // 备降
-            // 确定备降和更改备降菜单项显示
-            $('.confirm-alternate', collaboratorDom).show();
+        }else if(status == 2) {  // 状态为备降
+            // 更改备降、释放停机位、取消备降菜单项显示
             $('.update-alternate', collaboratorDom).show();
-            // 更改预先菜单项隐藏
+            $('.release-postion', collaboratorDom).show();
+            $('.cancel-alternate', collaboratorDom).show();
+            // 更改预选、确定备降菜单项隐藏
             $('.update-pre-alternate', collaboratorDom).hide();
-        }
-    }
+            $('.confirm-alternate', collaboratorDom).hide();
+        }else if(status == 4){ // 状态为正班占用
+            // 释放停机位、取消备降菜单项显示
+            $('.release-postion', collaboratorDom).show();
+            $('.cancel-alternate', collaboratorDom).show();
 
+            // 更改预选、更改备降、确定备降菜单项隐藏
+            $('.update-pre-alternate', collaboratorDom).hide();
+            $('.update-alternate', collaboratorDom).hide();
+            $('.confirm-alternate', collaboratorDom).hide();
+        }
+    }else {
+        return;
+    }
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
     // thisProxy.canvas.append(collaboratorDom);
@@ -984,29 +1009,19 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     $conAlternate.on('click', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
-        // 当前点击的菜单项
-        var $that = $(this);
-        // 获取当前航班备降机场
-        var altAirport = opt.flight.altairport;
-        // 校验code 是否有效，无效则不作任何操作
-        if(!$.isValidVariable(altAirport)){
+        // 备降计划ID
+        var id = opt.flight.id;
+        // 备降计划ID，无效则不作任何操作
+        if(!$.isValidVariable(id)){
             return;
         }
-        // 获取当前航班计划批号
-        var flightDataId = opt.flight.flightDataId;
-        // 校验code 是否有效，无效则不作任何操作
-        if(!$.isValidVariable(flightDataId)){
-            return;
-        }
-        // 获取当前航班备降计划
-        var altId = opt.flight.altId || '';
         // 操作请求地址
-        var submiturl = thisProxy.colCollaborateUrl.CONFIRM_ALTERNATE;
+        var submiturl = thisProxy.colCollaborateUrl.CHANGETOCONFIRM_ALTERNATE;
         // 校验操作请求地址是否有效，无效则不作任何操作
         if(!$.isValidVariable(submiturl)){
             return;
         }
-        submiturl = submiturl +'?flightDataId=' + flightDataId +'&altAirport=' + altAirport + '&altId='+ altId;
+        submiturl = submiturl +'?id=' + id;
         // ajax提交请求
         $.ajax({
             url:submiturl ,
@@ -1197,12 +1212,41 @@ GridTable.prototype.collaborateOver = function (opt) {
 GridTable.prototype.collaborateDep = function (opt) {
     // 代理
     var thisProxy = this;
+    /***出港暂不需要右键协调***/
+    return;
+    /****以下代码预留备用****/
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.DEP_DOM;
     // 校验DOM元素是否有效
     if(!$.isValidVariable(collaboratorDom)){
         return
     }
+
+    /**
+     * 菜单项显隐处理
+     * */
+        //获取航班状态
+    var status = opt.flight.status;
+    if($.isValidVariable(status)){
+        // 状态为预选
+        if(status == 1){
+            // 备降菜单项显示
+            $('.alternate', collaboratorDom).show();
+            // 预选、正班占用菜单项隐藏
+            $('.pre-alternate', collaboratorDom).hide();
+            $('.occupied', collaboratorDom).hide();
+        }else if(status == 2) {  // 状态为备降
+           return;
+        }else if(status == 4){ // 状态为正班占用
+            return
+        }
+    }else {
+        // 备降、预选、正班占用菜单项显示
+        $('.alternate', collaboratorDom).show();
+        $('.pre-alternate', collaboratorDom).show();
+        $('.occupied', collaboratorDom).show();
+    }
+
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
 

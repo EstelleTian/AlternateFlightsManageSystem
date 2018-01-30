@@ -1539,7 +1539,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         // 显示配置
         show: {
             delay: 0,
-            target: thisProxy.canvas,
+            target: cellObj,
             ready: true, // 初始化完成后马上显示
             effect: function () {
                 $(this).fadeIn(); // 显示动画

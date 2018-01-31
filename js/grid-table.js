@@ -1716,6 +1716,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
 
     // 容器
     $container = cellObj.parents('.ui-jqgrid-bdiv');
+    var $box = $('#gbox_' + thisProxy.tableId);
     // 确定样式设置
     var styleClasses = 'qtip-green';
     if (type == 'SUCCESS') {
@@ -1727,7 +1728,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
     }
 
     // 显示提示信息
-    cellObj.qtip({
+   var tooltips =  cellObj.qtip({
         // 内容
         content: {
             text: content // 显示的文本信息
@@ -1754,9 +1755,10 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
             my: 'bottom center', // 同jQueryUI Position
             at: 'top center',
             viewport: false, // 显示区域
-            container: $container, // 限制显示容器，以此容器为边界
+            target:cellObj, // 指定对象
+            container:  $box, // 限制显示容器，以此容器为边界
             adjust: {
-                resize: false, // 窗口改变时，重置位置
+                resize: true, // 窗口改变时，重置位置
                 method: 'shift shift'  //flipinvert/flip(页面变化时，任意位置翻转)  shift(转变) none(无)
             }
         },
@@ -1768,9 +1770,15 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         events: {
             hide: function (event, api) {
                 api.destroy(true); // 销毁提示信息
-            }
+            },
         }
     });
+    var api = tooltips.qtip('api');
+    // 滚动时复位qtip位置
+    $container.scroll(function(event) {
+        api.reposition(event,false); // Pass event object!
+    });
+
 };
 /**
  * 触发表格单个数据更新

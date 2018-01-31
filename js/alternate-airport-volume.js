@@ -82,7 +82,7 @@ var alternateAirport = function () {
    */
   var setDownText = function (textObj) {
     $.each(textObj.postionCategoryAirtype, function (i, e) {
-      var str = '<p><span class="total_count">' + e.remark + '：</span><span>' + e.value + '</span></p>';
+      var str = '<p><span class="total_count">' + e.text + '：</span><span>' + e.value + '</span></p>';
       str = $(str);
       $('.des')[0].insertBefore(str[0], $('.tip_container')[0]);
     })

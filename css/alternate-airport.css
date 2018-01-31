@@ -75,14 +75,14 @@ body .selected-cell {
   background: #39f !important;
   box-shadow: 0 0 10px 0px #222;
 }
-@media (max-width: 992px) {
+@media (max-width: 1366px) {
   html,
   body {
-    width: 992px;
+    width: 1366px;
   }
   html .app-transition,
   body .app-transition {
-    width: 992px;
+    width: 1366px;
   }
   html {
     overflow: scroll;

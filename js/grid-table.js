@@ -333,13 +333,21 @@ GridTable.prototype.fireTableDataChange = function (dataObj) {
     thisProxy.tableData = {};
     var tableData = [];
     var tableMap = {};
-    for (var index in data) {
+    // 遍历 data为数组，采用map遍历不会打乱顺序
+    data.map(function (item, index, arr) {
+        // 取得单个航班数据并转换
+        var d = thisProxy.convertData(item);
+        var id = d.id;
+        tableData.push(d);
+        tableMap[id] = d;
+    })
+    /*for (var index in data) {
         // 取得单个航班数据并转换
         var d = thisProxy.convertData(data[index]);
         var id = d.id;
         tableData.push(d);
         tableMap[id] = d;
-    }
+    }*/
     thisProxy.tableDataMap = tableMap;
     thisProxy.tableData = tableData;
     // 绘制表格数据
@@ -1727,7 +1735,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         // 显示配置
         show: {
             delay: 0,
-            // target: cellObj,
+            target: thisProxy.canvas,
             ready: true, // 初始化完成后马上显示
             effect: function () {
                 $(this).fadeIn(); // 显示动画
@@ -1735,7 +1743,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         },
         // 隐藏配置
         hide: {
-            // target: $container, // 指定对象
+            target: thisProxy.canvas, // 指定对象
             event: 'unfocus click', // 失去焦点时隐藏
             effect: function () {
                 $(this).fadeOut(); // 隐藏动画
@@ -1745,10 +1753,10 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         position: {
             my: 'bottom center', // 同jQueryUI Position
             at: 'top center',
-            viewport: true, // 显示区域
+            viewport: false, // 显示区域
             container: $container, // 限制显示容器，以此容器为边界
             adjust: {
-                resize: true, // 窗口改变时，重置位置
+                resize: false, // 窗口改变时，重置位置
                 method: 'shift shift'  //flipinvert/flip(页面变化时，任意位置翻转)  shift(转变) none(无)
             }
         },

@@ -369,7 +369,7 @@ ul, li {
     padding-top: 0;
 }
 
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
     .menu-bar ul{
         flex-direction: column;
         width: 100%;
@@ -381,7 +381,7 @@ ul, li {
         flex-direction: column;
     }
 
-}
+}*/
 
 @media (max-width: 1366px) {
     .modal-dialog {

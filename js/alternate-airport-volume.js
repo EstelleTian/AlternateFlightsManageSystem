@@ -213,7 +213,7 @@ var alternateAirport = function () {
         adjust: {
           resize: true,
           scroll: true,
-          method: 'shift shift'
+          method: 'flip flip'
         },
       },
       style: {
@@ -230,8 +230,8 @@ var alternateAirport = function () {
       },
       // 隐藏配置
       hide: {
-        target:opt.positionContainer , // 指定对象
-        event: 'unfocus  click', // 失去焦点时隐藏
+        target:opt.positionContainer , // 触发下面event的元素
+        event: 'scroll unfocus  click', // 失去焦点时隐藏
         effect: function () {
           $(this).fadeOut(); // 隐藏动画
         },
@@ -354,7 +354,7 @@ var alternateAirport = function () {
           $.each(config.typeArr, function (j, m) {
             if (m == ele.positionType) {
               obj[m + 'total'] = ele.capacity;
-              obj[m + 'total_style'] = 'background:#efffef;color:#000';
+              obj[m + 'total_style'] = 'background:#badcad;color:#000';
               obj[m + 'available'] = ele.available;
               obj[m + 'occupy'] = ele.occupy;
             }
@@ -372,7 +372,7 @@ var alternateAirport = function () {
         $.each(config.typeArr, function (j, m) {
           if (m == ele.positionType) {
             obj[m + 'total'] = ele.capacity;
-            obj[m + 'total_style'] = 'background:#efffef;color:#000';
+            obj[m + 'total_style'] = 'background:#badcad;color:#000';
             obj[m + 'available'] = ele.available;
             obj[m + 'occupy'] = ele.occupy;
           }

@@ -281,7 +281,7 @@ GridTable.prototype.initGridTableObject = function () {
 
     // 绑定Window事件，窗口变化时重新调整表格大小
     $(window).resize(function () {
-        if( thisProxy.gridTableObject.parents('section').is(":visible") ){
+        if( thisProxy.gridTableObject.parents('section').is(":visible") || thisProxy.canvas.is(':visible')){
             thisProxy.gridTableObject.jqGrid('resizeSize');
             thisProxy.frozenHeight = $('#'+thisProxy.tableId+'_frozen').parent().height();
             thisProxy.resizeFrozenTable();

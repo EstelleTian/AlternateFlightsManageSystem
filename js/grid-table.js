@@ -1824,6 +1824,7 @@ GridTable.prototype.deleteSingleData = function (flight) {
     var f = thisProxy.gridTableObject.jqGrid('delRowData', flight.id);
     //激活冻结列
     thisProxy.gridTableObject.jqGrid("setFrozenColumns");
+    thisProxy.scrollToFixForzen();
     // thisProxy.resizeFrozenTable();
 };
 

@@ -491,7 +491,7 @@ HistoryFormModule.prototype.initDatePicker = function () {
         clearBtn: true, //是否显示清空按钮
         //todayHighlight: true,
         // startDate: '0d', //可选日期的开始日期 0d:当前 -1d:当前的前1天, +1d:当前的后1天
-        endDate: '-1d', //可选日期最后日期
+        endDate: '0d', //可选日期最后日期
         keepEmptyValues: true,
         // forceParse: true,
         //格式化
@@ -502,10 +502,12 @@ HistoryFormModule.prototype.initDatePicker = function () {
     // 当前日期
     var now = $.getFullTime(new Date()).substring(0, 8);
     // 当前日期的前一天日期值
-    var preDay =$.addStringTime(now + '0000', 3600 * 1000 * 24 * -1);
+    // var preDay =$.addStringTime(now + '0000', 3600 * 1000 * 24 * -1);
+    // 当前日期的前3天日期值
+    var day3 =$.addStringTime(now + '0000', 3600 * 1000 * 24 * -3);
     // 设置默认选中日期
-    $start.datepicker('setDate', $.parseFullTime(preDay));
-    $end.datepicker('setDate', $.parseFullTime(preDay));
+    $start.datepicker('setDate', $.parseFullTime(day3));
+    $end.datepicker('setDate', $.parseFullTime(now +'0000'));
     // 保存默认日期
     thisProxy.start = $start.val();
     thisProxy.end = $end.val();

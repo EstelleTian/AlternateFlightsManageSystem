@@ -475,10 +475,11 @@ FormModule.prototype.inquireData = function () {
     }
     // 拼接参数,拼接完整的请求地址
     var url = thisProxy.url + '?scope='+ thisProxy.scope +'&keyWord='+ thisProxy.keyword;
-    // 备降模块无关键字参数
+    /*// 备降模块无关键字参数
     if(thisProxy.tableId == 'alternate-table'){
         url = thisProxy.url + '?scope='+ thisProxy.scope;
-    }else if (thisProxy.tableId == 'over-table'){ // 疆内飞越模块要添加exceptX参数
+    }else */
+    if (thisProxy.tableId == 'over-table'){ // 疆内飞越模块要添加exceptX参数
         // 若filter为true,则是勾选了'任务为X不显示'，exceptX参数值为'1',反之为'0'
         if(thisProxy.filter){
             url = thisProxy.url + '?scope='+ thisProxy.scope +'&keyWord='+ thisProxy.keyword + '&exceptX=' + '1';

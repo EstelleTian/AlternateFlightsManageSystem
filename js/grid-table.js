@@ -1771,7 +1771,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
             at: 'top center',
             viewport: true, // 显示区域
             target:cellObj, // 指定对象
-            container:  $container, // 限制显示容器，以此容器为边界
+            container:  $box, // 限制显示容器，以此容器为边界
             adjust: {
                 resize: true, // 窗口改变时，重置位置
                 method: 'flip flip'  //flipinvert/flip(页面变化时，任意位置翻转)  shift(转变) none(无)

@@ -85,7 +85,7 @@ var app = function () {
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
-                        sortname: 'deta',
+                        sortname: 'peta',
                         shrinkToFit: true,
                         sortorder: 'asc'
                     }
@@ -157,7 +157,7 @@ var app = function () {
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
-                        sortname: 'deta',
+                        sortname: 'peta',
                         shrinkToFit: true,
                         sortorder: 'asc'
                     }

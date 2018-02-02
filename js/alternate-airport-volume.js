@@ -3,7 +3,7 @@
  */
 var alternateAirport = function () {
   //IP地址
-  var ipHost = "http://192.168.243.104:8085/";
+  // var ipHost = "http://192.168.243.104:8085/";
   //备降场表格对象
   var airVolumeTable = '';
   //备降场表格原始数据
@@ -91,7 +91,7 @@ var alternateAirport = function () {
    *获取表格列配置
    */
   var getTableColmodel = function () {
-      var url = ipHost + 'altf/airport/retrieveAirportConfig'
+      var url = ipHost + 'airport/retrieveAirportConfig'
       $.ajax({
         type: "GET",
         url: url,
@@ -127,7 +127,7 @@ var alternateAirport = function () {
    * @param isRefresh
    */
   var getTableData = function (tableConfig, isRefresh) {
-      var url = ipHost + 'altf/airport/retrieveAirport'
+      var url = ipHost + 'airport/retrieveAirport'
       $.ajax({
         type: "GET",
         url: url,
@@ -510,7 +510,7 @@ var alternateAirport = function () {
   function getNewVolume(capacity, opt) {
     var loading = Ladda.create($('.collaborate-content-level')[0])
     loading.start();
-    var url = ipHost + 'altf/airport/updatePositionCap'
+    var url = ipHost + 'airport/updatePositionCap'
     $.ajax({
       type: "POST",
       url: url,
@@ -727,7 +727,7 @@ var alternateAirport = function () {
     $(".user_logout").click(function () {
       $.ajax({
         type: "POST",
-        url: ipHost + "altf/logon/userLogout/",
+        url: ipHost + "logon/userLogout/",
         data: {
 
         },

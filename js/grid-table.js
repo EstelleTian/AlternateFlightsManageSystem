@@ -279,7 +279,7 @@ GridTable.prototype.initGridTableObject = function () {
         $(this).removeClass('hover');
     });
 
-    // 初始化快速过滤工具栏
+   /* // 初始化快速过滤工具栏
     thisProxy.gridTableObject.jqGrid('filterToolbar', {
         // 是否开启Enter后查询
         searchOnEnter: false,
@@ -292,7 +292,7 @@ GridTable.prototype.initGridTableObject = function () {
             thisProxy.clearCollaborateContainer();
         }
     });// 隐藏过滤工具栏的X清空过滤条件按钮
-    thisProxy.canvas.find('.ui-search-clear').hide();
+    thisProxy.canvas.find('.ui-search-clear').hide();*/
 
     // 绑定Window事件，窗口变化时重新调整表格大小
     $(window).resize(function () {

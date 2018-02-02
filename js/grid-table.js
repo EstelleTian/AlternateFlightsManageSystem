@@ -496,10 +496,10 @@ GridTable.prototype.onRightClickRow = function ( rowid, iRow, iCol, e) {
         // 疆内飞越模块
         thisProxy.collaborateOver(opt);
 
-    }else if(tableId == 'dep-table'){
+    }/*else if(tableId == 'dep-table'){
         // 出港计划模块
         thisProxy.collaborateDep(opt);
-    }
+    }*/
 
 };
 

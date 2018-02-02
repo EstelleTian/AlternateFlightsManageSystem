@@ -170,7 +170,7 @@ var app = function () {
         });
         overObj.initFormModuleObject();
         moduleObjs.push(overObj);
-        // 出港计划模块
+        /*// 出港计划模块
         depObj = new FormModule({
             canvasId: 'dep-module',
             tableId: 'dep-table',
@@ -202,7 +202,7 @@ var app = function () {
             }
         });
         depObj.initFormModuleObject();
-        moduleObjs.push(depObj);
+        moduleObjs.push(depObj);*/
     };
 
 
@@ -388,10 +388,10 @@ var app = function () {
                 overObj.setScope(overFlightsScope);
             }
             // 出港计划模块
-            var depFlightsScope = airportConfig.depFlightsScope;
+           /* var depFlightsScope = airportConfig.depFlightsScope;
             if ($.isValidObject(depFlightsScope)) {
                 depObj.setScope(depFlightsScope);
-            }
+            }*/
         }
 
         // 备降计划模块

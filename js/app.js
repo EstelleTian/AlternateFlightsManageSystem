@@ -440,7 +440,8 @@ var app = function () {
         data.map(function (item, index, arr) {
             var type = item.type;
             var value = item.value;
-            var name = item.name;
+            // var name = item.name;
+            var name = item.text;
             var node = '<li data-val="'+ value +'" class="'+ value +'"><a href="javascript:; " >'+ name+'</a></li>';
 
             if(type ==1 ){

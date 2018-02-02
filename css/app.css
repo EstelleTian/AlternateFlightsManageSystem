@@ -349,6 +349,7 @@ ul, li {
     min-height: 5rem;
 }
 .condition-panel {
+    display: none !important;
     border-bottom: 1px solid #dddddd;
 }
 .no-event {

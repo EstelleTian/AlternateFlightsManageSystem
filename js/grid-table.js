@@ -924,7 +924,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
         // 备降计划
         var altId = opt.flight.altId || '';
         // 操作请求地址
-        var submiturl = thisProxy.colCollaborateUrl.PRE_ALTERNATE;
+        var submiturl = thisProxy.colCollaborateUrl.PRE_ALTERNATE_ALTERNATE;
         // 校验操作请求地址是否有效，无效则不作任何操作
         if(!$.isValidVariable(submiturl)){
             return;
@@ -994,7 +994,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
         // 备降计划
         var altId = opt.flight.altId || '';
         // 操作请求地址
-        var submiturl = thisProxy.colCollaborateUrl.CONFIRM_ALTERNATE;
+        var submiturl = thisProxy.colCollaborateUrl.CONFIRM_ALTERNATE_ALTERNATE;
         // 校验操作请求地址是否有效，无效则不作任何操作
         if(!$.isValidVariable(submiturl)){
             return;

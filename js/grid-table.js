@@ -136,6 +136,11 @@ function GridTable(params) {
      *  是否允许更新表格数据 默认允许
      * */
     this.fireDataFlag = true;
+
+    /**
+     * 表格右键可交互标记
+     * */
+    this.collaborateFlag = false;
 }
 
 
@@ -567,6 +572,12 @@ GridTable.prototype.clearCollaborateContainer = function () {
 GridTable.prototype.collaborateArr = function (opt) {
     // 代理
     var thisProxy = this;
+
+    // 表格右键交互限制
+    if(!thisProxy.collaborateFlag){
+        return;
+    }
+
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.ARR_DOM;
     // 校验DOM元素是否有效
@@ -1213,6 +1224,10 @@ GridTable.prototype.collaborateAlternate = function (opt) {
 GridTable.prototype.collaborateOver = function (opt) {
     // 代理
     var thisProxy = this;
+    // 表格右键交互限制
+    if(!thisProxy.collaborateFlag){
+        return;
+    }
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.OVER_DOM;
     // 校验DOM元素是否有效

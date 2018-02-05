@@ -23,7 +23,7 @@ var app = function () {
     // 航班状态码
     var statusCode = {};
 
-    // 表格右键可交互标记
+    // 表格右键可交互标记（进港和疆内飞越表格右键是否可交的限制条件依据）
     var collaborateFlag = false;
 
     /**

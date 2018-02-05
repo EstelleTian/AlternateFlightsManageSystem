@@ -209,16 +209,9 @@ FormModule.prototype.changeScope = function () {
     // 取得范围按钮
     var $btn =  $('.form-panel .dropdown-toggle', thisProxy.canvas);
     // 范围列表容器绑定点击事件(因为范围列表动态追加的，所有要用事件委托，把事件绑定在范围列表容器上)
-    $menu.on('click',function (e) {
+    $menu.on('click','a.scope-item',function (e) {
         // 取得当前点击目标源
-        var $that = $(e.target);
-        // 取得源 className
-        var thatClassName = $.trim($that.attr('class'));
-        // 若className 不等于'scope-item',则目标源不是范围列表,直接跳出，
-        // 反之，取得相关属性数据并更新到范围按钮和范围标识码上
-        if(!thatClassName =='scope-item'){
-            return;
-        }
+        var $that = $(this);
         // 取当前点击选中的范围列表项的自定义属性data-val的值,用于记录范围标识码
         var val = $that.attr('data-val');
         // 取得当前点击选中的范围列表项的节点内容,用于更新到范围按钮
@@ -227,6 +220,10 @@ FormModule.prototype.changeScope = function () {
         $btn.html( valCN +'<span class="caret"></span>');
         // 更新范围标识码
         thisProxy.scope = val;
+        // 清除定时器
+        clearTimeout(thisProxy.timer);
+        // 初始化数据查询并开启定时器(将会按指定的自定义定时器时间间隔进行)
+        thisProxy.initInquireData(true);
     })
 };
 
@@ -287,9 +284,13 @@ FormModule.prototype.changeWeatherModel = function () {
         if(bool){
             // 启用自定义定时器时间
             thisProxy.enableCustomeIntervalFlag = true;
+            // 更新表格右键可交互标记
+            // thisProxy.table.collaborateFlag = true;
         }else {
             // 关闭自定义定时器时间
             thisProxy.enableCustomeIntervalFlag = false;
+            // 更新表格右键可交互标记
+            // thisProxy.table.collaborateFlag = false;
         }
         // 清除定时器
         clearTimeout(thisProxy.timer);

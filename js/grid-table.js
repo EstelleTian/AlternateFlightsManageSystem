@@ -136,6 +136,11 @@ function GridTable(params) {
      *  是否允许更新表格数据 默认允许
      * */
     this.fireDataFlag = true;
+
+    /*/!**
+     * 表格右键可交互标记
+     * *!/
+    this.collaborateFlag = false;*/
 }
 
 
@@ -279,7 +284,7 @@ GridTable.prototype.initGridTableObject = function () {
         $(this).removeClass('hover');
     });
 
-    // 初始化快速过滤工具栏
+   /* // 初始化快速过滤工具栏
     thisProxy.gridTableObject.jqGrid('filterToolbar', {
         // 是否开启Enter后查询
         searchOnEnter: false,
@@ -292,7 +297,7 @@ GridTable.prototype.initGridTableObject = function () {
             thisProxy.clearCollaborateContainer();
         }
     });// 隐藏过滤工具栏的X清空过滤条件按钮
-    thisProxy.canvas.find('.ui-search-clear').hide();
+    thisProxy.canvas.find('.ui-search-clear').hide();*/
 
     // 绑定Window事件，窗口变化时重新调整表格大小
     $(window).resize(function () {
@@ -496,10 +501,10 @@ GridTable.prototype.onRightClickRow = function ( rowid, iRow, iCol, e) {
         // 疆内飞越模块
         thisProxy.collaborateOver(opt);
 
-    }else if(tableId == 'dep-table'){
+    }/*else if(tableId == 'dep-table'){
         // 出港计划模块
         thisProxy.collaborateDep(opt);
-    }
+    }*/
 
 };
 
@@ -567,6 +572,12 @@ GridTable.prototype.clearCollaborateContainer = function () {
 GridTable.prototype.collaborateArr = function (opt) {
     // 代理
     var thisProxy = this;
+
+    // 表格右键交互限制
+    if(!app.collaborateFlag){
+        return;
+    }
+
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.ARR_DOM;
     // 校验DOM元素是否有效
@@ -1213,6 +1224,10 @@ GridTable.prototype.collaborateAlternate = function (opt) {
 GridTable.prototype.collaborateOver = function (opt) {
     // 代理
     var thisProxy = this;
+    // 表格右键交互限制
+    if(!app.collaborateFlag){
+        return;
+    }
     // 获取协调DOM元素
     var collaboratorDom = GridTableCollaborateDom.OVER_DOM;
     // 校验DOM元素是否有效
@@ -1769,12 +1784,12 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         position: {
             my: 'bottom center', // 同jQueryUI Position
             at: 'top center',
-            viewport: false, // 显示区域
+            viewport: true, // 显示区域
             target:cellObj, // 指定对象
             container:  $box, // 限制显示容器，以此容器为边界
             adjust: {
                 resize: true, // 窗口改变时，重置位置
-                method: 'shift shift'  //flipinvert/flip(页面变化时，任意位置翻转)  shift(转变) none(无)
+                method: 'flip flip'  //flipinvert/flip(页面变化时，任意位置翻转)  shift(转变) none(无)
             }
         },
         // 样式配置

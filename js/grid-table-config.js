@@ -14,14 +14,14 @@ var GridTableConfig = function () {
                 name: 'flightDataId',
                 index: 'flightDataId',
                 width:120,
-                frozen:true
+                // frozen:true
             },
             // 备降场
             {
                 name: 'altairport',
                 index: 'altairport',
                 width:120,
-                frozen:true
+                // frozen:true
             },
             // 状态
             {

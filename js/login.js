@@ -48,7 +48,7 @@ var LOGIN = function () {
         if(isValidLogonInfo()){
             $.ajax({
                 type: "POST",
-                url: ipHost + "altf/logon/userLogon/",
+                url: ipHost + "logon/userLogon/",
                 data:{
                     username:userName,
                     password:passWord

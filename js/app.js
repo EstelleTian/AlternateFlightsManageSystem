@@ -23,6 +23,9 @@ var app = function () {
     // 航班状态码
     var statusCode = {};
 
+    // 表格右键可交互标记（进港和疆内飞越表格右键是否可交的限制条件依据）
+    var collaborateFlag = false;
+
     /**
      * 各模块对象
      * */
@@ -85,7 +88,7 @@ var app = function () {
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
-                        sortname: 'deta',
+                        sortname: 'peta',
                         shrinkToFit: true,
                         sortorder: 'asc'
                     }
@@ -157,7 +160,7 @@ var app = function () {
                     colTitle: GridTableConfig.common.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
-                        sortname: 'deta',
+                        sortname: 'peta',
                         shrinkToFit: true,
                         sortorder: 'asc'
                     }
@@ -170,7 +173,7 @@ var app = function () {
         });
         overObj.initFormModuleObject();
         moduleObjs.push(overObj);
-        // 出港计划模块
+        /*// 出港计划模块
         depObj = new FormModule({
             canvasId: 'dep-module',
             tableId: 'dep-table',
@@ -202,7 +205,7 @@ var app = function () {
             }
         });
         depObj.initFormModuleObject();
-        moduleObjs.push(depObj);
+        moduleObjs.push(depObj);*/
     };
 
 
@@ -388,10 +391,10 @@ var app = function () {
                 overObj.setScope(overFlightsScope);
             }
             // 出港计划模块
-            var depFlightsScope = airportConfig.depFlightsScope;
+           /* var depFlightsScope = airportConfig.depFlightsScope;
             if ($.isValidObject(depFlightsScope)) {
                 depObj.setScope(depFlightsScope);
-            }
+            }*/
         }
 
         // 备降计划模块
@@ -440,7 +443,8 @@ var app = function () {
         data.map(function (item, index, arr) {
             var type = item.type;
             var value = item.value;
-            var name = item.name;
+            // var name = item.name;
+            var name = item.text;
             var node = '<li data-val="'+ value +'" class="'+ value +'"><a href="javascript:; " >'+ name+'</a></li>';
 
             if(type ==1 ){
@@ -553,8 +557,33 @@ var app = function () {
         return data;
     };
 
+    /**
+     * 绑定进港计划模块切换复杂天气模式关联疆内飞越模块表格右键可交互标记
+     * */
+    var changeCollaborateFlag = function () {
+        // 取得checkbox
+        var $box = $('input#change-weather-model', '.arr-module');
+        // checkbox绑定点击事件
+        $box.on('click',function () {
+            // 取得checkbox勾选状态
+            var bool = $box.prop('checked');
+            // 若勾选
+            if(bool){
+                // 更新表格右键可交互标记
+                collaborateFlag = true;
+                app.collaborateFlag = true;
+            }else {
+                // 更新表格右键可交互标记
+                collaborateFlag = false;
+                app.collaborateFlag = false;
+            }
+        });
+    };
+
+
     return {
         statusCode : statusCode,
+        collaborateFlag : collaborateFlag,
         init : function () {
             // 设置默认活动模块
             initDefaultActiveModule();
@@ -566,6 +595,8 @@ var app = function () {
             initBasicData(1000);
             // 绑定菜单栏事件，切换模块显隐及活动模块
             initActiveModule();
+            // 绑定进港计划模块切换复杂天气模式关联疆内飞越模块表格右键可交互标记
+            changeCollaborateFlag();
         }
     }
 }();

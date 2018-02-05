@@ -23,6 +23,9 @@ var app = function () {
     // 航班状态码
     var statusCode = {};
 
+    // 表格右键可交互标记
+    var collaborateFlag = false;
+
     /**
      * 各模块对象
      * */
@@ -554,8 +557,33 @@ var app = function () {
         return data;
     };
 
+    /**
+     * 绑定进港计划模块切换复杂天气模式关联疆内飞越模块表格右键可交互标记
+     * */
+    var changeCollaborateFlag = function () {
+        // 取得checkbox
+        var $box = $('input#change-weather-model', '.arr-module');
+        // checkbox绑定点击事件
+        $box.on('click',function () {
+            // 取得checkbox勾选状态
+            var bool = $box.prop('checked');
+            // 若勾选
+            if(bool){
+                // 更新表格右键可交互标记
+                collaborateFlag = true;
+                app.collaborateFlag = true;
+            }else {
+                // 更新表格右键可交互标记
+                collaborateFlag = false;
+                app.collaborateFlag = false;
+            }
+        });
+    };
+
+
     return {
         statusCode : statusCode,
+        collaborateFlag : collaborateFlag,
         init : function () {
             // 设置默认活动模块
             initDefaultActiveModule();
@@ -567,6 +595,8 @@ var app = function () {
             initBasicData(1000);
             // 绑定菜单栏事件，切换模块显隐及活动模块
             initActiveModule();
+            // 绑定进港计划模块切换复杂天气模式关联疆内飞越模块表格右键可交互标记
+            changeCollaborateFlag();
         }
     }
 }();

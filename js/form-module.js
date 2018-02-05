@@ -285,12 +285,12 @@ FormModule.prototype.changeWeatherModel = function () {
             // 启用自定义定时器时间
             thisProxy.enableCustomeIntervalFlag = true;
             // 更新表格右键可交互标记
-            thisProxy.table.collaborateFlag = true;
+            // thisProxy.table.collaborateFlag = true;
         }else {
             // 关闭自定义定时器时间
             thisProxy.enableCustomeIntervalFlag = false;
             // 更新表格右键可交互标记
-            thisProxy.table.collaborateFlag = false;
+            // thisProxy.table.collaborateFlag = false;
         }
         // 清除定时器
         clearTimeout(thisProxy.timer);

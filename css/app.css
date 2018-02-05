@@ -373,6 +373,13 @@ ul, li {
 .result-panel .ui-jqgrid:first-child {
     overflow: hidden;
 }
+.form-panel .dropdown-menu {
+    padding: 0px;
+}
+.form-panel .dropdown-menu>li>a {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
 
 /*@media (max-width: 768px) {
     .menu-bar ul{

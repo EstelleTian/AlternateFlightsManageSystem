@@ -347,7 +347,7 @@ var alternateAirport = function () {
       //data数据填充
       $.each(dataObj, function (i, e) {
         var obj = {};
-        obj['airport'] = e.airport;
+        obj['airport'] = e.airport +'-'+e.text;
         obj['total'] = e.available;
         obj['remark'] = e.remark;
         $.each(e.positionCapInfo, function (index, ele) {
@@ -365,7 +365,7 @@ var alternateAirport = function () {
     } else {
       // 单条数据转换
       var obj = {};
-      obj['airport'] = dataObj.airport;
+      obj['airport'] = e.airport +'-'+e.text;
       obj['total'] = dataObj.available;
       obj['remark'] = dataObj.remark;
       $.each(dataObj.positionCapInfo, function (index, ele) {

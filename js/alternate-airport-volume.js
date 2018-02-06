@@ -21,7 +21,7 @@ var alternateAirport = function () {
     },
     colModel: [{
       name: 'airport',
-      index: 'airport'
+      index: 'airport',
     }, {
       name: 'total',
       index: 'total',
@@ -307,13 +307,12 @@ var alternateAirport = function () {
           var currentVal = rowData[colName];
           // 获取触发事件的单元格对象
           var type = colName.split('total');
-          var airportName = rowData.airport.split('-')
           var opt = {
             rowid: rowid,
             iRow: iRow,
             iCol: iCol,
             tableId: tableId,
-            airport: airportName[0],
+            airport: rowData.airport,
             type: type[0],
             cellObj: $(e.target),
             currentVal: currentVal,
@@ -348,7 +347,8 @@ var alternateAirport = function () {
       //data数据填充
       $.each(dataObj, function (i, e) {
         var obj = {};
-        obj['airport'] = e.airport +'-'+e.text;
+        obj['airport'] = e.airport;
+        obj['airport_title'] = e.airport + '-' + e.text;
         obj['total'] = e.available;
         obj['remark'] = e.remark;
         $.each(e.positionCapInfo, function (index, ele) {
@@ -366,7 +366,7 @@ var alternateAirport = function () {
     } else {
       // 单条数据转换
       var obj = {};
-      obj['airport'] = e.airport +'-'+e.text;
+      obj['airport'] = e.airport;
       obj['total'] = dataObj.available;
       obj['remark'] = dataObj.remark;
       $.each(dataObj.positionCapInfo, function (index, ele) {

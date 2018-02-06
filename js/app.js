@@ -576,6 +576,14 @@ var app = function () {
                 // 更新表格右键可交互标记
                 collaborateFlag = false;
                 app.collaborateFlag = false;
+                // 清除进港表格协调菜单
+                if($.isValidObject(arrObj.table) && $.isValidVariable(arrObj.table.clearCollaborateContainer)){
+                    arrObj.table.clearCollaborateContainer();
+                }
+                // 清除飞越表格协调菜单
+                if($.isValidObject(overObj.table) && $.isValidVariable(overObj.table.clearCollaborateContainer)){
+                    overObj.table.clearCollaborateContainer();
+                }
             }
         });
     };

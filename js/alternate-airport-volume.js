@@ -307,12 +307,13 @@ var alternateAirport = function () {
           var currentVal = rowData[colName];
           // 获取触发事件的单元格对象
           var type = colName.split('total');
+          var airportName = rowData.airport.split('-')
           var opt = {
             rowid: rowid,
             iRow: iRow,
             iCol: iCol,
             tableId: tableId,
-            airport: rowData.airport,
+            airport: airportName[0],
             type: type[0],
             cellObj: $(e.target),
             currentVal: currentVal,

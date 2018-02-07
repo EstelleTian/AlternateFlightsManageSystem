@@ -220,6 +220,13 @@ FormModule.prototype.changeScope = function () {
         $btn.html( valCN +'<span class="caret"></span>');
         // 更新范围标识码
         thisProxy.scope = val;
+        // 若表格已初始化
+        if($.isValidObject(thisProxy.table) && $.isValidObject(thisProxy.table.gridTableObject)){
+            // 清除协调窗口
+            thisProxy.table.clearCollaborateContainer();
+            // 开启表格数据更新标识
+            thisProxy.table.fireDataFlag = true;
+        }
         // 清除定时器
         clearTimeout(thisProxy.timer);
         // 初始化数据查询并开启定时器(将会按指定的自定义定时器时间间隔进行)
@@ -292,6 +299,13 @@ FormModule.prototype.changeWeatherModel = function () {
             // 更新表格右键可交互标记
             // thisProxy.table.collaborateFlag = false;
         }
+        // 若表格已初始化
+        if($.isValidObject(thisProxy.table) && $.isValidObject(thisProxy.table.gridTableObject)){
+            // 清除协调窗口
+            thisProxy.table.clearCollaborateContainer();
+            // 开启表格数据更新标识
+            thisProxy.table.fireDataFlag = true;
+        }
         // 清除定时器
         clearTimeout(thisProxy.timer);
         // 初始化数据查询并开启定时器(将会按指定的自定义定时器时间间隔进行)
@@ -330,7 +344,7 @@ FormModule.prototype.changeWeatherModel = function () {
 };
 
 /**
- * 切换复杂天气模式
+ * 切换过滤开启/关闭
  * */
 FormModule.prototype.changeFilter = function () {
     // 当前对象this代理
@@ -353,6 +367,14 @@ FormModule.prototype.changeFilter = function () {
             // 标记过滤是否开启
             thisProxy.filter = false;
         }
+        // 若表格已初始化
+        if($.isValidObject(thisProxy.table) && $.isValidObject(thisProxy.table.gridTableObject)){
+            // 清除协调窗口
+            thisProxy.table.clearCollaborateContainer();
+            // 开启表格数据更新标识
+            thisProxy.table.fireDataFlag = true;
+        }
+
         // 清除定时器
         clearTimeout(thisProxy.timer);
         // 初始化数据查询并开启定时器(将会按指定的自定义定时器时间间隔进行)
@@ -372,6 +394,13 @@ FormModule.prototype.bindEventOnButton = function () {
     var thisProxy = this;
     // 查询按钮绑定事件
     $('.inquire', thisProxy.canvas).on('click',function () {
+        // 若表格已初始化
+        if($.isValidObject(thisProxy.table) && $.isValidObject(thisProxy.table.gridTableObject)){
+            // 清除协调窗口
+            thisProxy.table.clearCollaborateContainer();
+            // 开启表格数据更新标识
+            thisProxy.table.fireDataFlag = true;
+        }
         // 清除定时器
         clearTimeout(thisProxy.timer);
         // 初始化数据查询并开启定时器(将会按指定的自定义定时器时间间隔进行)

@@ -605,10 +605,12 @@ GridTable.prototype.collaborateArr = function (opt) {
             $('.pre-alternate', collaboratorDom).hide();
             $('.occupied', collaboratorDom).hide();
         }else if(status == 4){ // 状态为正班占用
+            // 直接跳出
+            return;
             // 预选备降、确定备降和正班占用菜单项隐藏
-            $('.pre-alternate', collaboratorDom).hide();
-            $('.confirm-alternate', collaboratorDom).hide();
-            $('.occupied', collaboratorDom).hide();
+            // $('.pre-alternate', collaboratorDom).hide();
+            // $('.confirm-alternate', collaboratorDom).hide();
+            // $('.occupied', collaboratorDom).hide();
         }else {
             // 预选备降、确定备降和正班占用菜单项显示
             $('.pre-alternate', collaboratorDom).show();

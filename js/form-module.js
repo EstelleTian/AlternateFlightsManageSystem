@@ -845,7 +845,7 @@ FormModule.prototype.toggleQuickFilter = function () {
     }
     // checkbox绑定点击事件
     $box.on('click',function () {
-        if(!$.isValidObject(thisProxy.table.gridTableObject)){
+        if($.isValidObject(thisProxy.table.gridTableObject)){
             thisProxy.table.showQuickFilter();
         }
     });

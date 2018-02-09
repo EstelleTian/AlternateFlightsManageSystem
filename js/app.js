@@ -304,8 +304,8 @@ var app = function () {
                     colTitle: GridTableConfig.alertnate.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
-                        sortname: 'executeDate',
-                        sortorder: 'asc'
+                        // sortname: 'executeDate',
+                        // sortorder: 'asc'
                     }
                 };
                 table = new GridTable(opt);

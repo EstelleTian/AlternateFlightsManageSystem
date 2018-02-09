@@ -1887,7 +1887,8 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
 
     // 容器
     $container = cellObj.parents('.ui-jqgrid-bdiv');
-    var $box = $('#gbox_' + thisProxy.tableId);
+    var $box = $('#gview__' + thisProxy.tableId);
+    // var $box = cellObj.parents('tbody');
     // 确定样式设置
     var styleClasses = 'qtip-green';
     if (type == 'SUCCESS') {
@@ -1946,8 +1947,11 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
     });
     var api = tooltips.qtip('api');
     // 滚动时复位qtip位置
-    $container.scroll(function(event) {
-        api.reposition(event,false); // Pass event object!
+    $container.off('scroll').on('scroll',function(event) {
+        var qtip = $('.qtip ', $box);
+        if($.isValidObject(qtip) && qtip.length > 0){
+            api.reposition(event,false); // Pass event object!
+        }
     });
 
 };

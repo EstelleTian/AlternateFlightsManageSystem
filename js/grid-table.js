@@ -1887,7 +1887,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
 
     // 容器
     $container = cellObj.parents('.ui-jqgrid-bdiv');
-    var $box = $('#gview__' + thisProxy.tableId);
+    var $box = $('#gbox_' + thisProxy.tableId);
     // var $box = cellObj.parents('tbody');
     // 确定样式设置
     var styleClasses = 'qtip-green';
@@ -1924,8 +1924,8 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         },
         // 显示位置配置
         position: {
-            my: 'bottom center', // 同jQueryUI Position
-            at: 'top center',
+            my: 'top center', // 同jQueryUI Position
+            at: 'bottom center',
             viewport: true, // 显示区域
             target:cellObj, // 指定对象
             container:  $box, // 限制显示容器，以此容器为边界

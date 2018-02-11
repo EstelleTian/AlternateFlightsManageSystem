@@ -628,7 +628,8 @@ GridTable.prototype.collaborateArr = function (opt) {
     }
 
     // 追加协调DOM至容器
-    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
+    // $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
+    $('#gbox_' + thisProxy.tableId).parent().append(collaboratorDom);
 
     // 校验是否关闭定时请求
     thisProxy.isAbortRequest(collaboratorDom);
@@ -802,8 +803,6 @@ GridTable.prototype.collaborateArr = function (opt) {
         event.stopPropagation();
         // 清除协调窗口
         thisProxy.clearCollaborateContainer();
-        var loading = Ladda.create($occupied[0]);
-        loading.start();
 
         // 计划批号
         var flightDataId = opt.flight.flightDataId;
@@ -2056,7 +2055,7 @@ GridTable.prototype.followTargetPosition = function (collaboratorDom, cellObj) {
     // 代理
     var thisProxy = this;
     function position() {
-        var $container = $('#gbox_' + thisProxy.tableId);
+        var $container = $('#gbox_' + thisProxy.tableId).parent();
         // 获取协调窗口DOM
         var collaborator =  $('.grid-table-collaborate-container',$container);
         // 若取协调窗口DOM无效

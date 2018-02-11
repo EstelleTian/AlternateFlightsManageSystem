@@ -918,8 +918,8 @@ GridTable.prototype.collaborateAlternate = function (opt) {
         return;
     }
     // 追加协调DOM至容器
-    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
-    // thisProxy.canvas.append(collaboratorDom);
+    // $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
+     $('#gbox_' + thisProxy.tableId).parent().append(collaboratorDom);
     // 校验是否关闭定时请求
     thisProxy.isAbortRequest(collaboratorDom);
     // 定位协调DOM
@@ -1333,7 +1333,8 @@ GridTable.prototype.collaborateOver = function (opt) {
         $('.occupied', collaboratorDom).show();
     }
     // 追加协调DOM至容器
-    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
+    // $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
+    $('#gbox_' + thisProxy.tableId).parent().append(collaboratorDom);
     // 校验是否关闭定时请求
     thisProxy.isAbortRequest(collaboratorDom);
     // 定位协调DOM
@@ -1609,7 +1610,8 @@ GridTable.prototype.collaborateDep = function (opt) {
     }
 
     // 追加协调DOM至容器
-    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
+    // $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
+    $('#gbox_' + thisProxy.tableId).parent().append(collaboratorDom);
     // 校验是否关闭定时请求
     thisProxy.isAbortRequest(collaboratorDom);
     // 定位协调DOM

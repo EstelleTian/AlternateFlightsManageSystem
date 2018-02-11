@@ -131,6 +131,8 @@ FormModule.prototype.initFormModuleObject = function () {
 
     //绑定查询按钮事件
     thisProxy.bindEventOnButton();
+    // 切换快速过滤
+    thisProxy.toggleQuickFilter();
 
     // 绑定窗口调整时
     // $(window).resize(function () {
@@ -220,10 +222,8 @@ FormModule.prototype.changeScope = function () {
         $btn.html( valCN +'<span class="caret"></span>');
         // 更新范围标识码
         thisProxy.scope = val;
-        // 清除定时器
-        clearTimeout(thisProxy.timer);
-        // 初始化数据查询并开启定时器(将会按指定的自定义定时器时间间隔进行)
-        thisProxy.initInquireData(true);
+        thisProxy.abortRequest(true);
+        thisProxy.openRequest(true);
     })
 };
 
@@ -236,16 +236,21 @@ FormModule.prototype.changeKeyword = function () {
     var thisProxy = this;
     var $input = $('.form-panel .key', thisProxy.canvas);
 
-    $input.on('keyup', function () {
+    $input.on('keyup', function (event) {
         // 当前输入框值
         var val = $(this).val();
         // 转换为大写
         var upperCaseVal = val.toUpperCase();
         // 设置值为大写值
         $(this).val(upperCaseVal);
-        // $(this).change();
-        // 保存到关键字标识
-        thisProxy.keyword = upperCaseVal;
+        // 回车键
+        if(event.keyCode == 13){
+            // 保存到关键字标识
+            thisProxy.keyword = upperCaseVal;
+            thisProxy.abortRequest(true);
+            thisProxy.openRequest(true);
+        }
+
     });
 };
 
@@ -284,18 +289,12 @@ FormModule.prototype.changeWeatherModel = function () {
         if(bool){
             // 启用自定义定时器时间
             thisProxy.enableCustomeIntervalFlag = true;
-            // 更新表格右键可交互标记
-            // thisProxy.table.collaborateFlag = true;
         }else {
             // 关闭自定义定时器时间
             thisProxy.enableCustomeIntervalFlag = false;
-            // 更新表格右键可交互标记
-            // thisProxy.table.collaborateFlag = false;
         }
-        // 清除定时器
-        clearTimeout(thisProxy.timer);
-        // 初始化数据查询并开启定时器(将会按指定的自定义定时器时间间隔进行)
-        thisProxy.initInquireData(true);
+        thisProxy.abortRequest(true);
+        thisProxy.openRequest(true);
         // 向后端提交此次天气模式的切换
         var url = DataUrl.WEATHER_MODEL;
         if(!$.isValidVariable(url)){
@@ -330,7 +329,7 @@ FormModule.prototype.changeWeatherModel = function () {
 };
 
 /**
- * 切换复杂天气模式
+ * 切换过滤开启/关闭
  * */
 FormModule.prototype.changeFilter = function () {
     // 当前对象this代理
@@ -353,10 +352,8 @@ FormModule.prototype.changeFilter = function () {
             // 标记过滤是否开启
             thisProxy.filter = false;
         }
-        // 清除定时器
-        clearTimeout(thisProxy.timer);
-        // 初始化数据查询并开启定时器(将会按指定的自定义定时器时间间隔进行)
-        thisProxy.initInquireData(true);
+        thisProxy.abortRequest(true);
+        thisProxy.openRequest(true);
     })
 
 };
@@ -372,10 +369,8 @@ FormModule.prototype.bindEventOnButton = function () {
     var thisProxy = this;
     // 查询按钮绑定事件
     $('.inquire', thisProxy.canvas).on('click',function () {
-        // 清除定时器
-        clearTimeout(thisProxy.timer);
-        // 初始化数据查询并开启定时器(将会按指定的自定义定时器时间间隔进行)
-        thisProxy.initInquireData(true);
+        thisProxy.abortRequest(true);
+        thisProxy.openRequest(true);
     });
 };
 
@@ -391,8 +386,6 @@ FormModule.prototype.initInquireData = function (refresh) {
     thisProxy.desabledForm(true);
     // 启用loading动画
     thisProxy.loading.start();
-    // 清空相关数据信息
-    // thisProxy.clear();
 
     // 更新当前查询条件
     thisProxy.updateCondition();
@@ -476,10 +469,6 @@ FormModule.prototype.inquireData = function () {
     }
     // 拼接参数,拼接完整的请求地址
     var url = thisProxy.url + '?scope='+ thisProxy.scope +'&keyWord='+ thisProxy.keyword;
-    /*// 备降模块无关键字参数
-    if(thisProxy.tableId == 'alternate-table'){
-        url = thisProxy.url + '?scope='+ thisProxy.scope;
-    }else */
     if (thisProxy.tableId == 'over-table'){ // 疆内飞越模块要添加exceptX参数
         // 若filter为true,则是勾选了'任务为X不显示'，exceptX参数值为'1',反之为'0'
         if(thisProxy.filter){
@@ -719,7 +708,6 @@ FormModule.prototype.setScope = function (data) {
     thisProxy.setDefaultScope();
 };
 
-
 /**
  * 设置模块是否为活动模块
  *
@@ -729,31 +717,11 @@ FormModule.prototype.setActive = function (bool) {
     // 当前对象this代理
     var thisProxy = this;
     if(bool){
-        // 开启表格数据刷新开关
-        if($.isValidVariable(thisProxy.table.fireDataFlag)){
-            thisProxy.table.fireDataFlag = true;
-        }
-        // 开启定时总开关
-        thisProxy.timerValve = true;
-        // 查询数据并开启定时刷新
-        thisProxy.initInquireData(true);
+        // 开启请求
+        thisProxy.openRequest(true);
     }else {
-        if($.isValidVariable(thisProxy.table.fireDataFlag)){
-            // 关闭该模块下表格的数据刷新开关
-            thisProxy.table.fireDataFlag = false;
-        }
-        if($.isValidVariable(thisProxy.table.clearCollaborateContainer)){
-            // 清除协调窗口
-            thisProxy.table.clearCollaborateContainer();
-        }
-        if($.isValidVariable(thisProxy.xhr)){
-            // 取消掉已经发出的ajax请求
-            thisProxy.xhr.abort();
-        }
-        // 清除定时器
-        clearTimeout(thisProxy.timer);
-        // 关闭定时器总开关
-        thisProxy.timerValve = false;
+        // 关闭请求
+        thisProxy.abortRequest();
     }
 };
 
@@ -781,6 +749,69 @@ FormModule.prototype.startTimer = function (fn, isNext, time) {
 };
 
 /**
+ * 开启请求
+ *
+ *
+ *
+ * */
+FormModule.prototype.openRequest = function (now) {
+    // 当前对象this代理
+    var thisProxy = this;
+    // 开启表格数据刷新开关
+    if($.isValidVariable(thisProxy.table.fireDataFlag)){
+        thisProxy.table.fireDataFlag = true;
+    }
+    // 开启定时总开关
+    thisProxy.timerValve = true;
+
+    // 查询数据并开启定时刷新
+    if(now){
+        thisProxy.initInquireData(true);
+    }else {
+        var time = '';
+        // 若开启自定义定时刷新时间
+        if(thisProxy.enableCustomeIntervalFlag && $.isValidVariable(thisProxy.customeInterval)){
+            time = thisProxy.customeInterval;
+        }else {
+            time = thisProxy.interval;
+        }
+        setTimeout(function () {
+            thisProxy.initInquireData(true);
+        }, time)
+    }
+};
+
+/**
+ * 关闭请求
+ *
+ * clearCollaborate  是否清除表格协调窗口
+ * */
+FormModule.prototype.abortRequest = function (clearCollaborate) {
+    // 当前对象this代理
+    var thisProxy = this;
+
+    if($.isValidVariable(thisProxy.table.fireDataFlag)){
+        // 关闭该模块下表格的数据刷新开关
+        thisProxy.table.fireDataFlag = false;
+    }
+    if($.isValidVariable(thisProxy.table.clearCollaborateContainer) && clearCollaborate){
+        // 清除协调窗口
+        thisProxy.table.clearCollaborateContainer();
+    }
+    if($.isValidVariable(thisProxy.xhr)){
+        // 取消掉已经发出的ajax请求
+        thisProxy.xhr.abort();
+    }
+    // 清除定时器
+    clearTimeout(thisProxy.timer);
+    // 关闭定时器总开关
+    thisProxy.timerValve = false;
+};
+
+
+
+
+/**
  * 是否隐藏表格容器
  * @param bool 布尔值  true隐藏 false 不隐藏，即显示
  *
@@ -795,6 +826,29 @@ FormModule.prototype.isHiddenTableContainer = function (bool) {
     }else {
         $tableContainer.removeClass('hidden');
     }
+}
+
+/**
+ * 切换快速过滤
+ * @param bool 布尔值  true隐藏 false 不隐藏，即显示
+ *
+ * */
+
+FormModule.prototype.toggleQuickFilter = function () {
+    // 当前对象this代理
+    var thisProxy = this;
+    // 取得checkbox
+    var $box = $('.quick-filter > input.magic-checkbox', thisProxy.canvas);
+
+    if($.isValidVariable($box) && $box.length < 1){
+        return;
+    }
+    // checkbox绑定点击事件
+    $box.on('click',function () {
+        if($.isValidObject(thisProxy.table.gridTableObject)){
+            thisProxy.table.showQuickFilter();
+        }
+    });
 }
 
 

@@ -80,6 +80,7 @@ var app = function () {
             // 初始化表格
             initGridTable : function (table) {
                 var opt = {
+                    moduleObj : arrObj, // 表格所在模块对象
                     tableId: 'arr-table',
                     pagerId: 'arr-table-pager',
                     colNames: GridTableConfig.common.colName,
@@ -122,6 +123,7 @@ var app = function () {
             defaultScope : 'ALL',
             initGridTable : function (table) {
                 var opt = {
+                    moduleObj : alternateObj, // 表格所在模块对象
                     tableId: 'alternate-table',
                     pagerId: 'alternate-table-pager',
                     colNames: GridTableConfig.alertnate.colName,
@@ -152,6 +154,7 @@ var app = function () {
             defaultScope : '2',
             initGridTable : function (table) {
                 var opt = {
+                    moduleObj : overObj, // 表格所在模块对象
                     tableId: 'over-table',
                     pagerId: 'over-table-pager',
                     colNames: GridTableConfig.common.colName,
@@ -301,8 +304,8 @@ var app = function () {
                     colTitle: GridTableConfig.alertnate.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
-                        sortname: 'executeDate',
-                        sortorder: 'asc'
+                        // sortname: 'executeDate',
+                        // sortorder: 'asc'
                     }
                 };
                 table = new GridTable(opt);

@@ -11,9 +11,9 @@ function GridTable(params) {
     }
 
     /**
-     * 表格所在容器ID
+     * 表格所在模块对象
      */
-    // this.canvasId = params.canvasId;
+    this.moduleObj = params.moduleObj;
 
     /**
      * 表格所在容器jQuery对象
@@ -209,6 +209,8 @@ GridTable.prototype.initGridTableObject = function () {
         },
         // 绑定左键选中行事件
         onSelectRow: function (rowid, status, e) {
+            // 记录当前选中行号
+            thisProxy.activeFlight = rowid;
             if (undefined != thisProxy.onSelectRow && typeof(thisProxy.onSelectRow) == 'function') {
                 //若选中多选框，阻止冒泡
                 if( $(e.target).hasClass("cbox") ){
@@ -284,7 +286,7 @@ GridTable.prototype.initGridTableObject = function () {
         $(this).removeClass('hover');
     });
 
-   /* // 初始化快速过滤工具栏
+    // 初始化快速过滤工具栏
     thisProxy.gridTableObject.jqGrid('filterToolbar', {
         // 是否开启Enter后查询
         searchOnEnter: false,
@@ -297,7 +299,11 @@ GridTable.prototype.initGridTableObject = function () {
             thisProxy.clearCollaborateContainer();
         }
     });// 隐藏过滤工具栏的X清空过滤条件按钮
-    thisProxy.canvas.find('.ui-search-clear').hide();*/
+    thisProxy.canvas.find('.ui-search-clear').hide();
+    // 隐藏快速过滤（默认）
+    if (!thisProxy.params.showQuickFilter) {
+        thisProxy.gridTableObject[0].toggleToolbar();
+    }
 
     // 绑定Window事件，窗口变化时重新调整表格大小
     $(window).resize(function () {
@@ -408,7 +414,7 @@ GridTable.prototype.onCellSelect = function (rowid, iCol, cellcontent, e) {
     // 代理
     var thisProxy = this;
 
-    thisProxy.activeFlight = rowid;
+    // thisProxy.activeFlight = rowid;
     // 清除单元格样式
     thisProxy.clearCollaborateContainer();
     // 获取当前表格的协调窗口
@@ -436,10 +442,7 @@ GridTable.prototype.onCellSelect = function (rowid, iCol, cellcontent, e) {
 GridTable.prototype.onRightClickRow = function ( rowid, iRow, iCol, e) {
     // 代理
     var thisProxy = this;
-
-    // 关闭表格数据刷新开关,阻止定时更新的数据绘制到表格
-    thisProxy.fireDataFlag = false;
-
+    // thisProxy.activeFlight = rowid;
     // 清除单元格样式
     this.clearCollaborateContainer();
     // 获取单元格colModel对象
@@ -605,10 +608,12 @@ GridTable.prototype.collaborateArr = function (opt) {
             $('.pre-alternate', collaboratorDom).hide();
             $('.occupied', collaboratorDom).hide();
         }else if(status == 4){ // 状态为正班占用
+            // 直接跳出
+            return;
             // 预选备降、确定备降和正班占用菜单项隐藏
-            $('.pre-alternate', collaboratorDom).hide();
-            $('.confirm-alternate', collaboratorDom).hide();
-            $('.occupied', collaboratorDom).hide();
+            // $('.pre-alternate', collaboratorDom).hide();
+            // $('.confirm-alternate', collaboratorDom).hide();
+            // $('.occupied', collaboratorDom).hide();
         }else {
             // 预选备降、确定备降和正班占用菜单项显示
             $('.pre-alternate', collaboratorDom).show();
@@ -624,6 +629,9 @@ GridTable.prototype.collaborateArr = function (opt) {
 
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
+
+    // 校验是否关闭定时请求
+    thisProxy.isAbortRequest(collaboratorDom);
 
     // 定位协调DOM
     collaboratorDom.position({
@@ -671,13 +679,12 @@ GridTable.prototype.collaborateArr = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
-                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-                if(!thisProxy.fireDataFlag){
-                    thisProxy.fireDataFlag = true;
-                }
+
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "预选备降提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -687,16 +694,26 @@ GridTable.prototype.collaborateArr = function (opt) {
                     if($.isValidObject(altfFlights)){
                         thisProxy.fireSingleDataChange(altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '预选备降已提交成功');
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
-                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message);
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
-                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message);
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -741,13 +758,12 @@ GridTable.prototype.collaborateArr = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
-                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-                if(!thisProxy.fireDataFlag){
-                    thisProxy.fireDataFlag = true;
-                }
+
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "确定备降提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -757,16 +773,26 @@ GridTable.prototype.collaborateArr = function (opt) {
                     if($.isValidObject(altfFlights)){
                         thisProxy.fireSingleDataChange( altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '确定备降已提交成功');
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -802,13 +828,11 @@ GridTable.prototype.collaborateArr = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
-                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-                if(!thisProxy.fireDataFlag){
-                    thisProxy.fireDataFlag = true;
-                }
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "正班占用提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -818,16 +842,26 @@ GridTable.prototype.collaborateArr = function (opt) {
                     if($.isValidObject(altfFlights)){
                         thisProxy.fireSingleDataChange(altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '正班占用已提交成功');
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -891,6 +925,8 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
     // thisProxy.canvas.append(collaboratorDom);
+    // 校验是否关闭定时请求
+    thisProxy.isAbortRequest(collaboratorDom);
     // 定位协调DOM
     collaboratorDom.position({
         of: opt.cellObj,
@@ -938,13 +974,12 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
-                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-                if(!thisProxy.fireDataFlag){
-                    thisProxy.fireDataFlag = true;
-                }
+
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "更改预选提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -954,16 +989,26 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     if($.isValidObject(altfAlternate)){
                         thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '更改备降已提交成功');
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -1008,13 +1053,12 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
-                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-                if(!thisProxy.fireDataFlag){
-                    thisProxy.fireDataFlag = true;
-                }
+
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "更改备降提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -1024,16 +1068,26 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     if($.isValidObject(altfAlternate)){
                         thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '更改备降已提交成功');
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -1066,13 +1120,12 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
-                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-                if(!thisProxy.fireDataFlag){
-                    thisProxy.fireDataFlag = true;
-                }
+
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "确定备降提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -1082,16 +1135,26 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     if($.isValidObject(altfAlternate)){
                         thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '确定备降已提交成功');
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -1124,13 +1187,12 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
-                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-                if(!thisProxy.fireDataFlag){
-                    thisProxy.fireDataFlag = true;
-                }
+
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "释放停机位提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -1140,16 +1202,26 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     if($.isValidObject(altfAlternate)){
                         thisProxy.fireSingleDataChange(altfAlternate);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '释放停机位已提交成功');
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -1182,13 +1254,12 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
-                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-                if(!thisProxy.fireDataFlag){
-                    thisProxy.fireDataFlag = true;
-                }
+
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "取消备降提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -1200,16 +1271,26 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                         var id = altfAlternate.id;
                         var flightDataId = altfAlternate.flightDataId;
                         thisProxy.showMsg('success',''+'计划航班('+ flightDataId +')取消备降成功', 1000*5);
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -1273,6 +1354,8 @@ GridTable.prototype.collaborateOver = function (opt) {
     }
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
+    // 校验是否关闭定时请求
+    thisProxy.isAbortRequest(collaboratorDom);
     // 定位协调DOM
     collaboratorDom.position({
         of: opt.cellObj,
@@ -1319,13 +1402,12 @@ GridTable.prototype.collaborateOver = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
-                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-                if(!thisProxy.fireDataFlag){
-                    thisProxy.fireDataFlag = true;
-                }
+
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "预选备降提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -1335,16 +1417,26 @@ GridTable.prototype.collaborateOver = function (opt) {
                     if($.isValidObject(altfFlights)){
                         thisProxy.fireSingleDataChange(altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '预选备降已提交成功');
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -1389,13 +1481,12 @@ GridTable.prototype.collaborateOver = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
-                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-                if(!thisProxy.fireDataFlag){
-                    thisProxy.fireDataFlag = true;
-                }
+
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "确定备降提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -1405,16 +1496,26 @@ GridTable.prototype.collaborateOver = function (opt) {
                     if($.isValidObject(altfFlights)){
                         thisProxy.fireSingleDataChange(altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '确定备降已提交成功');
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -1450,13 +1551,12 @@ GridTable.prototype.collaborateOver = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
-                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-                if(!thisProxy.fireDataFlag){
-                    thisProxy.fireDataFlag = true;
-                }
+
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "正班占用提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -1466,16 +1566,26 @@ GridTable.prototype.collaborateOver = function (opt) {
                     if($.isValidObject(altfFlights)){
                         thisProxy.fireSingleDataChange(altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '正班占用已提交成功');
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -1529,7 +1639,8 @@ GridTable.prototype.collaborateDep = function (opt) {
 
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
-
+    // 校验是否关闭定时请求
+    thisProxy.isAbortRequest(collaboratorDom);
     // 定位协调DOM
     collaboratorDom.position({
         of: opt.cellObj,
@@ -1576,6 +1687,8 @@ GridTable.prototype.collaborateDep = function (opt) {
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "预选提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -1585,16 +1698,26 @@ GridTable.prototype.collaborateDep = function (opt) {
                     if($.isValidObject(altfFlights)){
                         thisProxy.fireSingleDataChange(altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '预选已提交成功');
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -1632,13 +1755,12 @@ GridTable.prototype.collaborateDep = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
-                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-                if(!thisProxy.fireDataFlag){
-                    thisProxy.fireDataFlag = true;
-                }
+
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "备降提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -1648,16 +1770,26 @@ GridTable.prototype.collaborateDep = function (opt) {
                     if($.isValidObject(altfFlights)){
                         thisProxy.fireSingleDataChange( altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '备降已提交成功');
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -1693,13 +1825,12 @@ GridTable.prototype.collaborateDep = function (opt) {
             success: function (data) {
                 // 清除协调窗口
                 thisProxy.clearCollaborateContainer();
-                // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-                if(!thisProxy.fireDataFlag){
-                    thisProxy.fireDataFlag = true;
-                }
+
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "正班占用提交失败，请稍后重试");
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
                 //成功
                 if (data.status == 200) {
@@ -1709,16 +1840,26 @@ GridTable.prototype.collaborateDep = function (opt) {
                     if($.isValidObject(altfFlights)){
                         thisProxy.fireSingleDataChange(altfFlights);
                         thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '正班占用已提交成功');
+                        // 开启定时请求但不立刻发起请求
+                        thisProxy.request();
                     }
                 } else if (data.status == 202) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 } else if (data.status == 500) { // 失败
                     thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
+                    // 开启定时请求但不立刻发起请求
+                    thisProxy.request();
                 };
             },
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
+                // 清除协调窗口
+                thisProxy.clearCollaborateContainer();
+                // 开启定时请求但不立刻发起请求
+                thisProxy.request();
             }
         })
 
@@ -1747,6 +1888,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
     // 容器
     $container = cellObj.parents('.ui-jqgrid-bdiv');
     var $box = $('#gbox_' + thisProxy.tableId);
+    // var $box = cellObj.parents('tbody');
     // 确定样式设置
     var styleClasses = 'qtip-green';
     if (type == 'SUCCESS') {
@@ -1782,8 +1924,8 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         },
         // 显示位置配置
         position: {
-            my: 'bottom center', // 同jQueryUI Position
-            at: 'top center',
+            my: 'top center', // 同jQueryUI Position
+            at: 'bottom center',
             viewport: true, // 显示区域
             target:cellObj, // 指定对象
             container:  $box, // 限制显示容器，以此容器为边界
@@ -1805,8 +1947,11 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
     });
     var api = tooltips.qtip('api');
     // 滚动时复位qtip位置
-    $container.scroll(function(event) {
-        api.reposition(event,false); // Pass event object!
+    $container.off('scroll').on('scroll',function(event) {
+        var qtip = $('.qtip ', $box);
+        if($.isValidObject(qtip) && qtip.length > 0){
+            api.reposition(event,false); // Pass event object!
+        }
     });
 
 };
@@ -1842,9 +1987,16 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
             thisProxy.gridTableObject.jqGrid('addRowData', flight.id, rowData, 'first');
         }
     }
+    // 记录选中的行号
+    // thisProxy.activeFlight = flight.id;
+
     //激活冻结列
     thisProxy.gridTableObject.jqGrid("setFrozenColumns");
     thisProxy.scrollToFixForzen();
+    // 清空所有选中行
+    this.gridTableObject.jqGrid('resetSelection');
+    // 选中行
+    this.gridTableObject.jqGrid('setSelection', thisProxy.activeFlight, false);
     // 更新表格数据
     // thisProxy.gridTableObject.jqGrid('setRowData',flight.id, rowData);
     // thisProxy.scrollToFixForzen();
@@ -2062,5 +2214,72 @@ GridTable.prototype.showMsg = function (type, content, clearTime) {
             $err.html('').removeClass('active')
         }, clearTime)
     }
+
+};
+
+/**
+ *  // 校验是否关闭定时请求
+
+ *
+ * @param rowid
+ */
+GridTable.prototype.isAbortRequest = function (collaboratorDom) {
+    // 代理
+    var thisProxy = this;
+
+    // 协调窗口显示的菜单选项
+   var mune = $('li:visible',collaboratorDom);
+   // 若有菜单选项显示
+    if(mune.length > 0){
+        // 若表格所在模块对象有效且模块对象为
+        if($.isValidVariable(thisProxy.moduleObj)){
+            // 取消掉模块已经发出的ajax请求
+            thisProxy.moduleObj.abortRequest();
+        }
+    }
+
+};
+
+/**
+ *  开启定时请求
+ *
+ * @param now 是否立刻发起请求
+ */
+GridTable.prototype.request = function (now) {
+    // 代理
+    var thisProxy = this;
+
+    // 若表格所在模块对象有效且模块对象为
+    if($.isValidVariable(thisProxy.moduleObj)){
+        // 开启定时请求数据
+        thisProxy.moduleObj.openRequest(now);
+    }
+
+};
+
+/**
+ * 显示/隐藏快速过滤工具条
+ */
+GridTable.prototype.showQuickFilter = function () {
+    // 代理
+    var thisProxy = this;
+    // 清空过滤条件
+    thisProxy.gridTableObject[0].clearToolbar();
+    //清除冻结列
+    thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
+    // 切换显示
+    thisProxy.gridTableObject[0].toggleToolbar();
+    // 隐藏清空条件的x
+    thisProxy.canvas.find('.ui-search-clear').hide();
+    // 自适应
+    thisProxy.resizeToFitContainer();
+    //激活冻结列
+    thisProxy.gridTableObject.jqGrid("setFrozenColumns");
+    thisProxy.gridTableObject.jqGrid('resizeSize');
+    thisProxy.scrollToFixForzen();
+    /*thisProxy.frozenHeight = $('#'+thisProxy.tableId+'_frozen').parent().height();
+    thisProxy.resizeFrozenTable();*/
+    /*thisProxy.frozenHeight = $('#'+this.tableId+'_frozen').parent().height();
+    thisProxy.resizeFrozenTable();*/
 
 };

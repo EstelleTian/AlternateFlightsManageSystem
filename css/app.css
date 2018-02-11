@@ -245,7 +245,6 @@ ul, li {
     flex-direction: column;
     flex:1 0 auto;
     justify-content: flex-start;
-    /*height: 90%;*/
 }
 
 .form-panel a {

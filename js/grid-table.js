@@ -628,8 +628,7 @@ GridTable.prototype.collaborateArr = function (opt) {
     }
 
     // 追加协调DOM至容器
-    // $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
-    $('#gbox_' + thisProxy.tableId).parent().append(collaboratorDom);
+    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
 
     // 校验是否关闭定时请求
     thisProxy.isAbortRequest(collaboratorDom);
@@ -918,8 +917,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
         return;
     }
     // 追加协调DOM至容器
-    // $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
-     $('#gbox_' + thisProxy.tableId).parent().append(collaboratorDom);
+    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
     // 校验是否关闭定时请求
     thisProxy.isAbortRequest(collaboratorDom);
     // 定位协调DOM
@@ -1333,8 +1331,7 @@ GridTable.prototype.collaborateOver = function (opt) {
         $('.occupied', collaboratorDom).show();
     }
     // 追加协调DOM至容器
-    // $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
-    $('#gbox_' + thisProxy.tableId).parent().append(collaboratorDom);
+    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
     // 校验是否关闭定时请求
     thisProxy.isAbortRequest(collaboratorDom);
     // 定位协调DOM
@@ -1610,8 +1607,7 @@ GridTable.prototype.collaborateDep = function (opt) {
     }
 
     // 追加协调DOM至容器
-    // $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
-    $('#gbox_' + thisProxy.tableId).parent().append(collaboratorDom);
+    $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
     // 校验是否关闭定时请求
     thisProxy.isAbortRequest(collaboratorDom);
     // 定位协调DOM
@@ -2057,7 +2053,7 @@ GridTable.prototype.followTargetPosition = function (collaboratorDom, cellObj) {
     // 代理
     var thisProxy = this;
     function position() {
-        var $container = $('#gbox_' + thisProxy.tableId).parent();
+        var $container = $('#gbox_' + thisProxy.tableId);
         // 获取协调窗口DOM
         var collaborator =  $('.grid-table-collaborate-container',$container);
         // 若取协调窗口DOM无效

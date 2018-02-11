@@ -281,7 +281,7 @@ var alternateAirport = function () {
         resize: false,
         cellattr: setTableColor,
         width: 120,
-        sortfunc: sortNum
+        // sortfunc: sortNum
       },
       pager: pagerId,
       pgbuttons: false,
@@ -331,7 +331,9 @@ var alternateAirport = function () {
 
   $(window).resize(function () {
     if($('.alter_volume').is(':visible')){
-      airVolumeTable.jqGrid('resizeSize');
+      if($.isValidObject(airVolumeTable)){
+        airVolumeTable.jqGrid('resizeSize');
+      }
     }
   })
   /**

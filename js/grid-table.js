@@ -1852,7 +1852,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
 
     // 容器
     $container = cellObj.parents('.ui-jqgrid-bdiv');
-    // var $box = $('#gbox_' + thisProxy.tableId);
+    var $box = $('#gbox_' + thisProxy.tableId);
     // var $box = cellObj.parents('tbody');
     // 确定样式设置
     var styleClasses = 'qtip-green';
@@ -1889,15 +1889,14 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         },
         // 显示位置配置
         position: {
-            y: 10,
-            my: 'bottom center', // 同jQueryUI Position
-            at: 'top center',
+            my: 'top center', // 同jQueryUI Position
+            at: 'bottom center',
             viewport: true, // 显示区域
             target:cellObj, // 指定对象
-            container:  $container, // 限制显示容器，以此容器为边界
+            container:  $box, // 限制显示容器，以此容器为边界
             adjust: {
                 resize: true, // 窗口改变时，重置位置
-                method: 'flipinvert flipinvert'  //flipinvert/flip(页面变化时，任意位置翻转)  shift(转变) none(无)
+                method: 'flip flip'  //flipinvert/flip(页面变化时，任意位置翻转)  shift(转变) none(无)
             }
         },
         // 样式配置
@@ -1911,14 +1910,14 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
             },
         }
     });
-    // var api = tooltips.qtip('api');
-    // // 滚动时复位qtip位置
-    // $container.off('scroll').on('scroll',function(event) {
-    //     var qtip = $('.qtip ', $box);
-    //     if($.isValidObject(qtip) && qtip.length > 0){
-    //         api.reposition(event,false); // Pass event object!
-    //     }
-    // });
+    var api = tooltips.qtip('api');
+    // 滚动时复位qtip位置
+    $container.off('scroll').on('scroll',function(event) {
+        var qtip = $('.qtip ', $box);
+        if($.isValidObject(qtip) && qtip.length > 0){
+            api.reposition(event,false); // Pass event object!
+        }
+    });
 
 };
 /**

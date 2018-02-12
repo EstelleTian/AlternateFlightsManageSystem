@@ -373,7 +373,7 @@ ul, li {
 }
 
 .result-panel .ui-jqgrid:first-child {
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 .form-panel .dropdown-menu {
     padding: 0px;

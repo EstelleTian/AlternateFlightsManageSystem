@@ -243,6 +243,8 @@ FormModule.prototype.changeKeyword = function () {
         var upperCaseVal = val.toUpperCase();
         // 设置值为大写值
         $(this).val(upperCaseVal);
+        // 保存到关键字标识
+        thisProxy.keyword = upperCaseVal;
         // 回车键
         if(event.keyCode == 13){
             // 保存到关键字标识

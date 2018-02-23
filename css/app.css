@@ -245,7 +245,6 @@ ul, li {
     flex-direction: column;
     flex:1 0 auto;
     justify-content: flex-start;
-    /*height: 90%;*/
 }
 
 .form-panel a {
@@ -374,7 +373,7 @@ ul, li {
 }
 
 .result-panel .ui-jqgrid:first-child {
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 .form-panel .dropdown-menu {
     padding: 0px;

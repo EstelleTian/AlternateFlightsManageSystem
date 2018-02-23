@@ -648,6 +648,8 @@ GridTable.prototype.collaborateArr = function (opt) {
     $preAlternate.on('click', 'li[data-val]', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
         // 当前点击的菜单项
         var $that = $(this);
         // 获取data-val属性值,此值对应该菜单的code(备降机场四字码)
@@ -677,8 +679,6 @@ GridTable.prototype.collaborateArr = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
 
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
@@ -710,8 +710,6 @@ GridTable.prototype.collaborateArr = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }
@@ -727,6 +725,8 @@ GridTable.prototype.collaborateArr = function (opt) {
     $conAlternate.on('click', 'li[data-val]', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
         // 当前点击的菜单项
         var $that = $(this);
         // 获取data-val属性值,此值对应该菜单的code(备降机场四字码)
@@ -756,8 +756,6 @@ GridTable.prototype.collaborateArr = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
 
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
@@ -789,8 +787,6 @@ GridTable.prototype.collaborateArr = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }
@@ -804,6 +800,8 @@ GridTable.prototype.collaborateArr = function (opt) {
     $occupied.on('click', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
 
         // 计划批号
         var flightDataId = opt.flight.flightDataId;
@@ -826,8 +824,6 @@ GridTable.prototype.collaborateArr = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "正班占用提交失败，请稍后重试");
@@ -858,8 +854,6 @@ GridTable.prototype.collaborateArr = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }
@@ -924,7 +918,6 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     }
     // 追加协调DOM至容器
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
-    // thisProxy.canvas.append(collaboratorDom);
     // 校验是否关闭定时请求
     thisProxy.isAbortRequest(collaboratorDom);
     // 定位协调DOM
@@ -943,6 +936,8 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     $updatePreAlternate.on('click', 'li[data-val]', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
         // 当前点击的菜单项
         var $that = $(this);
         // 获取data-val属性值,此值对应该菜单的code(备降机场四字码)
@@ -972,9 +967,6 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
-
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "更改预选提交失败，请稍后重试");
@@ -1005,8 +997,6 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }
@@ -1022,6 +1012,8 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     $updateAlternate.on('click', 'li[data-val]', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
         // 当前点击的菜单项
         var $that = $(this);
         // 获取data-val属性值,此值对应该菜单的code(备降机场四字码)
@@ -1051,9 +1043,6 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
-
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "更改备降提交失败，请稍后重试");
@@ -1084,8 +1073,6 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }
@@ -1099,6 +1086,8 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     $conAlternate.on('click', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
         // 备降计划ID
         var id = opt.flight.id;
         // 备降计划ID，无效则不作任何操作
@@ -1118,9 +1107,6 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
-
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "确定备降提交失败，请稍后重试");
@@ -1151,8 +1137,6 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }
@@ -1166,6 +1150,8 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     $releasePostion.on('click', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
         // 备降计划ID
         var id = opt.flight.id;
         // 备降计划ID，无效则不作任何操作
@@ -1185,9 +1171,6 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
-
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "释放停机位提交失败，请稍后重试");
@@ -1218,8 +1201,6 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }
@@ -1233,6 +1214,8 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     $cancelAlternate.on('click', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
         // 备降计划ID
         var id = opt.flight.id;
         // 备降计划ID，无效则不作任何操作
@@ -1252,9 +1235,6 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
-
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "取消备降提交失败，请稍后重试");
@@ -1287,8 +1267,6 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }
@@ -1371,6 +1349,8 @@ GridTable.prototype.collaborateOver = function (opt) {
     $preAlternate.on('click', 'li[data-val]', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
         // 当前点击的菜单项
         var $that = $(this);
         // 获取data-val属性值,此值对应该菜单的code(备降机场四字码)
@@ -1400,9 +1380,6 @@ GridTable.prototype.collaborateOver = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
-
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "预选备降提交失败，请稍后重试");
@@ -1433,8 +1410,6 @@ GridTable.prototype.collaborateOver = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }
@@ -1450,6 +1425,8 @@ GridTable.prototype.collaborateOver = function (opt) {
     $conAlternate.on('click', 'li[data-val]', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
         // 当前点击的菜单项
         var $that = $(this);
         // 获取data-val属性值,此值对应该菜单的code(备降机场四字码)
@@ -1479,9 +1456,6 @@ GridTable.prototype.collaborateOver = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
-
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "确定备降提交失败，请稍后重试");
@@ -1512,8 +1486,6 @@ GridTable.prototype.collaborateOver = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }
@@ -1527,6 +1499,8 @@ GridTable.prototype.collaborateOver = function (opt) {
     $occupied.on('click', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
 
         // 计划批号
         var flightDataId = opt.flight.flightDataId;
@@ -1549,9 +1523,6 @@ GridTable.prototype.collaborateOver = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
-
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "正班占用提交失败，请稍后重试");
@@ -1582,8 +1553,6 @@ GridTable.prototype.collaborateOver = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }
@@ -1656,6 +1625,8 @@ GridTable.prototype.collaborateDep = function (opt) {
     $preAlternate.on('click', 'li[data-val]', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
 
         // 计划批号
         var flightDataId = opt.flight.flightDataId;
@@ -1678,8 +1649,6 @@ GridTable.prototype.collaborateDep = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
                 if(!thisProxy.fireDataFlag){
                     thisProxy.fireDataFlag = true;
@@ -1714,8 +1683,6 @@ GridTable.prototype.collaborateDep = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }
@@ -1731,6 +1698,8 @@ GridTable.prototype.collaborateDep = function (opt) {
     $alternate.on('click', 'li[data-val]', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
 
         // 计划批号
         var flightDataId = opt.flight.flightDataId;
@@ -1753,9 +1722,6 @@ GridTable.prototype.collaborateDep = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
-
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
                     thisProxy.showTableCellTipMessage(opt, "FAIL", "备降提交失败，请稍后重试");
@@ -1786,8 +1752,6 @@ GridTable.prototype.collaborateDep = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }
@@ -1801,6 +1765,8 @@ GridTable.prototype.collaborateDep = function (opt) {
     $occupied.on('click', function (event) {
         // 阻止事件冒泡
         event.stopPropagation();
+        // 清除协调窗口
+        thisProxy.clearCollaborateContainer();
 
         // 计划批号
         var flightDataId = opt.flight.flightDataId;
@@ -1823,8 +1789,6 @@ GridTable.prototype.collaborateDep = function (opt) {
             type: 'POST',
             dataType: 'json',
             success: function (data) {
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
 
                 // 若数据无效
                 if (!$.isValidVariable(data)) {
@@ -1856,8 +1820,6 @@ GridTable.prototype.collaborateDep = function (opt) {
             error: function ( status, error) {
                 console.error('ajax requset  fail, error:');
                 console.error(error);
-                // 清除协调窗口
-                thisProxy.clearCollaborateContainer();
                 // 开启定时请求但不立刻发起请求
                 thisProxy.request();
             }

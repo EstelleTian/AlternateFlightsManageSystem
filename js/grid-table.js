@@ -276,7 +276,8 @@ GridTable.prototype.initGridTableObject = function () {
             $sub.position({
                 of: $that,
                 my: 'left top',
-                at: 'right top'
+                at: 'right top',
+                collision:'flip fit'
             });
         }
 
@@ -1933,7 +1934,10 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     // 更新数据
     thisProxy.tableDataMap[flight.id] = rowData;
     //清除冻结列
-    thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
+    if(thisProxy.hasFrozen()){
+        thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
+    }
+
     // 删除原数据行，加入新的数据行
     // 表格数据ID集合
     var ids = thisProxy.gridTableObject.jqGrid('getDataIDs');
@@ -1953,8 +1957,11 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     // thisProxy.activeFlight = flight.id;
 
     //激活冻结列
-    thisProxy.gridTableObject.jqGrid("setFrozenColumns");
-    thisProxy.scrollToFixForzen();
+    if(thisProxy.hasFrozen()){
+        thisProxy.gridTableObject.jqGrid("setFrozenColumns");
+        thisProxy.scrollToFixForzen();
+    }
+
     // 清空所有选中行
     this.gridTableObject.jqGrid('resetSelection');
     // 选中行
@@ -1978,13 +1985,18 @@ GridTable.prototype.deleteSingleData = function (flight) {
 
     // 转换数据
     var rowData = thisProxy.convertData(flight);
+
     //清除冻结列
-    thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
+    if(thisProxy.hasFrozen()){
+        thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
+    }
     // 删除原数据
     var f = thisProxy.gridTableObject.jqGrid('delRowData', flight.id);
     //激活冻结列
-    thisProxy.gridTableObject.jqGrid("setFrozenColumns");
-    thisProxy.scrollToFixForzen();
+    if(thisProxy.hasFrozen()){
+        thisProxy.gridTableObject.jqGrid("setFrozenColumns");
+        thisProxy.scrollToFixForzen();
+    }
     // thisProxy.resizeFrozenTable();
 };
 
@@ -2245,3 +2257,17 @@ GridTable.prototype.showQuickFilter = function () {
     thisProxy.resizeFrozenTable();*/
 
 };
+/**
+ * 表格是否有冻结列表格
+ * */
+GridTable.prototype.hasFrozen = function () {
+    // 代理
+    var thisProxy = this;
+    // 取得对应表格的冻结列表格
+    var $frozenTable  = $('#'+thisProxy.tableId+'_frozen', thisProxy.canvas);
+    if($.isValidObject($frozenTable) && $frozenTable.length > 0){
+        return true;
+    }else {
+        return false;
+    }
+}

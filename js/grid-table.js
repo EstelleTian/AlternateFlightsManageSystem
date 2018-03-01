@@ -1880,7 +1880,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         // 隐藏配置
         hide: {
             target: thisProxy.canvas, // 指定对象
-            event: 'unfocus click', // 失去焦点时隐藏
+            event: 'unfocus click mousedown', // 失去焦点时隐藏
             effect: function () {
                 $(this).fadeOut(); // 隐藏动画
             }

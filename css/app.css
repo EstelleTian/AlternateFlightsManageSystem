@@ -319,6 +319,7 @@ ul, li {
     white-space: nowrap;
     text-decoration: none;
     font-size: 1.5rem;
+    cursor: pointer;
 }
 /*.grid-table-collaborate-container li > a:hover {
     background: #f5f5f5;

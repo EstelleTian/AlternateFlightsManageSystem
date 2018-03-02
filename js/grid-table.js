@@ -269,12 +269,14 @@ GridTable.prototype.initGridTableObject = function () {
         $that = $(this);
         // 添加class 若有子菜单则子菜单会显示
         $that.addClass('hover');
+        var e = e || event;
+        $target = $(e.target);
         // 子菜单
-        var $sub = $($that).children('.collaborate-menu');
+        var $sub = $target.next('.collaborate-menu');
         // 若有子菜单则定位子菜单,解决某些情况下因菜单高度将表格高度撑高引起的表格滚动条跳动问题
         if($sub.length > 0){
             $sub.position({
-                of: $that,
+                of: $target.parent(),
                 my: 'left top',
                 at: 'right top',
                 collision:'flip fit'

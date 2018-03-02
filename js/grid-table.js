@@ -1912,7 +1912,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
     });
     var api = tooltips.qtip('api');
     // 滚动时复位qtip位置
-    $container.off('scroll').on('scroll',function(event) {
+    $container.on('scroll',function(event) {
         var qtip = $('.qtip ', $box);
         if($.isValidObject(qtip) && qtip.length > 0){
             api.reposition(event,false); // Pass event object!
@@ -1936,9 +1936,7 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     // 更新数据
     thisProxy.tableDataMap[flight.id] = rowData;
     //清除冻结列
-    if(thisProxy.hasFrozen()){
-        thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
-    }
+    thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
 
     // 删除原数据行，加入新的数据行
     // 表格数据ID集合
@@ -1959,10 +1957,8 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     // thisProxy.activeFlight = flight.id;
 
     //激活冻结列
-    if(thisProxy.hasFrozen()){
-        thisProxy.gridTableObject.jqGrid("setFrozenColumns");
-        thisProxy.scrollToFixForzen();
-    }
+    thisProxy.gridTableObject.jqGrid("setFrozenColumns");
+    thisProxy.scrollToFixForzen();
 
     // 清空所有选中行
     this.gridTableObject.jqGrid('resetSelection');
@@ -1990,15 +1986,13 @@ GridTable.prototype.deleteSingleData = function (flight) {
 
     //清除冻结列
     if(thisProxy.hasFrozen()){
-        thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
     }
+    thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
     // 删除原数据
     var f = thisProxy.gridTableObject.jqGrid('delRowData', flight.id);
     //激活冻结列
-    if(thisProxy.hasFrozen()){
-        thisProxy.gridTableObject.jqGrid("setFrozenColumns");
-        thisProxy.scrollToFixForzen();
-    }
+    thisProxy.gridTableObject.jqGrid("setFrozenColumns");
+    thisProxy.scrollToFixForzen();
     // thisProxy.resizeFrozenTable();
 };
 

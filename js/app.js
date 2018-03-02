@@ -105,7 +105,7 @@ var app = function () {
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
-                table.gridTableObject.jqGrid("destroyFrozenColumns");
+                // table.gridTableObject.jqGrid("destroyFrozenColumns");
                 return table;
             }
         });
@@ -170,7 +170,7 @@ var app = function () {
                 };
                 table = new GridTable(opt);
                 table.initGridTableObject();
-                table.gridTableObject.jqGrid("destroyFrozenColumns");
+                // table.gridTableObject.jqGrid("destroyFrozenColumns");
                 return table;
             }
         });

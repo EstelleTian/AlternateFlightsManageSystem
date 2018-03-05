@@ -400,6 +400,9 @@ GridTable.prototype.drawGridTableData = function () {
     // 更新表格数据
     var params = {data: this.tableData, srcoll: 1};
     this.gridTableObject.jqGrid('setGridParam', params).trigger('reloadGrid');
+    //清除冻结列
+    thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
+    thisProxy.gridTableObject.jqGrid("setFrozenColumns");
 
     // this.frozenHeight = $('#'+thisProxy.tableId+'_frozen').parent().height();
     // this.resizeFrozenTable();

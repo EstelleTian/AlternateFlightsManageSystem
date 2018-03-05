@@ -331,7 +331,9 @@ var alternateAirport = function () {
 
   $(window).resize(function () {
     if($('.alter_volume').is(':visible')){
-      airVolumeTable.jqGrid('resizeSize');
+      if($.isValidObject(airVolumeTable)){
+        airVolumeTable.jqGrid('resizeSize');
+      }
     }
   })
   /**
@@ -563,21 +565,44 @@ var alternateAirport = function () {
   function sortNum(a, b, direction) {
     // 若为升序排序，空值转换为最大的值进行比较
     // 保证排序过程中，空值始终在最下方
-    a = a * 1;
-    b = b * 1;
-    var maxNum = Number.MAX_VALUE;
-    if (!$.isValidVariable(a) || a < 0) {
-      if (direction > 0) {
-        a = maxNum;
+    // 若为升序排序，空值转换为最大的值进行比较
+    // 保证排序过程中，空值始终在最下方
+    if (isNaN(a*1) && isNaN(b*1)) {
+      // 字符串类型
+      var maxStr = 'ZZZZZZZZZZZZ';
+      if (!$.isValidVariable(a)) {
+        if (direction > 0) {
+          a = maxStr;
+        } else {
+          a = '';
+        }
       }
-    }
-    if (!$.isValidVariable(b) || b < 0) {
-      if (direction > 0) {
-        b = maxNum;
+      if (!$.isValidVariable(b)) {
+        if (direction > 0) {
+          b = maxStr;
+        } else {
+          b = '';
+        }
       }
+      return a.localeCompare(b) * direction;
+    } else {
+      // 数字类型
+      a = a*1;
+      b = b*1;
+      var maxNum = Number.MAX_VALUE;
+      if (!$.isValidVariable(a) || a < 0) {
+        if (direction > 0) {
+          a = maxNum;
+        }
+      }
+      if (!$.isValidVariable(b) || b < 0) {
+        if (direction > 0) {
+          b = maxNum;
+        }
+      }
+      return (a > b ? 1 : -1) * direction;
     }
-    return (a > b ? 1 : -1) * direction;
-  }
+    }
 
 
   /**

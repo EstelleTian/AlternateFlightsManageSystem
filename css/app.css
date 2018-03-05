@@ -319,6 +319,7 @@ ul, li {
     white-space: nowrap;
     text-decoration: none;
     font-size: 1.5rem;
+    cursor: pointer;
 }
 /*.grid-table-collaborate-container li > a:hover {
     background: #f5f5f5;
@@ -551,6 +552,7 @@ ul, li {
 .magic-checkbox:checked[disabled] + label:before {
     border: #c9e2f9;
     background: #c9e2f9; }
+
 /********************进港计划,疆内飞越,出港计划宽度自适应****************************/
 .arr-module .ui-jqgrid-bdiv div:first-child {
     overflow-x: hidden;

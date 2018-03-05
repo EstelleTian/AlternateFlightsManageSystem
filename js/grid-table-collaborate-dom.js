@@ -14,45 +14,45 @@ var GridTableCollaborateDom = function () {
     // 进港
     var ARR_DOM = $('<div class="grid-table-collaborate-container">' +
         '<ul class="collaborate-menu">' +
-        '<li class="pre-alternate"><a href="javascript:;" >预选备降<span class="glyphicon glyphicon-play"></span></a></li>' +
-        '<li class="confirm-alternate"><a href="javascript:; " >确定备降<span class="glyphicon glyphicon-play"></span></a></li>' +
-        '<li data-val="occupied" class="occupied"><a href="javascript:;" >正班占用</a></li>' +
-        // '<li data-val="manual-add" class="manual-add"><a href="javascript:;" >手工添加计划</a></li>' +
+        '<li class="pre-alternate"><a  >预选备降<span class="glyphicon glyphicon-play"></span></a></li>' +
+        '<li class="confirm-alternate"><a  >确定备降<span class="glyphicon glyphicon-play"></span></a></li>' +
+        '<li data-val="occupied" class="occupied"><a  >正班占用</a></li>' +
+        // '<li data-val="manual-add" class="manual-add"><a  >手工添加计划</a></li>' +
         '</ul>' +
         '</div>');
     // 备降
     var ALTERNATE_DOM = $('<div class="grid-table-collaborate-container">' +
         '<ul class="collaborate-menu">' +
-        '<li class="update-pre-alternate"><a href="javascript:;" >更改预选<span class="glyphicon glyphicon-play"></span></a></li>' +
-        '<li class="update-alternate"><a href="javascript:; " >更改备降<span class="glyphicon glyphicon-play"></span></a></li>' +
-        '<li data-val="confirm-alternate" class="confirm-alternate"><a href="javascript:; " >确定备降</a></li>' +
-        '<li data-val="release-postion" class="release-postion"><a href="javascript:;" >释放停机位</a></li>' +
-        '<li data-val="cancel-alternate" class="cancel-alternate"><a href="javascript:;" >取消备降</a></li>' +
+        '<li class="update-pre-alternate"><a  >更改预选<span class="glyphicon glyphicon-play"></span></a></li>' +
+        '<li class="update-alternate"><a  >更改备降<span class="glyphicon glyphicon-play"></span></a></li>' +
+        '<li data-val="confirm-alternate" class="confirm-alternate"><a  >确定备降</a></li>' +
+        '<li data-val="release-postion" class="release-postion"><a  >释放停机位</a></li>' +
+        '<li data-val="cancel-alternate" class="cancel-alternate"><a  >取消备降</a></li>' +
         '</ul>' +
         '</div>');
 
     // 疆内飞越
     var OVER_DOM = $('<div class="grid-table-collaborate-container">' +
         '<ul class="collaborate-menu">' +
-        '<li class="pre-alternate"><a href="javascript:;" >预选备降<span class="glyphicon glyphicon-play"></span></a></li>' +
-        '<li class="confirm-alternate"><a href="javascript:; " >确定备降<span class="glyphicon glyphicon-play"></span></a></li>' +
-        '<li data-val="occupied" class="occupied"><a href="javascript:;" >正班占用</a></li>' +
+        '<li class="pre-alternate"><a  >预选备降<span class="glyphicon glyphicon-play"></span></a></li>' +
+        '<li class="confirm-alternate"><a  >确定备降<span class="glyphicon glyphicon-play"></span></a></li>' +
+        '<li data-val="occupied" class="occupied"><a  >正班占用</a></li>' +
         '</ul>' +
         '</div>');
 
     // 出港
     var DEP_DOM = $('<div class="grid-table-collaborate-container">' +
         '<ul class="collaborate-menu">' +
-        '<li data-val="alternate" class="alternate"><a href="javascript:; " >备降</a></li>' +
-        '<li data-val="pre-alternate" class="pre-alternate"><a href="javascript:;" >预选</a></li>' +
-        '<li data-val="occupied" class="occupied"><a href="javascript:;" >正班占用</a></li>' +
+        '<li data-val="alternate" class="alternate"><a  >备降</a></li>' +
+        '<li data-val="pre-alternate" class="pre-alternate"><a  >预选</a></li>' +
+        '<li data-val="occupied" class="occupied"><a  >正班占用</a></li>' +
         '</ul>' +
         '</div>');
 
     var LEVEL2 = $('<ul class="collaborate-menu level-2">' +
-        '<li class="other"><a href="javascript:; " >其它<span class="glyphicon glyphicon-play"></span></a></li>' +
-        '<li class="complex"><a href="javascript:; " >军民合用<span class="glyphicon glyphicon-play"></span></a></li>' +
-        '<li data-val="outside" class="outside"><a href="javascript:; " >区外</a></li>' +
+        '<li class="other"><a  >其它<span class="glyphicon glyphicon-play"></span></a></li>' +
+        '<li class="complex"><a  >军民合用<span class="glyphicon glyphicon-play"></span></a></li>' +
+        '<li data-val="outside" class="outside"><a  >区外</a></li>' +
         '</ul>') ;
 
     var OTHER = $('<ul class="collaborate-menu collaborate-menu-other">' + '</ul>');

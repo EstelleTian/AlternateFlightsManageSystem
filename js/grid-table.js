@@ -269,14 +269,17 @@ GridTable.prototype.initGridTableObject = function () {
         $that = $(this);
         // 添加class 若有子菜单则子菜单会显示
         $that.addClass('hover');
+        var e = e || event;
+        $target = $(e.target);
         // 子菜单
-        var $sub = $($that).children('.collaborate-menu');
+        var $sub = $target.next('.collaborate-menu');
         // 若有子菜单则定位子菜单,解决某些情况下因菜单高度将表格高度撑高引起的表格滚动条跳动问题
         if($sub.length > 0){
             $sub.position({
-                of: $that,
+                of: $target.parent(),
                 my: 'left top',
-                at: 'right top'
+                at: 'right top',
+                collision:'flip fit'
             });
         }
 
@@ -1879,7 +1882,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
         // 隐藏配置
         hide: {
             target: thisProxy.canvas, // 指定对象
-            event: 'unfocus click', // 失去焦点时隐藏
+            event: 'unfocus click mousedown', // 失去焦点时隐藏
             effect: function () {
                 $(this).fadeOut(); // 隐藏动画
             }
@@ -1909,7 +1912,7 @@ GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
     });
     var api = tooltips.qtip('api');
     // 滚动时复位qtip位置
-    $container.off('scroll').on('scroll',function(event) {
+    $container.on('scroll',function(event) {
         var qtip = $('.qtip ', $box);
         if($.isValidObject(qtip) && qtip.length > 0){
             api.reposition(event,false); // Pass event object!
@@ -1934,6 +1937,7 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     thisProxy.tableDataMap[flight.id] = rowData;
     //清除冻结列
     thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
+
     // 删除原数据行，加入新的数据行
     // 表格数据ID集合
     var ids = thisProxy.gridTableObject.jqGrid('getDataIDs');
@@ -1955,6 +1959,7 @@ GridTable.prototype.fireSingleDataChange = function (flight) {
     //激活冻结列
     thisProxy.gridTableObject.jqGrid("setFrozenColumns");
     thisProxy.scrollToFixForzen();
+
     // 清空所有选中行
     this.gridTableObject.jqGrid('resetSelection');
     // 选中行
@@ -1978,7 +1983,10 @@ GridTable.prototype.deleteSingleData = function (flight) {
 
     // 转换数据
     var rowData = thisProxy.convertData(flight);
+
     //清除冻结列
+    if(thisProxy.hasFrozen()){
+    }
     thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
     // 删除原数据
     var f = thisProxy.gridTableObject.jqGrid('delRowData', flight.id);
@@ -2245,3 +2253,17 @@ GridTable.prototype.showQuickFilter = function () {
     thisProxy.resizeFrozenTable();*/
 
 };
+/**
+ * 表格是否有冻结列表格
+ * */
+GridTable.prototype.hasFrozen = function () {
+    // 代理
+    var thisProxy = this;
+    // 取得对应表格的冻结列表格
+    var $frozenTable  = $('#'+thisProxy.tableId+'_frozen', thisProxy.canvas);
+    if($.isValidObject($frozenTable) && $frozenTable.length > 0){
+        return true;
+    }else {
+        return false;
+    }
+}

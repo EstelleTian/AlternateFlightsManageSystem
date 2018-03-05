@@ -1985,15 +1985,13 @@ GridTable.prototype.deleteSingleData = function (flight) {
     var rowData = thisProxy.convertData(flight);
 
     //清除冻结列
-    if(thisProxy.hasFrozen()){
-    }
     thisProxy.gridTableObject.jqGrid("destroyFrozenColumns");
     // 删除原数据
     var f = thisProxy.gridTableObject.jqGrid('delRowData', flight.id);
     //激活冻结列
     thisProxy.gridTableObject.jqGrid("setFrozenColumns");
-    thisProxy.scrollToFixForzen();
-    // thisProxy.resizeFrozenTable();
+    // thisProxy.scrollToFixForzen();
+    thisProxy.resizeFrozenTable();
 };
 
 
@@ -2253,17 +2251,3 @@ GridTable.prototype.showQuickFilter = function () {
     thisProxy.resizeFrozenTable();*/
 
 };
-/**
- * 表格是否有冻结列表格
- * */
-GridTable.prototype.hasFrozen = function () {
-    // 代理
-    var thisProxy = this;
-    // 取得对应表格的冻结列表格
-    var $frozenTable  = $('#'+thisProxy.tableId+'_frozen', thisProxy.canvas);
-    if($.isValidObject($frozenTable) && $frozenTable.length > 0){
-        return true;
-    }else {
-        return false;
-    }
-}

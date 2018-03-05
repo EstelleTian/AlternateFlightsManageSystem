@@ -37,6 +37,9 @@ body .alernate_flight_grid_table {
   flex: 1 0 auto;
   user-select: none;
 }
+body .table-contianer .ui-jqgrid-view {
+  border: 1px solid #dddddd;
+}
 body .table-contianer .ui-jqgrid .ui-jqgrid-bdiv {
   overflow-x: hidden;
 }

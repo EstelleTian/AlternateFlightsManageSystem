@@ -591,6 +591,99 @@ var app = function () {
         });
     };
 
+    /**
+     * 初始化机位管理模块
+     * */
+    var initPostionModule = function () {
+        // 机位拖动
+        var active = 0;
+        var targetIndex = 0;
+        var placeIndex = 0;
+        $('.postion-box').sortable({
+            handle: ".postion-header", //限制排序开始点击指定的元素
+            placeholder : 'sortable-placeholder postion',
+            helper: "clone", //
+            tolerance: "pointer", // 设置当鼠标指针与其他项目重叠时，被移动的项目悬停在另一个项目上
+            // appendTo: document.body,
+            // cursorAt: { left: 5 },
+            // forcePlaceholderSize: true
+            activate : function (event,ui) {
+                active = ui.item.index();
+            },
+            beforeStop : function (event,ui) {
+                placeIndex = ui.placeholder.index()
+            },
+            stop : function (event,ui) {
+                if(active < placeIndex){
+                    // ui.item.insertAfter($('li')[targetIndex]);
+                    ui.item.prev().insertBefore($('.postion-box > li')[active])
+                }else if(active > placeIndex){
+                    ui.item.insertBefore($('.postion-box > li')[targetIndex]);
+                    ui.item.next().insertAfter($('.postion-box > li')[active])
+
+                }
+            }
+        });
+        //
+        $('.aircraft-type-list').sortable({
+            appendTo: '.postion-box',
+            placeholder : 'drag-placeholder ',
+            connectWith: '.aircraft-type-list',
+            helper: "clone", //
+            tolerance: "pointer", // 设置当鼠标指针与其他项目重叠时，被移动的项目悬停在另一个项目上
+            zIndex: 999,
+            scroll: false,
+            forceHelperSize: true,
+            activate : function (event,ui) {
+                // 获取当前活动项的高度
+                var h = ui.item.innerHeight();
+                // 设置当前的占位符项高度
+                ui.placeholder.height(h);
+            },
+            create : function (event,ui) {
+                console.log('create')
+                console.log(ui);
+            },
+
+           /* over: function (event,ui) {
+                console.log('over')
+                console.log(ui);
+            },
+            out : function (event,ui) {
+                console.log('out');
+                console.log(ui);
+            },*/
+            remove : function (event,ui) {
+                console.log('remove');
+                console.log(ui);
+
+            },
+
+        });
+        $('#zxy').sortable({
+            appendTo: '.postion-box',
+            placeholder : 'drag-placeholder ',
+            connectWith: '.aircraft-type-list',
+            helper: "clone", //
+            tolerance: "pointer", // 设置当鼠标指针与其他项目重叠时，被移动的项目悬停在另一个项目上
+            zIndex: 99999999,
+            scroll: false,
+            forceHelperSize: true,
+            activate : function (event,ui) {
+                // 获取当前活动项的高度
+                var h = ui.item.innerHeight();
+                // 设置当前的占位符项高度
+                ui.placeholder.height(h);
+            },
+
+
+            out : function (event,ui) {
+                console.log('out');
+                console.log(ui);
+            },
+        });
+        var arr = $('.aircraft-type-list').sortable('toArray');
+    }
 
     return {
         statusCode : statusCode,
@@ -608,6 +701,8 @@ var app = function () {
             initActiveModule();
             // 绑定进港计划模块切换复杂天气模式关联疆内飞越模块表格右键可交互标记
             changeCollaborateFlag();
+            //机位管理模块
+            initPostionModule();
         }
     }
 }();

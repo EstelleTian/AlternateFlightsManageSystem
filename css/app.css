@@ -126,7 +126,7 @@ ul, li {
     position: relative;
 }
 
-.main-area section {
+.main-area > section {
     display: none;
     height: 100%;
     width: 100%;
@@ -382,6 +382,201 @@ ul, li {
 .form-panel .dropdown-menu>li>a {
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+.postion-box {
+    position: relative;
+    padding: 10px;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.postion {
+    position: relative;
+    width: 288px;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    margin-right: 10px;
+    vertical-align: top;
+    background-color: #eee;
+    border-radius: 3px;
+}
+.postion-box .ui-sortable-helper {
+    box-shadow: 0 7px 21px rgba(0,0,0,.15);
+    -webkit-transform: rotate(1deg);
+    transform: rotate(1deg);
+    z-index: 2014
+}
+.postion-box .sortable-placeholder {
+    background: #e5e5e5
+}
+.aircraft-type-list .drag-placeholder {
+    margin: 0 8px 8px;
+    background-color: #e5e5e5;
+    border-radius: 3px
+}
+.postion-box .postion-header {
+    cursor: move;
+    webkit-flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 14px 18px;
+    font-size: 15px;
+    font-weight: 700;
+    z-index: 1;
+    transition: box-shadow 100ms ease;
+}
+.postion-box .postion-header .postion-name{
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.remove {
+    transition: all .2s;
+    /*display: none;*/
+    opacity: 0;
+    cursor: pointer;
+    color: #c00;
+    /*top: 10px;*/
+    /*right: 40px;*/
+    font-style: normal;
+
+}
+
+.postion-box .postion-header:hover .remove, .aircraft-type-list .item:hover .remove{
+    opacity: 1;
+    display: inline-block;
+}
+.postion-wrap{
+    position: relative;
+    height: 100%;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: 0%;
+}
+.postion-content{
+    display: flex;
+    flex: 1;
+    height: 1px;
+    overflow: auto;
+    /*overflow-x: hidden;*/
+    -webkit-overflow-scrolling: touch;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+
+}
+.aircraft-type-list {
+    width: 100%;
+}
+.postion-box .item,.aircraft-type-list .item {
+    background-color: #fff;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+    cursor: pointer;
+    margin: 0 8px 8px;
+    flex: 0 0 auto;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 14px 18px;
+    font-size: 15px;
+    font-weight: 700;
+    z-index: 1;
+    transition: box-shadow 100ms ease;
+}
+.aircraft-type-list .item .item-name {
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+
+.add-item {
+    width: 100%;
+    outline: 0;
+    /*margin: 10px 0 0;*/
+    /*transition: opacity .1s ease;*/
+    /*cursor: pointer;*/
+    /*background: #578ebe;*/
+    /*padding: 10px 0;*/
+}
+
+
+
+.dls-thin-scroll::-webkit-scrollbar,.thin-scroll::-webkit-scrollbar {
+    width: 7px
+}
+
+.dls-thin-scroll::-webkit-scrollbar-track,.thin-scroll::-webkit-scrollbar-track {
+    background-color: #e5e5e5;
+    border-left: 2px solid transparent
+}
+
+.dls-thin-scroll::-webkit-scrollbar-thumb,.thin-scroll::-webkit-scrollbar-thumb {
+    background-color: #a6a6a6;
+    border-left: 2px solid transparent
+}
+
+.dls-thin-scroll::-webkit-scrollbar-thumb:window-inactive,.thin-scroll::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(0,0,0,.1)
+}
+
+.transparent-scroll::-webkit-scrollbar {
+    width: 8px
+}
+
+.transparent-scroll::-webkit-scrollbar-track {
+    background: transparent
+}
+
+.transparent-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,.25)
 }
 
 /*@media (max-width: 768px) {

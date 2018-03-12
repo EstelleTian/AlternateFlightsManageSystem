@@ -595,94 +595,98 @@ var app = function () {
      * 初始化机位管理模块
      * */
     var initPostionModule = function () {
+
+        getPostionDatas();
+
+
+
+
         // 机位拖动
-        var active = 0;
-        var targetIndex = 0;
-        var placeIndex = 0;
-        $('.postion-box').sortable({
-            handle: ".postion-header", //限制排序开始点击指定的元素
-            placeholder : 'sortable-placeholder postion',
-            helper: "clone", //
-            tolerance: "pointer", // 设置当鼠标指针与其他项目重叠时，被移动的项目悬停在另一个项目上
-            // appendTo: document.body,
-            // cursorAt: { left: 5 },
-            // forcePlaceholderSize: true
-            activate : function (event,ui) {
-                active = ui.item.index();
-            },
-            beforeStop : function (event,ui) {
-                placeIndex = ui.placeholder.index()
-            },
-            stop : function (event,ui) {
-                if(active < placeIndex){
-                    // ui.item.insertAfter($('li')[targetIndex]);
-                    ui.item.prev().insertBefore($('.postion-box > li')[active])
-                }else if(active > placeIndex){
-                    ui.item.insertBefore($('.postion-box > li')[targetIndex]);
-                    ui.item.next().insertAfter($('.postion-box > li')[active])
+        // var active = 0;
+        // var targetIndex = 0;
+        // var placeIndex = 0;
+
+        // var ids = []; //用于存初始时的id
+        // var  sortedIds = []; // 用于存拖动排序后的id
+        // $('.position-box').sortable({
+        //     handle: ".position-header", //限制排序开始点击指定的元素
+        //     placeholder : 'sortable-placeholder position',
+        //     helper: "clone", //
+        //     tolerance: "pointer", // 设置当鼠标指针与其他项目重叠时，被移动的项目悬停在另一个项目上
+        //     stop : function (event,ui) {
+        //         // 更新当前排序后的各id顺序
+        //         sortedIds = $('.position-box').sortable('toArray');
+        //     }
+        // });
+        // //记录初始化时的id顺序
+        // ids = $('.position-box').sortable('toArray');
+    }
+    
+    var getPostionDatas = function () {
+        $.ajax({
+            url:DataUrl.POSTION_LIST,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+
+                // 数据无效
+                if (!data) {
+
+                };
+                // 成功
+                if (data.status == 200) {
+                    // 绘制出机位列表
+                    drawPostion(data);
+                    // 绑定拖动排序
+                    bindSortable();
 
                 }
+            },
+            error: function ( status, error) {
+                console.error('ajax requset  fail, error:');
+                console.error(error);
             }
         });
-        //
-        $('.aircraft-type-list').sortable({
-            appendTo: '.postion-box',
-            placeholder : 'drag-placeholder ',
-            connectWith: '.aircraft-type-list',
-            helper: "clone", //
-            tolerance: "pointer", // 设置当鼠标指针与其他项目重叠时，被移动的项目悬停在另一个项目上
-            zIndex: 999,
-            scroll: false,
-            forceHelperSize: true,
-            activate : function (event,ui) {
-                // 获取当前活动项的高度
-                var h = ui.item.innerHeight();
-                // 设置当前的占位符项高度
-                ui.placeholder.height(h);
-            },
-            create : function (event,ui) {
-                console.log('create')
-                console.log(ui);
-            },
-
-           /* over: function (event,ui) {
-                console.log('over')
-                console.log(ui);
-            },
-            out : function (event,ui) {
-                console.log('out');
-                console.log(ui);
-            },*/
-            remove : function (event,ui) {
-                console.log('remove');
-                console.log(ui);
-
-            },
-
+    };
+    var drawPostion = function (data) {
+        //检测数据是否有效
+        if(!$.isValidObject(data.configs)) {
+            return;
+        }
+        //取得机位配置数据
+        var  config = data.configs;
+        // 将机位内部的机型字段值转为数组
+        config.map(function (item, index, arr) {
+                item.value = item.value.split(',');
         });
-        $('#zxy').sortable({
-            appendTo: '.postion-box',
-            placeholder : 'drag-placeholder ',
-            connectWith: '.aircraft-type-list',
-            helper: "clone", //
-            tolerance: "pointer", // 设置当鼠标指针与其他项目重叠时，被移动的项目悬停在另一个项目上
-            zIndex: 99999999,
-            scroll: false,
-            forceHelperSize: true,
-            activate : function (event,ui) {
-                // 获取当前活动项的高度
-                var h = ui.item.innerHeight();
-                // 设置当前的占位符项高度
-                ui.placeholder.height(h);
-            },
+        // 利用Handlebars模版生成对应HTML结构
+        var myTemplate = Handlebars.compile($("#template").html());
+        $('#position-box').html(myTemplate(config));
+    };
 
-
-            out : function (event,ui) {
-                console.log('out');
-                console.log(ui);
-            },
+    var bindSortable = function () {
+        // 配置初始化参数
+        var sort = new SortablePart({
+            selector : $('#position-box'),
+            saveBtn : $('.save'),
+            handle: ".position-header", //限制排序开始点击指定的元素
+            placeholder : 'sortable-placeholder position',
+            order : [3,5,6]
+        })
+        //初始化
+        sort.init();
+        //事件绑定
+        $('#edited').on('click',function () {
+            // 取得checkbox勾选状态
+            var bool = $(this).prop('checked');
+            // 若勾选
+            if(bool){
+                // 启用自定义定时器时间
+                sort.enableEdit();
+            }else {
+                sort.disableEdit();
+            }
         });
-        var arr = $('.aircraft-type-list').sortable('toArray');
     }
 
     return {
@@ -702,6 +706,7 @@ var app = function () {
             // 绑定进港计划模块切换复杂天气模式关联疆内飞越模块表格右键可交互标记
             changeCollaborateFlag();
             //机位管理模块
+
             initPostionModule();
         }
     }

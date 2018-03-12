@@ -372,6 +372,11 @@ ul, li {
 .modal-body {
     padding-top: 0;
 }
+.modal-text {
+    padding-top: 15px;
+    margin: 10px 0;
+    font-size: 1.5rem;
+}
 
 .result-panel .ui-jqgrid:first-child {
     /*overflow: hidden;*/
@@ -384,7 +389,14 @@ ul, li {
     padding-bottom: 5px;
 }
 
-.postion-box {
+/**机位管理模块**/
+.edited-option {
+    padding: 4px 0;
+}
+.save {
+    display: none;
+}
+.position-box {
     position: relative;
     padding: 10px;
     white-space: nowrap;
@@ -400,7 +412,7 @@ ul, li {
     justify-content: flex-start;
 }
 
-.postion {
+.position {
     position: relative;
     width: 288px;
     display: -webkit-inline-flex;
@@ -416,14 +428,34 @@ ul, li {
     vertical-align: top;
     background-color: #eee;
     border-radius: 3px;
+    flex: 0 0 auto;
 }
-.postion-box .ui-sortable-helper {
+.add-position {
+    height: 4rem;
+    position: relative;
+    width: 288px;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    margin-right: 10px;
+    vertical-align: top;
+    background-color: #eee;
+    border-radius: 3px;
+    flex: 0 0 auto;
+}
+.position-box .ui-sortable-helper {
     box-shadow: 0 7px 21px rgba(0,0,0,.15);
     -webkit-transform: rotate(1deg);
     transform: rotate(1deg);
     z-index: 2014
 }
-.postion-box .sortable-placeholder {
+.position-box .sortable-placeholder {
     background: #e5e5e5
 }
 .aircraft-type-list .drag-placeholder {
@@ -431,7 +463,7 @@ ul, li {
     background-color: #e5e5e5;
     border-radius: 3px
 }
-.postion-box .postion-header {
+.position-box .position-header {
     cursor: move;
     webkit-flex: 0 0 auto;
     -ms-flex: 0 0 auto;
@@ -451,7 +483,24 @@ ul, li {
     z-index: 1;
     transition: box-shadow 100ms ease;
 }
-.postion-box .postion-header .postion-name{
+.position-box .add-position .position-header{
+    height: 100%;
+}
+.position-box .add-position .position-header,  .position-box .add-position .position-header a{
+    cursor: pointer;
+    color: #a6a6a6;
+    text-decoration: none;
+    opacity : 1
+}
+.position-box .add-position .position-header:hover, .position-box .add-position .position-header:hover a  {
+    cursor: pointer;
+    color: #3da8f5;
+    text-decoration: none;
+}
+.position-box .add-position .position-header .position-name {
+    margin-left: 0.5rem;
+}
+.position-box .position-header .position-name{
     -webkit-flex: 1 1 auto;
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
@@ -460,23 +509,27 @@ ul, li {
     white-space: nowrap;
 }
 
-.remove {
+.position-box .icon {
     transition: all .2s;
-    /*display: none;*/
     opacity: 0;
     cursor: pointer;
-    color: #c00;
-    /*top: 10px;*/
-    /*right: 40px;*/
     font-style: normal;
-
+    color: #808080;
+    padding-left: 8px;
+    padding-right: 8px;
+    text-decoration: none;
+}
+.position-box .icon:hover, .position-box .open.icon {
+    color: #3da8f5;
+    text-decoration: none;
+    opacity: 1;
 }
 
-.postion-box .postion-header:hover .remove, .aircraft-type-list .item:hover .remove{
+.position-box .position-header:hover .icon, .aircraft-type-list .item:hover .icon{
     opacity: 1;
     display: inline-block;
 }
-.postion-wrap{
+.position-wrap{
     position: relative;
     height: 100%;
     -webkit-flex: 1 1 auto;
@@ -490,7 +543,7 @@ ul, li {
     flex-direction: column;
     min-height: 0%;
 }
-.postion-content{
+.position-content{
     display: flex;
     flex: 1;
     height: 1px;
@@ -504,7 +557,7 @@ ul, li {
 .aircraft-type-list {
     width: 100%;
 }
-.postion-box .item,.aircraft-type-list .item {
+.position-box .item,.aircraft-type-list .item {
     background-color: #fff;
     border-radius: 3px;
     box-shadow: 0 1px 2px rgba(0,0,0,.1);
@@ -592,6 +645,35 @@ ul, li {
     }
 
 }*/
+
+.popover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 106;
+    display: none;
+    width: 250px;
+    max-width: none;
+    padding: 0;
+    text-align: left;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 7px 21px rgba(0,0,0,.1);
+    box-shadow: 0 7px 21px rgba(0,0,0,.1);
+    -webkit-border-radius: 3px;
+    white-space: normal;
+    background-clip: padding-box;
+    word-wrap: break-word
+}
+.popover.bottom {
+    margin-top : 0;
+}
+.popover .popover-header{
+    padding: 10px 15px;
+    margin: 0 15px;
+    border-bottom: 1px solid rgba(0,0,0,.07);
+}
 
 @media (max-width: 1366px) {
     .modal-dialog {

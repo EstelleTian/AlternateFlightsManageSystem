@@ -39,5 +39,15 @@ var DataUrl = {
     // 出港
     DEP : ipHost+'airport/retrieveDepFlights',
     // 复杂天气模式
-    WEATHER_MODEL : ipHost+'airport/changeWeatherModel'
+    WEATHER_MODEL : ipHost+'airport/changeWeatherModel',
+    // 获取机位数据
+    POSTION_LIST : ipHost + 'airport/retrievePostionType',
+    // 机位排序
+    POSTION_ORDER : ipHost + 'airport/orderPostionType',
+    // 机位添加
+    POSTION_ADD : ipHost + 'airport/addPostionType',
+    // 机位删除
+    POSTION_DEL : ipHost + 'airport/deletePostionType',
+    // 机位修改
+    POSTION_UPDATE : ipHost + 'airport/updatePostionType'
 }

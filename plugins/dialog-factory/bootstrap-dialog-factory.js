@@ -287,6 +287,7 @@ var BootstrapDialogFactory = function () {
             }
 
             dialogDom.modal('show');
+            // return dialogDom;
         }
 
     }

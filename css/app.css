@@ -390,12 +390,13 @@ ul, li {
 }
 
 /**机位管理模块**/
+.flex-end {
+    justify-content: flex-end;
+}
 .edited-option {
     padding: 4px 0;
 }
-.save {
-    display: none;
-}
+
 .position-box {
     position: relative;
     padding: 10px;
@@ -414,7 +415,7 @@ ul, li {
 
 .position {
     position: relative;
-    width: 288px;
+    width: 200px;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
     display: inline-flex;
@@ -507,11 +508,11 @@ ul, li {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-size: 2rem;
 }
 
 .position-box .icon {
     transition: all .2s;
-    opacity: 0;
     cursor: pointer;
     font-style: normal;
     color: #808080;
@@ -519,14 +520,12 @@ ul, li {
     padding-right: 8px;
     text-decoration: none;
 }
-.position-box .icon:hover, .position-box .open.icon {
+.position-box .icon:hover {
     color: #3da8f5;
     text-decoration: none;
-    opacity: 1;
 }
 
 .position-box .position-header:hover .icon, .aircraft-type-list .item:hover .icon{
-    opacity: 1;
     display: inline-block;
 }
 .position-wrap{
@@ -672,9 +671,31 @@ ul, li {
 .popover .popover-header{
     padding: 10px 15px;
     margin: 0 15px;
-    border-bottom: 1px solid rgba(0,0,0,.07);
+    /*border-bottom: 1px solid rgba(0,0,0,.07);*/
 }
 
+.modal-dialog .form-section .banner {
+    /*border-bottom: 1px solid rgba(0,0,0,.1);*/
+    padding: 10px 0;
+}
+.modal-dialog .form-section .banner .header {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+.modal-dialog .form-section .banner .tip {
+    color: #a6a6a6;
+}
+#position-value {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    /*box-shadow: none;*/
+    /*outline: none;*/
+    text-transform: uppercase;
+}
+#position-value :host{
+    outline: none;
+}
 @media (max-width: 1366px) {
     .modal-dialog {
         width: 1100px !important;

@@ -595,31 +595,7 @@ var app = function () {
      * 初始化机位管理模块
      * */
     var initPostionModule = function () {
-
         getPostionDatas();
-
-
-
-
-        // 机位拖动
-        // var active = 0;
-        // var targetIndex = 0;
-        // var placeIndex = 0;
-
-        // var ids = []; //用于存初始时的id
-        // var  sortedIds = []; // 用于存拖动排序后的id
-        // $('.position-box').sortable({
-        //     handle: ".position-header", //限制排序开始点击指定的元素
-        //     placeholder : 'sortable-placeholder position',
-        //     helper: "clone", //
-        //     tolerance: "pointer", // 设置当鼠标指针与其他项目重叠时，被移动的项目悬停在另一个项目上
-        //     stop : function (event,ui) {
-        //         // 更新当前排序后的各id顺序
-        //         sortedIds = $('.position-box').sortable('toArray');
-        //     }
-        // });
-        // //记录初始化时的id顺序
-        // ids = $('.position-box').sortable('toArray');
     }
     
     var getPostionDatas = function () {
@@ -635,11 +611,11 @@ var app = function () {
                 };
                 // 成功
                 if (data.status == 200) {
+
                     // 绘制出机位列表
                     drawPostion(data);
                     // 绑定拖动排序
-                    bindSortable();
-
+                    bindSortable(data);
                 }
             },
             error: function ( status, error) {
@@ -664,14 +640,28 @@ var app = function () {
         $('#position-box').html(myTemplate(config));
     };
 
-    var bindSortable = function () {
+    var bindSortable = function (data) {
+        // 对应数据集合
+        var obj = {};
+        if($.isValidObject(data.configs)){
+            //取得机位配置数据
+            var  config = data.configs;
+            // 将机位内部的机型字段值转为数组
+            config.map(function (item, index, arr) {
+                obj[item.id] = $.extend(true,{},item)
+            });
+        }
+        console.log(obj);
+
         // 配置初始化参数
         var sort = new SortablePart({
+            data : obj,
             selector : $('#position-box'),
-            saveBtn : $('.save'),
+            addBtn : $('.add-btn'),
+            revertBtn : $('.revert-btn'),
+            saveBtn : $('.save-btn'),
             handle: ".position-header", //限制排序开始点击指定的元素
-            placeholder : 'sortable-placeholder position',
-            order : [3,5,6]
+            placeholder : 'sortable-placeholder position'
         })
         //初始化
         sort.init();

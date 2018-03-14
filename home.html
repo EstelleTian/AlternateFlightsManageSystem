@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="plugins/qtip2/css/jquery.qtip.min.css">
     <link rel="stylesheet" href="plugins/qtip2/css/jquery.qtip-custom.css">
     <link rel="stylesheet" href="plugins/jquery-ui/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="plugins/jquery-manifest/css/jquery.manifest.css">
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/alternate-airport.css">
 </head>
@@ -362,17 +363,21 @@
                     <div class="time"></div>
                 </div>
                 <div class="panel-body">
-                    <ul class="form-panel" >
+                    <ul class="form-panel flex-end" >
                         <li class="form-item">
-                            <a href="javascript:;" class="edited-option">
-                                <input class="magic-checkbox" type="checkbox" id="edited" >
-                                <label for="edited">开启编辑</label>
-                            </a>
+                            <button class="atfm-btn atfm-btn-blue ladda-button add-btn">
+                                添加机位
+                            </button>
                         </li>
 
                         <li class="form-item">
-                            <button class="atfm-btn atfm-btn-sm atfm-btn-blue ladda-button save">
-                                保存
+                            <button class="atfm-btn atfm-btn-blue ladda-button revert-btn">
+                                还原排序
+                            </button>
+                        </li>
+                        <li class="form-item">
+                            <button class="atfm-btn atfm-btn-blue ladda-button save-btn">
+                                保存排序
                             </button>
                         </li>
                         <!--提示信息-->
@@ -422,6 +427,7 @@
 <script src="plugins/qtip2/js/jquery.qtip.min.js"></script>
 <script src="plugins/jquery-ui/js/jquery-ui.min.js"></script>
 <script src="plugins/handlebars/handlebars-v4.0.11.js"></script>
+<script src="plugins/jquery-manifest/js/jquery.manifest.js"></script>
 
 <!--表单模块通用方法-->
 <script src="js/form-module.js"></script>
@@ -440,7 +446,7 @@
 <script src="js/app.js"></script>
 
 <script src="js/alternate-airport-volume.js"></script>
-
+<!--机位列表模模板-->
 <script id="template" type="text/x-handlebars-template">
 
         {{#each this}}
@@ -451,8 +457,8 @@
                 <div class="position-name">
                     {{key}}
                 </div>
-                <a class="icon glyphicon glyphicon-edit" pos-id="{{id}}" pos-key="{{key}}"></a>
-                <a class="icon glyphicon glyphicon-trash" pos-id="{{id}}" pos-key="{{key}}"></a>
+                <a class="icon glyphicon glyphicon-edit" pos-id="{{id}}" pos-key="{{key}}" data-event="edit" ></a>
+                <a class="icon glyphicon glyphicon-trash" pos-id="{{id}}" pos-key="{{key}}" data-event="delete" ></a>
             </header>
             <!--内容-->
             <div class="position-wrap">
@@ -465,68 +471,64 @@
                             <div class="item-name">
                                 {{this}}
                             </div>
-                            <a class="icon glyphicon glyphicon-edit" pos-id="{{../id}}" pos-key="{{../key}}" data-val="{{this}}"></a>
-                            <a class="icon glyphicon glyphicon-trash" pos-id="{{../id}}"  pos-key="{{../key}}" data-val="{{this}}"></a>
                         </li>
                         {{/each}}
 
                     </ul>
                 </section>
-                <div class="aircraft-type-create">
-                    <button class="add-item atfm-btn atfm-btn-blue">添加</button>
-                </div>
+                <!--<div class="aircraft-type-create">-->
+                    <!--<button class="add-item atfm-btn atfm-btn-blue">添加</button>-->
+                <!--</div>-->
             </div>
         </li>
     {{/each}}
-    <li class="locked  add-position">
-        <!--头部-->
-        <header class="position-header">
-            <a class="glyphicon glyphicon-plus"></a>
-            <div class="position-name">新建机位...</div>
-        </header>
-
-    </li>
 </script>
-
-<script id="single-position" type="text/x-handlebars-template">
-
-    {{#each this}}
-    <!--机位-->
-    <li class="position" data-id={{id}} data-text="{{text}}">
-        <!--头部-->
-        <header class="position-header">
-            <div class="position-name">
-                {{key}}
+<!--机位表单模板-->
+<script id="form-template" type="text/x-handlebars-template">
+<form id="form-position"  data-id="{{id}}" autocomplete="off">
+    <section class="form-section">
+        <div class="banner">
+            <div class="header">
+                机位分类名称
             </div>
-            <a class="icon glyphicon glyphicon-edit" pos-id="{{id}}" pos-key="{{key}}"></a>
-            <a class="icon glyphicon glyphicon-trash"  pos-id="{{id}}" pos-key="{{key}}"></a>
-        </header>
-        <!--内容-->
-        <div class="position-wrap">
-            <section class="position-content thin-scroll">
-                <!--机型列表-->
-                <ul class="aircraft-type-list" >
-                    {{#each value}}
-                    <!--机型-->
-                    <li class="item" >
-                        <div class="item-name">
-                            {{this}}
-                        </div>
-                        <a class="icon glyphicon glyphicon-edit" pos-id="{{../id}}"  pos-key="{{../key}}" data-val="{{this}}"></a>
-                        <a class="icon glyphicon glyphicon-trash" pos-id="{{../id}}"  pos-key="{{../key}}" data-val="{{this}}"></a>
-                    </li>
-                    {{/each}}
-
-                </ul>
-            </section>
-            <div class="aircraft-type-create">
-                <button class="add-item atfm-btn atfm-btn-blue">添加</button>
+            <div class="form-group">
+                {{#if this.key}}
+                <input type="text" class="form-control position-key" name="position-key" placeholder="必填" value="{{key}}" readonly disabled>
+                {{else }}
+                <input type="text" class="form-control position-key" name="position-key" placeholder="必填" value="{{key}}">
+                {{/if}}
             </div>
+            <div class="tip">
+                以数字和字母组合,最大三位
+            </div>
+
         </div>
-    </li>
-    {{/each}}
-</script>
+        <div class="banner">
+            <div class="header">
+                描述
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control position-text" name="position-text" placeholder="必填" value="{{text}}">
+            </div>
 
+        </div>
+        <div class="banner">
+            <div class="header">
+                机型
+            </div>
+            <div class="form-group">
+                <input type="text" id="position-value" class="form-control position-value" name="position-value" value="{{value}}" disableautocomplete>
+            </div>
+            <div class="tip">
+                以字母和数据组合，多个以逗号分隔
+            </div>
+
+        </div>
+
+    </section>
+
+</form>
+</script>
 </body>
 
 </html>

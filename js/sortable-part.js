@@ -6,12 +6,18 @@ function SortablePart(params) {
     if (!$.isValidObject(params)) {
         return;
     }
+    // 数据集合
+    this.data = params.data;
     //拖动排序元素 jQ对象
     this.selector = params.selector;
+    // 添加按钮
+    this.addBtn = params.addBtn;
+    // 还原按钮
+    this.revertBtn = params.revertBtn;
     // 保存按钮
     this.saveBtn = params.saveBtn;
-    // 序号
-    this.order = params.order;
+    // 机型集合
+    this.items = [];
     // 原始id集合
     this.ids = [];
     // 排序后的id集合
@@ -22,8 +28,6 @@ function SortablePart(params) {
     this.handle = params.handle; // ".position-header",
     // 指定占位元素class 字符串
     this.placeholder = params.placeholder //'sortable-placeholder position',
-    // 是否可编辑 默认为false
-    this.isEdit  = false;
 }
 
 /**
@@ -46,12 +50,14 @@ SortablePart.prototype.init = function () {
             // 更新保存按钮是否可用
             thisProxy.toggleButtonEnable();
         },
-        disabled: true // 初始化设置为不可用
+        // disabled: true // 初始化设置为不可用
     }).disableSelection();
     // 记录初始化时的id顺序，即原始id集合
     thisProxy.ids = thisProxy.selector.sortable('toArray',{attribute :'data-id'});
     // 默认设置排序后的id集合与原始id集合一致
     thisProxy.sortedIds= thisProxy.selector.sortable('toArray',{attribute :'data-id'});
+    // 更新保存按钮是否可用
+    thisProxy.toggleButtonEnable();
     // 绑定事件
     thisProxy.initEvent();
 };
@@ -59,13 +65,9 @@ SortablePart.prototype.init = function () {
 SortablePart.prototype.initEvent = function () {
     var thisProxy = this;
 
-
-
     // 添加机位
-    $('.add-position .position-header').on('click',function () {
-        if(!thisProxy.isEdit){
-            alert('请先开启编辑再新建机位');
-        }else if(thisProxy.sorted){
+    thisProxy.addBtn.on('click',function () {
+        if(thisProxy.sorted){
             alert('排序有变更,请先保存排序后再新建机位');
         }else {
             // todo
@@ -73,83 +75,46 @@ SortablePart.prototype.initEvent = function () {
             thisProxy.addPosition()
         }
     });
+    //还原排序
+    thisProxy.revertBtn.on('click',function () {
+        if(thisProxy.sorted){
+            var text = "<p class='modal-text'>确定还原排序吗？</p>";
+            thisProxy.confirmRevertDialog(text);
+        }
+    });
+    //保存排序
+    thisProxy.saveBtn.on('click',function () {
+        if(thisProxy.sorted){
+            var text = "确定保存当前排序吗？";
+            thisProxy.confirmSaveDialog(text);
+        }
+    })
 
     // 删除/修改机位
     $(thisProxy.selector).on('click','.position .position-header',function (e) {
         var event = e || event;
+        // 事件源jQ对象
         var $target = $(e.target);
+        // 事件源jQ对象data-event属性
+        var mark = $target.attr('data-event');
         var opt = {
             id : $target.attr('pos-id'),
             key : $target.attr('pos-key')
         }
-
         // 删除机位
-        if($target.hasClass('glyphicon-trash')){
+        if(mark== 'delete'){
             // todo
             thisProxy.deletePosition(opt);
 
-        }else if($target.hasClass('glyphicon-edit')){ // 修改机位
+        }else if(mark == 'edit'){ // 修改机位
             thisProxy.updatePosition(opt);
         }
-
-
     });
-
-
-    /*$('.position-header .icon.glyphicon-edit',thisProxy.selector).on('click',function () {
-        var $that = $(this);
-        if(!thisProxy.isEdit){
-            alert('请先开启编辑再修改');
-        }else if(thisProxy.sorted){
-            alert('排序有变更,请先保存排序后再修改');
-        }else {
-            // todo
-            // 编辑机位
-        }
-    });
-    $('.position-header .icon.glyphicon-trash',thisProxy.selector).on('click',function () {
-        if(!thisProxy.isEdit){
-            alert('请先开启编辑再删除');
-        }else if(thisProxy.sorted){
-            alert('排序有变更,请先保存排序后再删除');
-        }else {
-            // todo
-            // 编辑机位
-        }
-    });
-    $('.item .icon.glyphicon-edit',thisProxy.selector).on('click',function () {
-        if(!thisProxy.isEdit){
-            alert('请先开启编辑再修改');
-        }else if(thisProxy.sorted){
-            alert('排序有变更,请先保存排序后再修改');
-        }else {
-            // todo
-            // 编辑机型
-        }
-    });
-    $('.item .icon.glyphicon-trash',thisProxy.selector).on('click',function () {
-        if(!thisProxy.isEdit){
-            alert('请先开启编辑再删除');
-        }else if(thisProxy.sorted){
-            alert('排序有变更,请先保存排序后再删除');
-        }else {
-            // todo
-            // 编辑机型
-        }
-    })*/
-    //保存排序
-    thisProxy.saveBtn.on('click',function () {
-        if(thisProxy.isEdit && thisProxy.sorted){
-            var text = "<p class='modal-text'>确定保存当前排序吗？</p>";
-            thisProxy.confirmSaveSort(text);
-        }
-    })
 
 };
 SortablePart.prototype.enableEdit = function () {
     var thisProxy = this;
     thisProxy.selector.sortable('enable');
-    thisProxy.isEdit = true;
 };
 
 SortablePart.prototype.disableEdit = function () {
@@ -159,11 +124,9 @@ SortablePart.prototype.disableEdit = function () {
         var text = "<p class='modal-text'>排序有变更,是否保存当前排序？</p>";
         thisProxy.confirmSaveSort(text);
         thisProxy.selector.sortable('disable');
-        thisProxy.isEdit = false;
 
     }else {
         thisProxy.selector.sortable('disable');
-        thisProxy.isEdit = false;
     }
 };
 
@@ -187,9 +150,13 @@ SortablePart.prototype.isSorted = function () {
 SortablePart.prototype.toggleButtonEnable = function (ele) {
     var thisProxy = this;
     if(thisProxy.sorted){
-        thisProxy.saveBtn.show().attr('disabled',false);
+        thisProxy.saveBtn.attr('disabled',false);
+        thisProxy.revertBtn.attr('disabled',false);
+        thisProxy.addBtn.attr('disabled',true);
     }else {
-        thisProxy.saveBtn.hide().attr('disabled',false);
+        thisProxy.saveBtn.attr('disabled',true);
+        thisProxy.revertBtn.attr('disabled',true);
+        thisProxy.addBtn.attr('disabled',false);
     }
 };
 
@@ -220,15 +187,43 @@ SortablePart.prototype.revert = function () {
     thisProxy.sortedIds= thisProxy.selector.sortable('toArray',{attribute :'data-id'});
     // 更新排序标识
     thisProxy.isSorted();
-    // 禁用保存按钮
-    thisProxy.saveBtn.hide().attr('disabled',false);
-
+    // 更新保存按钮是否可用
+    thisProxy.toggleButtonEnable();
 };
 
-SortablePart.prototype.confirmSaveSort =function(text){
+SortablePart.prototype.confirmSaveDialog =function(text){
     var thisProxy = this;
     var options = {
-        title : "保存",
+        title : "保存排序",
+        content : '<p class="modal-text">'+text+'</p>',
+        status: 1,// 1:正常 2:警告 3:危险 不填:默认情况
+        width : 400,
+        mtop: 200,
+        showCancelBtn: false,
+        buttons: [
+            {
+                name : "取消",
+                status :-1 ,
+                callback : function(){
+
+                }
+            },{
+                name : "保存",
+                status :1 ,
+                // isHidden : false,
+                callback : function(){
+                    var btn = $(this);
+                    thisProxy.saveSort(btn);
+                }
+            }
+        ]
+    };
+    BootstrapDialogFactory.dialog(options);
+};
+SortablePart.prototype.confirmRevertDialog =function(text){
+    var thisProxy = this;
+    var options = {
+        title : "还原排序",
         content : text,
         status: 2,// 1:正常 2:警告 3:危险 不填:默认情况
         width : 400,
@@ -246,14 +241,6 @@ SortablePart.prototype.confirmSaveSort =function(text){
                 status :1 ,
                 callback : function(){
                     thisProxy.revert();
-                }
-            },{
-                name : "保存",
-                status :1 ,
-                // isHidden : false,
-                callback : function(){
-                    var btn = $(this);
-                    thisProxy.saveSort(btn);
                 }
             }
         ]
@@ -293,7 +280,7 @@ SortablePart.prototype.saveSort = function (btn) {
                 thisProxy.ids = thisProxy.selector.sortable('toArray',{attribute :'data-id'});
                 // 更新排序标识
                 thisProxy.isSorted();
-                // 更新保存按钮是否可用
+                // 更新按钮是否可用
                 thisProxy.toggleButtonEnable();
 
             }else if(data.status == 500){
@@ -319,11 +306,16 @@ SortablePart.prototype.addPosition = function () {
 
 SortablePart.prototype.addPositionDialog = function () {
     var thisProxy = this;
+    // 创建一个空数据
+    var data = {};
+    // 利用Handlebars模版生成对应HTML结构
+    var myTemplate = Handlebars.compile($("#form-template").html());
+    var content = myTemplate(data);
     var options = {
-        title : "新建机位",
-        content : '<form class="position-form"  ><input class="position-name form-control"  placeholder="机位名称"><input class="item-name form-control" placeholder="机型名称"></form>',
-        status: 2,// 1:正常 2:警告 3:危险 不填:默认情况
-        width : 400,
+        title : "添加机位",
+        content : content,
+        status: 1,// 1:正常 2:警告 3:危险 不填:默认情况
+        width : 500,
         mtop: 200,
         showCancelBtn: false,
         buttons: [
@@ -338,36 +330,30 @@ SortablePart.prototype.addPositionDialog = function () {
                 status :1 ,
                 // isHidden : false,
                 callback : function(){
-                    // var btn = $(this);
-                    var key = $('.position-form .position-name').val();
-                    var value = $('.position-form .item-name').val();
-                    var text = value+'机位对应可停飞机';
-                    var opt = {
-                        key : key,
-                        value : value,
-                        text : text,
+
+                    // 表单校验是否通过
+                    var valid = thisProxy.isValid();
+                    // 表单校验是否通过
+                    if(valid){
+                        thisProxy.addPositionSubmit();
                     }
-                    thisProxy.addPositionSubmit(opt);
                 }
             }
         ]
     };
     BootstrapDialogFactory.dialog(options);
+    thisProxy.initForm()
 }
 
-SortablePart.prototype.addPositionSubmit = function (opt) {
+SortablePart.prototype.addPositionSubmit = function () {
     var thisProxy = this;
-
+    var newData = thisProxy.getSinglePositionData();
     $.ajax({
         url:DataUrl.POSTION_ADD,
         type: 'POST',
         dataType: 'json',
         traditional: true,
-        data : {
-            key: opt.key,
-            value : opt.value,
-            text : opt.text
-        },
+        data :newData,
         success: function (data) {
 
             // 数据无效
@@ -404,32 +390,28 @@ SortablePart.prototype.appendSinglePositin = function(data){
     // 将机位内部的机型字段值转为数组
     config.map(function (item, index, arr) {
         item.value = item.value.split(',');
+        // 拷贝
+        var obj = $.extend(true,{},item);
+        // 更新到数据集合
+        thisProxy.data[obj.id] = obj;
     });
     //
+
     // 利用Handlebars模版生成对应HTML结构
-    var myTemplate = Handlebars.compile($("#single-position").html());
+    var myTemplate = Handlebars.compile($("#template").html());
     var nodes = myTemplate(config);
     // 追加到列表
-    $(nodes).insertBefore($('.locked'));
-
-    // 更新原始id集合
-    thisProxy.ids = thisProxy.selector.sortable('toArray',{attribute :'data-id'});
-    // 更新排序后的id集合
-    thisProxy.sortedIds= thisProxy.selector.sortable('toArray',{attribute :'data-id'});
-    // 更新排序标识
-    thisProxy.isSorted();
-    // 更新保存按钮是否可用
-    thisProxy.toggleButtonEnable();
-    // $('#position-box').html(myTemplate(config));
+    $(nodes).appendTo(thisProxy.selector);
+    // 刷新
+    thisProxy.refresh();
 };
 
 SortablePart.prototype.deletePosition  = function (opt) {
 
     var thisProxy = this;
-    if(!thisProxy.isEdit){
-        alert('请先开启编辑再删除机位');
-    }else if(thisProxy.sorted){
-        alert('排序有变更,请先保存排序后再删除机位');
+    if(thisProxy.sorted){
+        var text = '排序有变更,请先保存排序后再删除机位';
+        thisProxy.alertDialog(text)
     }else {
         // todo
         // 删除机位弹框
@@ -478,7 +460,6 @@ SortablePart.prototype.deletePositionSubmit = function (opt) {
             id : id,
         },
         success: function (data) {
-
             // 数据无效
             if (!data) {
                 alert('删除机位'+ opt.key+'失败')
@@ -510,40 +491,44 @@ SortablePart.prototype.deletePositionSubmit = function (opt) {
 };
 SortablePart.prototype.deleteSinglePositin = function(opt){
     var thisProxy = this;
+    var id = opt.id
     // 删除机位html节点
-    $('.position[data-id="'+ opt.id+'"]',thisProxy.selector).remove();
+    $('.position[data-id="'+ id+'"]',thisProxy.selector).remove();
+    // 同步删除数据集合中对应数据
+    delete thisProxy.data[id];
 
-    // 更新原始id集合
-    thisProxy.ids = thisProxy.selector.sortable('toArray',{attribute :'data-id'});
-    // 更新排序后的id集合
-    thisProxy.sortedIds= thisProxy.selector.sortable('toArray',{attribute :'data-id'});
-    // 更新排序标识
-    thisProxy.isSorted();
-    // 更新保存按钮是否可用
-    thisProxy.toggleButtonEnable();
-    // $('#position-box').html(myTemplate(config));
+    // 刷新
+    thisProxy.refresh();
 };
 
 SortablePart.prototype.updatePosition  = function (opt) {
 
     var thisProxy = this;
-    if(!thisProxy.isEdit){
-        alert('请先开启编辑再修改机位');
-    }else if(thisProxy.sorted){
-        alert('排序有变更,请先保存排序后再修改机位');
+    if(thisProxy.sorted){
+        var text = '排序有变更,请先保存排序后再修改机位';
+        thisProxy.alertDialog(text)
     }else {
         // todo
         // 修改机位弹框
         thisProxy.updatePositionDialog(opt);
+
+
     }
 };
 SortablePart.prototype.updatePositionDialog = function (opt) {
     var thisProxy = this;
+    var id = opt.id;
+    // 取相应数据
+    var data = thisProxy.data[id];
+    // 利用Handlebars模版生成对应HTML结构
+    var myTemplate = Handlebars.compile($("#form-template").html());
+    var content = myTemplate(data);
+
     var options = {
         title : "修改机位",
-        content : '<form class="position-form"  ><input class="position-name form-control"  placeholder="机位名称" value="'+ opt.key+'"></form>',
+        content : content,
         status: 1,// 1:正常 2:警告 3:危险 不填:默认情况
-        width : 400,
+        width : 500,
         mtop: 200,
         showCancelBtn: false,
         buttons: [
@@ -558,39 +543,29 @@ SortablePart.prototype.updatePositionDialog = function (opt) {
                 status :1 ,
                 // isHidden : false,
                 callback : function(){
-                    // var btn = $(this);
-                    var id = opt.id;
-                    var key = $('.position-form .position-name').val();
-                    var $item = $('.position[data-id="'+ id+'"]',thisProxy.selector);
-                    var text = $item.attr('data-text');
-                    var value = [];
-                    $('.item',$item).each(function (item) {
-                        value.push($.trim($(this).text()));
-                    });
-                    console.log(value);
-                    var params = {
-                        id : id,
-                        key : key,
-                        text : text,
-                        value : value.join(',')
+                    // 表单校验是否通过
+                    var valid = thisProxy.isValid();
+                    // 表单校验是否通过
+                    if(valid){
+                        thisProxy.updatePositionSubmit();
                     }
 
-                    thisProxy.updatePositionSubmit(params);
                 }
             }
         ]
     };
-    BootstrapDialogFactory.dialog(options);
+     BootstrapDialogFactory.dialog(options);
+    thisProxy.initForm()
 };
-SortablePart.prototype.updatePositionSubmit = function (opt) {
+SortablePart.prototype.updatePositionSubmit = function () {
     var thisProxy = this;
-
+    var newData = thisProxy.getSinglePositionData();
     $.ajax({
         url:DataUrl.POSTION_UPDATE,
         type: 'POST',
         dataType: 'json',
         traditional: true,
-        data : opt,
+        data : newData,
         success: function (data) {
 
             // 数据无效
@@ -600,7 +575,7 @@ SortablePart.prototype.updatePositionSubmit = function (opt) {
             // 成功
             if (data.status == 200) {
                 thisProxy.updateSinglePositin(data);
-                alert('修改机位'+ opt.key+'成功');
+                alert('修改机位'+newData.key+'成功');
             }else if(data.status == 500){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
                     alert('修改机位'+ opt.key+'失败:'+data.error.message);
@@ -634,10 +609,13 @@ SortablePart.prototype.updateSinglePositin = function(data){
     // 将机位内部的机型字段值转为数组
     config.map(function (item, index, arr) {
         item.value = item.value.split(',');
+        // 拷贝
+        var obj = $.extend(true,{},item);
+        // 更新到数据集合
+        thisProxy.data[obj.id] = obj;
     });
-    //
     // 利用Handlebars模版生成对应HTML结构
-    var myTemplate = Handlebars.compile($("#single-position").html());
+    var myTemplate = Handlebars.compile($("#template").html());
     var nodes = myTemplate(config);
     var oldNodes = $('.position[data-id="'+ config[0].id+'"]',thisProxy.selector);
     // 追加到列表
@@ -645,14 +623,172 @@ SortablePart.prototype.updateSinglePositin = function(data){
 
     // 删除旧机位html节点
     oldNodes.remove();
+    // 刷新
+    thisProxy.refresh();
 
+
+};
+
+SortablePart.prototype.alertDialog = function (text) {
+    var thisProxy = this;
+    var options = {
+        title : "提示",
+        content : '<p class="modal-text">'+text+'</p>',
+        status: 2,// 1:正常 2:警告 3:危险 不填:默认情况
+        width : 400,
+        mtop: 200,
+        showCancelBtn: false,
+        buttons: [
+            {
+                name : "关闭",
+                status :1 ,
+                callback : function(){
+
+                }
+            }
+        ]
+    };
+    BootstrapDialogFactory.dialog(options);
+}
+
+SortablePart.prototype.refresh = function (text) {
+    var thisProxy = this;
     // 更新原始id集合
     thisProxy.ids = thisProxy.selector.sortable('toArray',{attribute :'data-id'});
     // 更新排序后的id集合
     thisProxy.sortedIds= thisProxy.selector.sortable('toArray',{attribute :'data-id'});
     // 更新排序标识
     thisProxy.isSorted();
-    // 更新保存按钮是否可用
+    // 更新按钮是否可用
     thisProxy.toggleButtonEnable();
-    // $('#position-box').html(myTemplate(config));
+}
+
+/**
+ * 初始化处理表单
+ *
+ *
+ * */
+SortablePart.prototype.initForm = function () {
+    var thisProxy = this;
+    var $form = $('#bootstrap-modal-dialog #form-position');
+    // 校验初始化
+    thisProxy.initValidator($form);
+    // 多值输入初始化
+    thisProxy.initManifest($form);
+}
+
+/**
+ * 表单校验初始化
+ * $form 表单jQ对象
+ * */
+SortablePart.prototype.initValidator = function ($form) {
+    var thisProxy = this;
+    $form.bootstrapValidator({
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'position-key': {// 机位名称
+                validators: {
+                    notEmpty: {}
+                }
+            },
+            'position-text': {// 描述
+                validators: {
+                    notEmpty: {}
+                }
+            },
+            'position-value': {
+                validators: {
+                    leastOneItem: {// 最少有一个值
+                        len: function () {
+                            return thisProxy.items.length;
+                        }
+                    }
+                }
+
+            }
+        }
+    })
+}
+/**
+ * 多值输入初始化
+ * $form 表单jQ对象
+ *
+ * */
+
+SortablePart.prototype.initManifest = function ($form) {
+    var thisProxy = this;
+    // 清空机型数值集合
+    thisProxy.items = [];
+    // 表单校验对象
+    var validatorObj = $form.data('bootstrapValidator');
+    // 初始化多值输入
+    $('#position-value').manifest({
+        // 格式化数值
+        formatValue: function (data,$value,$item,$mpItem){
+            return data.toUpperCase();
+        },
+        // 格式化数值显示
+        formatDisplay: function (data, $item, $mpItem) {
+            return data.toUpperCase();
+        },
+
+        // 添加
+        onAdd: function (data, $value, $item, $mpItem) {
+            var dataUpper = data.toUpperCase();
+
+            var bool = validatorObj.isValidField("position-value");
+            thisProxy.items = $('#position-value').manifest('values');
+            if (!bool) {// 校验失败
+                validatorObj.resetField("position-value", true);// 重置校验
+                return false;// 阻止添加
+            } else {
+                thisProxy.items.push(dataUpper);
+            }
+
+        },
+        // 删除
+        onRemove: function (data, $item) {
+            var dataUpper = data.toUpperCase();
+            var index = $item.index();
+            thisProxy.items.splice(index,1);
+            var len = thisProxy.items.length;
+            if (len == 0) {// 如果没有值
+                validatorObj.revalidateField("position-value");// 重新校验
+            }
+        }
+
+    });
 };
+
+SortablePart.prototype.isValid = function () {
+    var thisProxy = this;
+    var $form = $('#bootstrap-modal-dialog #form-position');
+    // 全局校验
+    $form.bootstrapValidator("validate");
+    var valid = $form.data('bootstrapValidator').isValid();
+    return valid;
+}
+/**
+ * 获取表单数据
+ *
+ * */
+SortablePart.prototype.getSinglePositionData = function () {
+    var thisProxy = this;
+    var opt = {};
+    var $from = $('#form-position');
+    var id = $from.attr('data-id');
+    var key = $('.position-key',$from).val();
+    var text = $('.position-text',$from).val();
+    var value = thisProxy.items;
+    if($.isValidVariable(id)){
+        opt.id = id;
+    }
+    opt.key = key;
+    opt.text = text;
+    opt.value = value;
+    return opt;
+}

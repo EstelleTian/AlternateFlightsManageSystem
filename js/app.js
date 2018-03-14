@@ -612,10 +612,19 @@ var app = function () {
      * 初始化机位管理模块
      * */
     var initPostionModule = function () {
-        getPostionDatas();
+
+        $('.position-config').on('click',function () {
+            // 获取机位分类数据
+            getPostionDatas();
+        })
     }
-    
+    /**
+     * 获取机位分类数据
+     * */
     var getPostionDatas = function () {
+        // 清除提示信息
+        $('.position-module .alert').html('').removeClass('alert-danger active');
+        //ajax请求获取数据
         $.ajax({
             url:DataUrl.POSTION_LIST,
             type: 'GET',
@@ -624,10 +633,16 @@ var app = function () {
 
                 // 数据无效
                 if (!data) {
-
+                    // 显示提示信息
+                    $('.position-module .alert').html('暂无数据').addClass('alert-danger active')
                 };
                 // 成功
                 if (data.status == 200) {
+                    // 更新数据生成时间
+                    if($.isValidVariable(data.generateTime)){
+                        var time = '数据生成时间: '+ formaterGenerateTime( data.generateTime);
+                        $('.position-module .time').text(time)
+                    }
 
                     // 绘制出机位列表
                     drawPostion(data);
@@ -640,6 +655,23 @@ var app = function () {
                 console.error(error);
             }
         });
+    };
+
+    /**
+     * 格式化数据生成时间
+     * */
+    var formaterGenerateTime = function (time) {
+        var str = '';
+        if(time.length == 12){
+            var year = time.substring(0, 4);
+            var mon = time.substring(4, 6);
+            var date = time.substring(6, 8);
+            var hour = time.substring(8, 10);
+            var min = time.substring(10, 12);
+            str = year + '-' + mon + '-' + date + ' ' + hour + ":" + min;
+        }
+
+        return str;
     };
     var drawPostion = function (data) {
         //检测数据是否有效
@@ -668,7 +700,6 @@ var app = function () {
                 obj[item.id] = $.extend(true,{},item)
             });
         }
-        console.log(obj);
 
         // 配置初始化参数
         var sort = new SortablePart({
@@ -682,18 +713,6 @@ var app = function () {
         })
         //初始化
         sort.init();
-        //事件绑定
-        $('#edited').on('click',function () {
-            // 取得checkbox勾选状态
-            var bool = $(this).prop('checked');
-            // 若勾选
-            if(bool){
-                // 启用自定义定时器时间
-                sort.enableEdit();
-            }else {
-                sort.disableEdit();
-            }
-        });
     }
 
     return {

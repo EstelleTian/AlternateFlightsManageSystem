@@ -324,11 +324,31 @@ var app = function () {
      *  因为数据从后端请求获取，所以定时刷新校验数据有效性
      * */
     var initBasicData = function (time) {
+        var url = ipHost + 'airport/retrieveAirportConfig'
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: "",
+            dataType: "JSON",
+            // async: false,
+            success: function (data) {
+                if ($.isValidObject(data) && data.status == 200) {
+                    basicData = data;
+                } else if (data.status == 500) {
+                    console.warn(data.error.message)
+                } else {
+                    console.warn('获取机场配置为空')
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(error)
+            }
+        });
+
         // 若数据有效则更新各模块范围列表项，
-        if($.isValidObject(alternateAirport.airportConfig) && $.isValidObject(alternateAirport.airportConfig.alternateAirport)){
-            basicData  = alternateAirport.airportConfig;
-            scopeListData  = alternateAirport.airportConfig;
-            subCollaborateDomData = alternateAirport.airportConfig.alternateAirport;
+        if($.isValidObject(basicData) && $.isValidObject(basicData.airportConfig) && $.isValidObject(basicData.alternateAirport)){
+            // scopeListData  = basicData.airportConfig;
+            subCollaborateDomData = basicData.alternateAirport;
             // 更新各模块范围列表项
             setScopeList();
             // 拼接各模块协调窗口列表项
@@ -378,31 +398,28 @@ var app = function () {
      *
      * */
     var setScopeList = function () {
+        var scopeListData = basicData.airportConfig;
 
-        if($.isValidObject(scopeListData.airportConfig)){
-
-            var airportConfig = scopeListData.airportConfig;
-            // 进港计划模块
-            var arrFlightsScope = airportConfig.arrFlightsScope;
-            if ($.isValidObject(arrFlightsScope)) {
-                arrObj.setScope(arrFlightsScope);
-            }
-
-            // 疆内飞越模块
-            var overFlightsScope = airportConfig.overFlightsScope;
-            if ($.isValidObject(overFlightsScope)) {
-                overObj.setScope(overFlightsScope);
-            }
-            // 出港计划模块
-           /* var depFlightsScope = airportConfig.depFlightsScope;
-            if ($.isValidObject(depFlightsScope)) {
-                depObj.setScope(depFlightsScope);
-            }*/
+        // 进港计划模块
+        var arrFlightsScope = scopeListData.arrFlightsScope;
+        if ($.isValidObject(arrFlightsScope)) {
+            arrObj.setScope(arrFlightsScope);
         }
 
+        // 疆内飞越模块
+        var overFlightsScope = scopeListData.overFlightsScope;
+        if ($.isValidObject(overFlightsScope)) {
+            overObj.setScope(overFlightsScope);
+        }
+        // 出港计划模块
+        /* var depFlightsScope = scopeListData.depFlightsScope;
+         if ($.isValidObject(depFlightsScope)) {
+         depObj.setScope(depFlightsScope);
+         }*/
+
         // 备降计划模块
-        if ($.isValidObject(scopeListData.alternateAirport)) {
-            var alternateFlightsScope = scopeListData.alternateAirport;
+        if ($.isValidObject(basicData.alternateAirport)) {
+            var alternateFlightsScope = basicData.alternateAirport;
             alternateObj.setScope(alternateFlightsScope);
         }
     };
@@ -696,7 +713,6 @@ var app = function () {
             // 绑定进港计划模块切换复杂天气模式关联疆内飞越模块表格右键可交互标记
             changeCollaborateFlag();
             //机位管理模块
-
             initPostionModule();
         }
     }

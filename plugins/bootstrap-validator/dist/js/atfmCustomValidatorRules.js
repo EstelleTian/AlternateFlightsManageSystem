@@ -100,6 +100,15 @@
         datenoEmpty:{
             'default':'必填项，请输入值'
         },
+        // 以字母开头，长度为1~3位的全字母或字母与数字组合
+        wordAndDigit1_3:{
+            'default':'以字母开头，长度为1~3位的全字母或字母与数字组合'
+        },
+        // 长度为1~4位的字母、数字或字母与数字组合
+        wordOrDigit1_4 : {
+            'default':'长度为1~4位的字母、数字或字母与数字组合'
+
+        }
 
 
     });
@@ -646,6 +655,35 @@
                 return true;
             }
         },
+        // 以字母开头，长度为1~3位的全字母或字母与数字组合
+        wordAndDigit1_3: {
+            validate: function (validator, $field, options) {
+                var inputVal = $field.val();
+                var regexp = /^[A-Za-z][A-Za-z0-9]{0,2}$/;
+                if (!regexp.test(inputVal)) {
+                    return {
+                        valid: false,
+                        message: '以字母开头，长度为1~3位的全字母或字母与数字组合'
+                    }
+                }
+                return true;
+            }
+        },
+        // 长度为1~4位的字母、数字或字母与数字组合
+        wordOrDigit1_4 : {
+            validate: function (validator, $field, options) {
+                var inputVal = $field.val();
+                var regexp = /^[A-Za-z0-9]{1,4}$/;
+                if (!regexp.test(inputVal)) {
+                    return {
+                        valid: false,
+                        message: '长度为1~4位的字母、数字或字母与数字组合'
+                    }
+                }
+                return true;
+            }
+
+        }
 
 
 

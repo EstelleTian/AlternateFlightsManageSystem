@@ -61,14 +61,17 @@ SortablePart.prototype.init = function () {
     // 绑定事件
     thisProxy.initEvent();
 };
-
+/**
+ * 绑定事件
+ * */
 SortablePart.prototype.initEvent = function () {
     var thisProxy = this;
 
     // 添加机位
     thisProxy.addBtn.on('click',function () {
         if(thisProxy.sorted){
-            alert('排序有变更,请先保存排序后再新建机位');
+            var text = '排序有变更,请先保存排序后再添加机位';
+            thisProxy.alertDialog(text)
         }else {
             // todo
             // 添加机位
@@ -120,7 +123,6 @@ SortablePart.prototype.enableEdit = function () {
 SortablePart.prototype.disableEdit = function () {
     var thisProxy = this;
     if(thisProxy.sorted){
-        // alert('排序有变更,是否保存当前排序？')
         var text = "<p class='modal-text'>排序有变更,是否保存当前排序？</p>";
         thisProxy.confirmSaveSort(text);
         thisProxy.selector.sortable('disable');
@@ -210,10 +212,12 @@ SortablePart.prototype.confirmSaveDialog =function(text){
             },{
                 name : "保存",
                 status :1 ,
-                // isHidden : false,
+                isHidden : false,
                 callback : function(){
                     var btn = $(this);
-                    thisProxy.saveSort(btn);
+                    var dialog = $('#bootstrap-modal-dialog');
+                    thisProxy.disabledCloseDialog(dialog,btn);
+                    thisProxy.saveSort();
                 }
             }
         ]
@@ -250,12 +254,6 @@ SortablePart.prototype.confirmRevertDialog =function(text){
 
 SortablePart.prototype.saveSort = function (btn) {
     var thisProxy = this;
-    // 禁用弹框关闭按钮
-    // $('#bootstrap-modal-dialog .close').hide();
-    // // 启用loading动画
-    // var loading = Ladda.create(btn[0]);
-    // loading.start();
-    console.log(thisProxy.sortedIds);
     // ajax
     $.ajax({
         url:DataUrl.POSTION_ORDER,
@@ -270,33 +268,34 @@ SortablePart.prototype.saveSort = function (btn) {
 
             // 数据无效
             if (!data) {
-                alert('提交排序失败')
+                thisProxy.alertDialog('提交排序失败')
             };
             // 成功
             if (data.status == 200) {
 
-                alert('提交排序成功');
                 // 更新原始id集合
                 thisProxy.ids = thisProxy.selector.sortable('toArray',{attribute :'data-id'});
                 // 更新排序标识
                 thisProxy.isSorted();
                 // 更新按钮是否可用
                 thisProxy.toggleButtonEnable();
-
+                // 弹框提示操作成功
+                thisProxy.tipDialog('提交排序成功');
             }else if(data.status == 500){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    alert(data.error.message);
+                    var mess =data.error.message;
+                        thisProxy.alertDialog(mess)
                 }else {
-                    alert('提交排序失败');
+                    thisProxy.alertDialog('提交排序失败')
                 }
             }
         },
         error: function ( status, error) {
+            thisProxy.alertDialog('提交排序失败');
             console.error('ajax requset  fail, error:');
             console.error(error);
         }
     });
-
 };
 
 SortablePart.prototype.addPosition = function () {
@@ -328,13 +327,16 @@ SortablePart.prototype.addPositionDialog = function () {
             },{
                 name : "创建",
                 status :1 ,
-                // isHidden : false,
+                isHidden : false,
                 callback : function(){
 
                     // 表单校验是否通过
                     var valid = thisProxy.isValid();
                     // 表单校验是否通过
                     if(valid){
+                        var btn = $(this);
+                        var dialog = $('#bootstrap-modal-dialog');
+                        thisProxy.disabledCloseDialog(dialog,btn);
                         thisProxy.addPositionSubmit();
                     }
                 }
@@ -358,27 +360,36 @@ SortablePart.prototype.addPositionSubmit = function () {
 
             // 数据无效
             if (!data) {
-                alert('创建失败')
+                thisProxy.alertDialog('添加机位失败')
             };
             // 成功
             if (data.status == 200) {
                 thisProxy.appendSinglePositin(data);
-                alert('创建成功');
+                // 刷新
+                thisProxy.refresh();
+                // 弹框提示成功
+                thisProxy.tipDialog('添加机位成功');
             }else if(data.status == 500){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    alert(data.error.message);
+                    var mess = data.error.message
+                    thisProxy.alertDialog(mess)
                 }else {
-                    alert('创建失败');
+                    thisProxy.alertDialog('添加机位失败');
                 }
             }
         },
         error: function ( status, error) {
+            thisProxy.alertDialog('添加机位失败');
             console.error('ajax requset  fail, error:');
             console.error(error);
         }
     });
 };
 
+/**
+ * 追加单个新的机位列表
+ *
+ * */
 SortablePart.prototype.appendSinglePositin = function(data){
     var thisProxy = this;
     //检测数据是否有效
@@ -402,8 +413,6 @@ SortablePart.prototype.appendSinglePositin = function(data){
     var nodes = myTemplate(config);
     // 追加到列表
     $(nodes).appendTo(thisProxy.selector);
-    // 刷新
-    thisProxy.refresh();
 };
 
 SortablePart.prototype.deletePosition  = function (opt) {
@@ -437,9 +446,11 @@ SortablePart.prototype.deletePositionDialog = function (opt) {
             },{
                 name : "删除",
                 status :3 ,
-                // isHidden : false,
+                isHidden : false,
                 callback : function(){
-                    // var btn = $(this);
+                    var btn = $(this);
+                    var dialog = $('#bootstrap-modal-dialog');
+                    thisProxy.disabledCloseDialog(dialog,btn);
                     thisProxy.deletePositionSubmit(opt);
                 }
             }
@@ -462,28 +473,34 @@ SortablePart.prototype.deletePositionSubmit = function (opt) {
         success: function (data) {
             // 数据无效
             if (!data) {
-                alert('删除机位'+ opt.key+'失败')
+                thisProxy.alertDialog('删除机位'+ opt.key+'失败')
             };
             // 成功
             if (data.status == 200) {
                 thisProxy.deleteSinglePositin(opt);
-                alert('删除机位'+ opt.key+'成功');
+                // 同步删除数据集合中对应数据
+                delete thisProxy.data[id];
+                // 刷新
+                thisProxy.refresh();
+
+                thisProxy.tipDialog('删除机位'+ opt.key+'成功')
             }else if(data.status == 500){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    alert('删除机位'+ opt.key+'失败:'+data.error.message);
+                    thisProxy.alertDialog('删除机位'+ opt.key+'失败:'+data.error.message);
                 }else {
-                    alert('删除机位'+ opt.key+'失败');
+                    thisProxy.alertDialog('删除机位'+ opt.key+'失败')
                 }
             }else if(data.status == 202){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    alert('删除机位'+ opt.key+'失败:' +data.error.message);
+                    thisProxy.alertDialog('删除机位'+ opt.key+'失败:' +data.error.message);
                 }else {
-                    alert('删除机位'+ opt.key+'失败');
+                    thisProxy.alertDialog('删除机位'+ opt.key+'失败')
                 }
 
             }
         },
         error: function ( status, error) {
+            thisProxy.alertDialog('删除机位'+ opt.key+'失败')
             console.error('ajax requset  fail, error:');
             console.error(error);
         }
@@ -494,11 +511,6 @@ SortablePart.prototype.deleteSinglePositin = function(opt){
     var id = opt.id
     // 删除机位html节点
     $('.position[data-id="'+ id+'"]',thisProxy.selector).remove();
-    // 同步删除数据集合中对应数据
-    delete thisProxy.data[id];
-
-    // 刷新
-    thisProxy.refresh();
 };
 
 SortablePart.prototype.updatePosition  = function (opt) {
@@ -541,12 +553,15 @@ SortablePart.prototype.updatePositionDialog = function (opt) {
             },{
                 name : "修改",
                 status :1 ,
-                // isHidden : false,
+                isHidden : false,
                 callback : function(){
                     // 表单校验是否通过
                     var valid = thisProxy.isValid();
                     // 表单校验是否通过
                     if(valid){
+                        var btn = $(this);
+                        var dialog = $('#bootstrap-modal-dialog');
+                        thisProxy.disabledCloseDialog(dialog,btn);
                         thisProxy.updatePositionSubmit();
                     }
 
@@ -570,23 +585,25 @@ SortablePart.prototype.updatePositionSubmit = function () {
 
             // 数据无效
             if (!data) {
-                alert('修改机位'+ opt.key+'失败')
+                thisProxy.alertDialog('修改机位'+ opt.key+'失败')
             };
             // 成功
             if (data.status == 200) {
                 thisProxy.updateSinglePositin(data);
-                alert('修改机位'+newData.key+'成功');
+                // 刷新
+                thisProxy.refresh();
+                thisProxy.tipDialog('修改机位'+newData.key+'成功');
             }else if(data.status == 500){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    alert('修改机位'+ opt.key+'失败:'+data.error.message);
+                    thisProxy.alertDialog('修改机位'+ opt.key+'失败:'+data.error.message);
                 }else {
-                    alert('修改机位'+ opt.key+'失败');
+                    thisProxy.alertDialog('修改机位'+ opt.key+'失败')
                 }
             }else if(data.status == 202){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    alert('修改机位'+ opt.key+'失败:' +data.error.message);
+                    thisProxy.alertDialog('修改机位'+ opt.key+'失败:' +data.error.message);
                 }else {
-                    alert('修改机位'+ opt.key+'失败');
+                    thisProxy.alertDialog('修改机位'+ opt.key+'失败')
                 }
 
             }
@@ -623,12 +640,32 @@ SortablePart.prototype.updateSinglePositin = function(data){
 
     // 删除旧机位html节点
     oldNodes.remove();
-    // 刷新
-    thisProxy.refresh();
-
-
 };
 
+/**
+ * 禁用弹框关闭
+ * */
+SortablePart.prototype.disabledCloseDialog = function (dialog,btn) {
+    var thisProxy = this;
+    //禁用头部关闭按钮
+    $('.close',dialog).attr('disabled',true);
+    // 启用loading动画
+    var loading = Ladda.create(btn[0]);
+    loading.start();
+    //禁用底部所有操作按钮
+    $('#bootstrap-modal-dialog-footer button',dialog).attr('disabled',true);
+};
+
+SortablePart.prototype.removeDialog = function (dialog,btn) {
+    var thisProxy = this;
+    $('#bootstrap-modal-dialog').remove();
+    $('.modal-backdrop').remove();
+}
+
+/**
+ * 警告框
+ *
+ * */
 SortablePart.prototype.alertDialog = function (text) {
     var thisProxy = this;
     var options = {
@@ -651,6 +688,35 @@ SortablePart.prototype.alertDialog = function (text) {
     BootstrapDialogFactory.dialog(options);
 }
 
+/**
+ * 提示框
+ *
+ * */
+SortablePart.prototype.tipDialog = function (text) {
+    var thisProxy = this;
+    var options = {
+        title : "提示",
+        content : '<p class="modal-text">'+text+'</p>',
+        status: 1,// 1:正常 2:警告 3:危险 不填:默认情况
+        width : 400,
+        mtop: 200,
+        showCancelBtn: false,
+        buttons: [
+            {
+                name : "关闭",
+                status :1 ,
+                callback : function(){
+
+                }
+            }
+        ]
+    };
+    BootstrapDialogFactory.dialog(options);
+}
+/**
+ * 刷新相关数据，使与当前视图保持同步
+ *
+ * */
 SortablePart.prototype.refresh = function (text) {
     var thisProxy = this;
     // 更新原始id集合
@@ -692,7 +758,8 @@ SortablePart.prototype.initValidator = function ($form) {
         fields: {
             'position-key': {// 机位名称
                 validators: {
-                    notEmpty: {}
+                    // 以字母开头，长度为1~3位的全字母或字母与数字组合
+                    wordAndDigit1_3: {}
                 }
             },
             'position-text': {// 描述
@@ -702,11 +769,12 @@ SortablePart.prototype.initValidator = function ($form) {
             },
             'position-value': {
                 validators: {
-                    leastOneItem: {// 最少有一个值
-                        len: function () {
-                            return thisProxy.items.length;
-                        }
-                    }
+                    wordOrDigit1_4 : {},
+                    // leastOneItem: {// 最少有一个值
+                    //     len: function () {
+                    //         return thisProxy.items.length;
+                    //     }
+                    // },
                 }
 
             }

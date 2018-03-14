@@ -425,7 +425,7 @@
 <script src="plugins/bootstrap-validator/dist/js/atfmCustomValidatorRules.js"></script>
 <script src="plugins/ladda/js/ladda.js" type="text/javascript" ></script>
 <script src="plugins/qtip2/js/jquery.qtip.min.js"></script>
-<script src="plugins/jquery-ui/js/jquery-ui.min.js"></script>
+<!--<script src="plugins/jquery-ui/js/jquery-ui.min.js"></script>-->
 <script src="plugins/handlebars/handlebars-v4.0.11.js"></script>
 <script src="plugins/jquery-manifest/js/jquery.manifest.js"></script>
 
@@ -445,7 +445,7 @@
 <!--主脚本-->
 <script src="js/app.js"></script>
 
-<script src="js/alternate-airport-volume.js"></script>
+<!--<script src="js/alternate-airport-volume.js"></script>-->
 <!--机位列表模模板-->
 <script id="template" type="text/x-handlebars-template">
 
@@ -499,7 +499,7 @@
                 {{/if}}
             </div>
             <div class="tip">
-                以数字和字母组合,最大三位
+                以字母开头，长度为1~3位的全字母或字母与数字组合
             </div>
 
         </div>
@@ -520,7 +520,7 @@
                 <input type="text" id="position-value" class="form-control position-value" name="position-value" value="{{value}}" disableautocomplete>
             </div>
             <div class="tip">
-                以字母和数据组合，多个以逗号分隔
+                长度为1~4位的字母、数字或字母与数字组合，多个以逗号分隔
             </div>
 
         </div>

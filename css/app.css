@@ -696,6 +696,7 @@ ul, li {
 #position-value :host{
     outline: none;
 }
+
 @media (max-width: 1366px) {
     .modal-dialog {
         width: 1100px !important;

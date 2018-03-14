@@ -673,6 +673,9 @@
         wordOrDigit1_4 : {
             validate: function (validator, $field, options) {
                 var inputVal = $field.val();
+                if($.trim(inputVal) == ''){
+                    return true;
+                }
                 var regexp = /^[A-Za-z0-9]{1,4}$/;
                 if (!regexp.test(inputVal)) {
                     return {

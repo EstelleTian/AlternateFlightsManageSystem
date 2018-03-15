@@ -724,6 +724,17 @@ SortablePart.prototype.disabledCloseDialog = function (dialog,btn) {
     $('#bootstrap-modal-dialog-footer button',dialog).attr('disabled',true);
 };
 
+/**
+ * 启用弹框关闭
+ * */
+SortablePart.prototype.enabledCloseDialog = function () {
+    var thisProxy = this;
+    //启用头部关闭按钮
+    $('.close',dialog).attr('disabled',false);
+    //启用底部所有操作按钮
+    $('#bootstrap-modal-dialog-footer button').attr('disabled',false);
+};
+
 
 /**
  * 警告框
@@ -731,6 +742,7 @@ SortablePart.prototype.disabledCloseDialog = function (dialog,btn) {
  * */
 SortablePart.prototype.alertDialog = function (text) {
     var thisProxy = this;
+    thisProxy.enabledCloseDialog();
     var options = {
         title : "提示",
         content : '<p class="modal-text">'+text+'</p>',
@@ -757,6 +769,7 @@ SortablePart.prototype.alertDialog = function (text) {
  * */
 SortablePart.prototype.tipDialog = function (text) {
     var thisProxy = this;
+    thisProxy.enabledCloseDialog();
     var options = {
         title : "提示",
         content : '<p class="modal-text">'+text+'</p>',

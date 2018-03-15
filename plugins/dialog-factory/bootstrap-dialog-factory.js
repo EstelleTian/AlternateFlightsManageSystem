@@ -120,8 +120,6 @@ var BootstrapDialogFactory = function () {
          */
         dialog: function (options) {
             var pattern = options.pattern;
-            $('.bootstrap-modal-dialog').remove();
-            $('.modal-backdrop').remove();
             buildModalDialogDom();
             var dialogDom = $(".modal-dialog");
             if("sm" == pattern && !dialogDom.hasClass("modal-sm")){

@@ -281,7 +281,7 @@ var app = function () {
         };
         BootstrapDialogFactory.dialog(options);
         // 移除模态框footer
-        $('#bootstrap-modal-dialog-footer').remove();
+        // $('#bootstrap-modal-dialog-footer').remove();
     };
 
     /**

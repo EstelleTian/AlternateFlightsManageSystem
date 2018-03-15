@@ -211,12 +211,6 @@ SortablePart.prototype.confirmSaveDialog =function(text){
         showCancelBtn: false,
         buttons: [
             {
-                name : "取消",
-                status :-1 ,
-                callback : function(){
-
-                }
-            },{
                 name : "保存",
                 status :1 ,
                 isHidden : false,
@@ -225,6 +219,12 @@ SortablePart.prototype.confirmSaveDialog =function(text){
                     var dialog = $('#bootstrap-modal-dialog');
                     thisProxy.disabledCloseDialog(dialog,btn);
                     thisProxy.saveSort();
+                }
+            },{
+                name : "取消",
+                status :-1 ,
+                callback : function(){
+
                 }
             }
         ]
@@ -247,16 +247,16 @@ SortablePart.prototype.confirmRevertDialog =function(text){
         showCancelBtn: false,
         buttons: [
             {
-                name : "取消",
-                status :-1 ,
-                callback : function(){
-
-                }
-            },{
                 name : "还原",
                 status :1 ,
                 callback : function(){
                     thisProxy.revert();
+                }
+            },{
+                name : "取消",
+                status :-1 ,
+                callback : function(){
+
                 }
             }
         ]
@@ -338,13 +338,7 @@ SortablePart.prototype.addPositionDialog = function () {
         mtop: 200,
         showCancelBtn: false,
         buttons: [
-            {
-                name : "取消",
-                status :-1 ,
-                callback : function(){
-
-                }
-            },{
+           {
                 name : "创建",
                 status :1 ,
                 isHidden : false,
@@ -362,7 +356,14 @@ SortablePart.prototype.addPositionDialog = function () {
                         thisProxy.addPositionSubmit();
                     }
                 }
-            }
+            },
+            {
+                name : "取消",
+                status :-1 ,
+                callback : function(){
+
+                }
+            },
         ]
     };
     BootstrapDialogFactory.dialog(options);
@@ -477,12 +478,6 @@ SortablePart.prototype.deletePositionDialog = function (opt) {
         showCancelBtn: false,
         buttons: [
             {
-                name : "取消",
-                status :-1 ,
-                callback : function(){
-
-                }
-            },{
                 name : "删除",
                 status :3 ,
                 isHidden : false,
@@ -491,6 +486,13 @@ SortablePart.prototype.deletePositionDialog = function (opt) {
                     var dialog = $('#bootstrap-modal-dialog');
                     thisProxy.disabledCloseDialog(dialog,btn);
                     thisProxy.deletePositionSubmit(opt);
+                }
+            },
+            {
+                name : "取消",
+                status :-1 ,
+                callback : function(){
+
                 }
             }
         ]
@@ -600,12 +602,6 @@ SortablePart.prototype.updatePositionDialog = function (opt) {
         showCancelBtn: false,
         buttons: [
             {
-                name : "取消",
-                status :-1 ,
-                callback : function(){
-
-                }
-            },{
                 name : "修改",
                 status :1 ,
                 isHidden : false,
@@ -621,6 +617,13 @@ SortablePart.prototype.updatePositionDialog = function (opt) {
                         // 提交修改
                         thisProxy.updatePositionSubmit();
                     }
+
+                }
+            },
+            {
+                name : "取消",
+                status :-1 ,
+                callback : function(){
 
                 }
             }

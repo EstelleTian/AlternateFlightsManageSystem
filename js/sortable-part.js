@@ -730,7 +730,7 @@ SortablePart.prototype.disabledCloseDialog = function (dialog,btn) {
 SortablePart.prototype.enabledCloseDialog = function () {
     var thisProxy = this;
     //启用头部关闭按钮
-    $('.close',dialog).attr('disabled',false);
+    $('#bootstrap-modal-dialog .modal-header .close').attr('disabled',false);
     //启用底部所有操作按钮
     $('#bootstrap-modal-dialog-footer button').attr('disabled',false);
 };
@@ -845,7 +845,7 @@ SortablePart.prototype.initValidator = function ($form) {
             },
             'position-value': {
                 validators: {
-                    wordOrDigit1_4 : {},
+                    wordOrDigit1_6 : {},
                     leastOneItem: {// 最少有一个值
                         len: function () {
                             return thisProxy.items.length;

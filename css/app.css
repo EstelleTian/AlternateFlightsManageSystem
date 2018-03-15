@@ -201,7 +201,7 @@ ul, li {
 }
 
 .form-control[readonly] {
-    background: #FFFFFF;
+    /*background: #FFFFFF;*/
 }
 .panel-body .form-panel .form-item, .panel-body .condition-panel li, .alternate-history-module .form-panel .form-item, .alternate-history-module .condition-panel li {
     display: flex;

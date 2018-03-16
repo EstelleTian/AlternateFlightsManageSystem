@@ -263,13 +263,8 @@ ul, li {
 .form-panel .key {
     text-transform: uppercase;
 }
-/*.alternate-history-module .result-panel {*/
-    /*height: 45rem;*/
-/*}*/
 
-.alternate-history-module {
-    height: 50rem;
-}
+
 
 .summary-list {
     display: flex;
@@ -348,9 +343,9 @@ ul, li {
 .grid-table-collaborate-container li.hover>ul {
     display: block;
 }
-.alternate-history-module .condition-panel {
-    min-height: 5rem;
-}
+/*.alternate-history-module .condition-panel {*/
+    /*min-height: 5rem;*/
+/*}*/
 .condition-panel {
     display: none !important;
     border-bottom: 1px solid #dddddd;
@@ -853,12 +848,6 @@ ul, li {
     background: #c9e2f9; }
 
 /********************进港计划,疆内飞越,出港计划宽度自适应****************************/
-.arr-module .ui-jqgrid-bdiv div:first-child {
-    overflow-x: hidden;
-}
-.over-module .ui-jqgrid-bdiv div:first-child {
-    overflow-x: hidden;
-}
-.dep-module .ui-jqgrid-bdiv div:first-child {
+.main-area >section .ui-jqgrid-bdiv div:first-child{
     overflow-x: hidden;
 }

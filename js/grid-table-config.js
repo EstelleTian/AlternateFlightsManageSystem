@@ -7,7 +7,7 @@
 var GridTableConfig = function () {
     // 通用表(进港计划表 出港计划表 疆内飞越表)
     var common = {
-        colName : ['计划批号','备降场', '状态', '航班号', '机号','机型', '任务', '起飞机场','停机位','计划ETD', '动态ETD', 'ATD','动态ETA','ATA','计划ETA','降落机场','备注' ],
+        colName : ['计划批号','备降场', '备降状态', '航班号', '机号','机型', '起飞机场','降落机场','计划ETD', '动态ETD', 'ATD','计划ETA','动态ETA','ATA','任务' ],
         colModel: [
             // 计划批号
             {
@@ -23,7 +23,7 @@ var GridTableConfig = function () {
                 width:120,
                 // frozen:true
             },
-            // 状态
+            // 备降状态
             {
                 name: 'status',
                 index: 'status',
@@ -44,21 +44,16 @@ var GridTableConfig = function () {
                 name: 'aircraftType',
                 index: 'aircraftType'
             },
-            // 任务
-            {
-                name: 'task',
-                index: 'task'
-            },
+
             // 起飞机场
             {
                 name: 'depap',
                 index: 'depap'
             },
-            // 停机位
+            // 降落机场
             {
-                name: 'position',
-                index: 'position',
-                hidden : true
+                name: 'arrap',
+                index: 'arrap'
             },
             // 计划ETD
             {
@@ -79,6 +74,12 @@ var GridTableConfig = function () {
                 width:120,
                 formatter : formatterDateTime
             },
+            // 计划ETA
+            {
+                name: 'peta',
+                index: 'peta',
+                formatter : formatterDateTime
+            },
             // 动态ETA
             {
                 name: 'deta',
@@ -91,84 +92,75 @@ var GridTableConfig = function () {
                 index: 'ata',
                 formatter : formatterDateTime
             },
-            // 计划ETA
+
+
+            // 任务
             {
-                name: 'peta',
-                index: 'peta',
-                formatter : formatterDateTime
-            },
-            // 降落机场
-            {
-                name: 'arrap',
-                index: 'arrap'
-            },
-            // 备注
-            {
-                name: 'remark',
-                index: 'remark'
+                name: 'task',
+                index: 'task'
             }],
         colTitle: {
             flightDataId:'计划批号',
             altairport:'备降场',
-            status:'状态',
+            status:'备降状态',
             flightId:'航班号',
             registeNum:'机号',
             aircraftType:'机型',
-            task:'任务',
             depap:'起飞机场',
-            position:'停机位',
+            arrap:'降落机场',
             petd:'计划ETD',
             detd:'动态ETD',
             atd:'ATD',
+            peta:'计划ETA',
             deta: '动态ETA',
             ata: 'ATA',
-            peta:'计划ETA',
-            arrap:'降落机场',
-            remark:'备注'
+            task:'任务'
         }
     };
-    // 备降计划表、备降历史数据查询表
+    // 备降计划表、
     var alertnate = {
-        colName: ['备降计划主键','计划批号', '航班号', '机号', '机型', '机型分类', '占用机位', '任务', '起飞机场', '计划ETD', '动态ETD', 'ATD','动态ETA','ATA', '计划ETA', '降落机场', '备降场', '状态', '备降起飞','修改人','执行时间','修改时间','备注'],
+        colName: ['计划批号','备降场', '备降状态','航班号', '机号', '机型', '机型分类', '占用机位', '起飞机场', '降落机场','计划ETD', '动态ETD', 'ATD','计划ETA','动态ETA','ATA','实际落地机场', '机位状态','备降起飞' ],
         colTitle: {
-            id : '备降计划主键',
             flightDataId: '计划批号',
+            altairport: '备降场',
+            status: '备降状态',
             flightId: '航班号',
             registeNum: '机号',
             aircraftType: '机型',
             aircraftTypeCategory: '机型分类',
             occupyPosition: '占用机位',
-            task: '任务',
             depap: '起飞机场',
+            arrap: '降落机场',
             petd: '计划ETD',
             detd: '动态ETD',
             atd: 'ATD',
+            peta: '计划ETA',
             deta: '动态ETA',
             ata: 'ATA',
-            peta: '计划ETA',
-            arrap: '降落机场',
-            altairport: '备降场',
-            status: '状态',
-            alternateDeptime: '备降起飞',
-            oper: '修改人',
-            executeDate: '执行时间',
-            updateTime: '修改时间',
-            remark: '备注'
+            rarrap : '实际落地机场',
+            positionStatus: '机位状态',
+            alternateDeptime: '备降起飞'
+
         },
         colModel: [
-            // 备降计划主键
-            {
-                name: 'id',
-                index: 'id',
-                frozen: true,
-                hidden: true
-            },
+
             // 计划批号
             {
                 name: 'flightDataId',
                 index: 'flightDataId',
                 width: 120,
-                frozen: true
+                frozen: false
+            },
+            // 备降场
+            {
+                name: 'altairport',
+                index: 'altairport',
+            },
+            // 备降状态
+            {
+                name: 'status',
+                index: 'status',
+                formatter : formatterStatus
             },
             // 航班号
             {
@@ -197,15 +189,15 @@ var GridTableConfig = function () {
                 name: 'occupyPosition',
                 index: 'occupyPosition'
             },
-            // 任务
-            {
-                name: 'task',
-                index: 'task'
-            },
             // 起飞机场
             {
                 name: 'depap',
                 index: 'depap'
+            },
+            // 降落机场
+            {
+                name: 'arrap',
+                index: 'arrap'
             },
             // 计划ETD
             {
@@ -225,6 +217,12 @@ var GridTableConfig = function () {
                 index: 'atd',
                 formatter : formatterDateTime
             },
+            // 计划ETA
+            {
+                name: 'peta',
+                index: 'peta',
+                formatter : formatterDateTime
+            },
             // 动态ETA
             {
                 name: 'deta',
@@ -237,54 +235,168 @@ var GridTableConfig = function () {
                 index: 'ata',
                 formatter : formatterDateTime
             },
-            // 计划ETA
+            // 实际落地机场
             {
-                name: 'peta',
-                index: 'peta',
-                formatter : formatterDateTime
+                name: 'rarrap',
+                index: 'rarrap',
             },
-            // 降落机场
+
+            // 机位状态
             {
-                name: 'arrap',
-                index: 'arrap'
+                name: 'positionStatus',
+                index: 'positionStatus'
+            },
+            // 备降起飞
+            {
+                name: 'alternateDeptime',
+                index: 'alternateDeptime'
+            }
+
+        ]
+    }
+    // 备降历史数据查询表
+
+    var alertnateHistory = {
+        colName: ['计划批号','备降场', '备降状态','航班号', '机号', '机型', '机型分类', '占用机位', '起飞机场', '降落机场','计划ETD', '动态ETD', 'ATD','计划ETA','动态ETA','ATA','实际落地机场', '机位状态','备降起飞','计划日期' ],
+            colTitle: {
+            flightDataId: '计划批号',
+                altairport: '备降场',
+                status: '备降状态',
+                flightId: '航班号',
+                registeNum: '机号',
+                aircraftType: '机型',
+                aircraftTypeCategory: '机型分类',
+                occupyPosition: '占用机位',
+                depap: '起飞机场',
+                arrap: '降落机场',
+                petd: '计划ETD',
+                detd: '动态ETD',
+                atd: 'ATD',
+                peta: '计划ETA',
+                deta: '动态ETA',
+                ata: 'ATA',
+                rarrap : '实际落地机场',
+                positionStatus: '机位状态',
+                alternateDeptime: '备降起飞',
+                executeDate: '计划日期'
+
+        },
+        colModel: [
+
+            // 计划批号
+            {
+                name: 'flightDataId',
+                index: 'flightDataId',
+                width: 120,
+                frozen: false
             },
             // 备降场
             {
                 name: 'altairport',
                 index: 'altairport',
             },
-            // 状态
+            // 备降状态
             {
                 name: 'status',
                 index: 'status',
                 formatter : formatterStatus
+            },
+            // 航班号
+            {
+                name: 'flightId',
+                index: 'flightId',
+                width: 120,
+                frozen: true
+            },
+            // 机号
+            {
+                name: 'registeNum',
+                index: 'registeNum'
+            },
+            // 机型
+            {
+                name: 'aircraftType',
+                index: 'aircraftType'
+            },
+            // 机型分类
+            {
+                name: 'aircraftTypeCategory',
+                index: 'aircraftTypeCategory'
+            },
+            // 占用机位
+            {
+                name: 'occupyPosition',
+                index: 'occupyPosition'
+            },
+            // 起飞机场
+            {
+                name: 'depap',
+                index: 'depap'
+            },
+            // 降落机场
+            {
+                name: 'arrap',
+                index: 'arrap'
+            },
+            // 计划ETD
+            {
+                name: 'petd',
+                index: 'petd',
+                formatter : formatterDateTime
+            },
+            // 动态ETD
+            {
+                name: 'detd',
+                index: 'detd',
+                formatter : formatterDateTime
+            },
+            // ATD
+            {
+                name: 'atd',
+                index: 'atd',
+                formatter : formatterDateTime
+            },
+            // 计划ETA
+            {
+                name: 'peta',
+                index: 'peta',
+                formatter : formatterDateTime
+            },
+            // 动态ETA
+            {
+                name: 'deta',
+                index: 'deta',
+                formatter : formatterDateTime
+            },
+            // ATA
+            {
+                name: 'ata',
+                index: 'ata',
+                formatter : formatterDateTime
+            },
+            // 实际落地机场
+            {
+                name: 'rarrap',
+                index: 'rarrap',
+            },
+
+            // 机位状态
+            {
+                name: 'positionStatus',
+                index: 'positionStatus'
             },
             // 备降起飞
             {
                 name: 'alternateDeptime',
                 index: 'alternateDeptime'
             },
-            // 修改人
-            {
-                name: 'oper',
-                index: 'oper'
-            },
-            // 执行时间
+            // 计划日期
             {
                 name: 'executeDate',
                 index: 'executeDate'
-            },
-            // 修改时间
-            {
-                name: 'updateTime',
-                index: 'updateTime',
-                formatter : formatterDateTime
-            },
-            // 备注
-            {
-                name: 'remark',
-                index: 'remark'
-            }]
+            }
+
+        ]
     }
     // 备降场机位容量表
 
@@ -432,6 +544,7 @@ var GridTableConfig = function () {
     return {
         common : common,
         alertnate : alertnate,
+        alertnateHistory : alertnateHistory,
         colModelTemplate : colModelTemplate
     }
 

@@ -132,6 +132,7 @@ var app = function () {
                     colTitle: GridTableConfig.alertnate.colTitle,
                     colCollaborateUrl: CellOpreationUrl,
                     params: {
+                        shrinkToFit: true,
                         // sortname: 'executeDate',
                         // sortorder: 'asc'
                     }

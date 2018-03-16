@@ -39,6 +39,9 @@
                 <a href="javascript:;" >备降计划</a>
             </li>
             <li>
+                <a href="javascript:;" >备降历史</a>
+            </li>
+            <li>
                 <a href="javascript:;" >疆内飞越</a>
             </li>
            <!-- <li >
@@ -53,7 +56,7 @@
         </ul>
     </div>
     <div class="main-area">
-        <!--模块1-->
+        <!--模块1 进港计划-->
         <section class="arr-module active">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -122,7 +125,7 @@
                 </div>
             </div>
         </section>
-        <!--模块2-->
+        <!--模块2 备降计划-->
         <section class="alternate-module">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -156,11 +159,11 @@
                                 <span class="ladda-label">查询</span>
                             </button>
                         </li>
-                        <li class="form-item one-child">
-                            <button class="atfm-btn atfm-btn-blue ladda-button history-inquire" data-style="zoom-out">
-                                <span class="ladda-label">查询历史</span>
-                            </button>
-                        </li>
+                        <!--<li class="form-item one-child">-->
+                            <!--<button class="atfm-btn atfm-btn-blue ladda-button history-inquire" data-style="zoom-out">-->
+                                <!--<span class="ladda-label">查询历史</span>-->
+                            <!--</button>-->
+                        <!--</li>-->
                         <li class="form-item">
                             <a href="javascript:;" class="quick-filter">
                                 <input class="magic-checkbox" type="checkbox" id="alternate-filter" >
@@ -184,6 +187,44 @@
                     <div class="result-panel">
                         <table id="alternate-table"></table>
                         <div id="alternate-table-pager"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--模块3 备降历史-->
+        <section class="alternate-history-module">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="poster">备降历史</div>
+                    <div class="time"></div>
+                </div>
+                <div class="panel-body">
+                    <!-- 表单面板-->
+                    <ul class="form-panel" >
+                        <li class="form-item"><label>开始日期</label><input type="text" class="start-date form-control" maxlength="8" value="" readonly=""></li>
+                        <li class="form-item"><label>结束日期</label><input type="text" class="end-date form-control" maxlength="8" value="" readonly=""></li>
+                        <li class="form-item one-child">
+                            <button class="atfm-btn atfm-btn-blue ladda-button inquire" data-style="zoom-out">
+                                <span class="ladda-label">查询历史</span>
+                            </button>
+                        </li>
+                        <!--提示信息-->
+                        <li class="form-item">
+                            <span class="alert"></span>
+                        </li>
+                    </ul>
+                    <!-- 查询条件显示-->
+                    <ul class="condition-panel hidden">
+                        <li class="form-item">
+                            当前查询条件:
+                        </li>
+                        <li class="form-item scope"></li>
+                        <li class="form-item key"></li>
+                    </ul>
+                    <!-- 数据可视化区(图表,表格)-->
+                    <div class="result-panel">
+                        <table id="alternate-history-table"></table>
+                        <div id="alternate-history-table-pager"></div>
                     </div>
                 </div>
             </div>

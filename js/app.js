@@ -177,6 +177,35 @@ var app = function () {
         });
         overObj.initFormModuleObject();
         moduleObjs.push(overObj);
+
+        // 备降计划历史查询模块
+        alternateHistoryObj = new HistoryFormModule({
+            canvasId: 'alternate-history-module',
+            tableId: 'alternate-history-table',
+            url: DataUrl.ALTERNATE_HISTORY,
+            initGridTable: function (table) {
+                var opt = {
+                    tableId: 'alternate-history-table',
+                    pagerId: 'alternate-history-table-pager',
+                    colNames: GridTableConfig.alertnateHistory.colName,
+                    colModel: GridTableConfig.alertnateHistory.colModel,
+                    cmTemplate: GridTableConfig.colModelTemplate,
+                    colTitle: GridTableConfig.alertnateHistory.colTitle,
+                    // colCollaborateUrl: CellOpreationUrl,
+                    params: {
+                        shrinkToFit: true,
+                        // sortname: 'executeDate',
+                        // sortorder: 'asc'
+                    }
+                };
+                table = new GridTable(opt);
+                table.initGridTableObject();
+                return table;
+            }
+        });
+        alternateHistoryObj.initHistoryFormModuleObject();
+        moduleObjs.push(alternateHistoryObj);
+
         /*// 出港计划模块
         depObj = new FormModule({
             canvasId: 'dep-module',
@@ -725,7 +754,7 @@ var app = function () {
             // 初始化模块
             initModule();
             // 初始化备降历史数据查询模块
-            initHistory();
+            // initHistory();
             // 初始化所需各项基本参数
             initBasicData(1000);
             // 绑定菜单栏事件，切换模块显隐及活动模块

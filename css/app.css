@@ -358,11 +358,11 @@ ul, li {
     line-height: 1.42857143;
 }
 
-.modal-header {
-    background: #E6F0F3;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
+/*.modal-header {*/
+    /*background: #E6F0F3;*/
+    /*padding-top: 10px;*/
+    /*padding-bottom: 10px;*/
+/*}*/
 
 .modal-body {
     padding-top: 0;
@@ -692,37 +692,6 @@ ul, li {
     outline: none;
 }
 
-@media (max-width: 1366px) {
-    .modal-dialog {
-        width: 1100px !important;
-    }
-}
-@media (max-width: 1200px) {
-    .modal-dialog {
-        width: 1000px !important;
-    }
-}
-@media (max-width: 1100px) {
-    .modal-dialog {
-        width: 800px !important;
-    }
-}
-
-@media (max-width: 900px) {
-    .modal-dialog {
-        width: 700px !important;
-    }
-}
-@media (max-width: 768px) {
-    .modal-dialog {
-        width: 480px !important;
-    }
-}
-@media (max-width: 512px) {
-    .modal-dialog {
-        width: 428px !important;
-    }
-}
 
 
 /*********************magic-checkbox 复选框美化**************************************/

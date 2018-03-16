@@ -390,10 +390,10 @@ FormModule.prototype.initInquireData = function (refresh) {
     thisProxy.loading.start();
 
     // 更新当前查询条件
-    thisProxy.updateCondition();
+    // thisProxy.updateCondition();
     // 计算表格容器大小,使其大小自适应
     // (因为更新显示了模块内当前查询条件栏内容，所以重新计算表格容器的高度)
-    thisProxy.resizeTableContainer();
+    // thisProxy.resizeTableContainer();
 
     // 校验表单是否有效
     var valid = thisProxy.validateForm();

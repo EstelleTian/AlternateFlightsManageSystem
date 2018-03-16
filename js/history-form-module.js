@@ -81,14 +81,17 @@ HistoryFormModule.prototype.initHistoryFormModuleObject = function () {
     //初始化查询按钮loading
     thisProxy.initLoading();
 
-    //初始化数据查询
-    thisProxy.initInquireData();
+    // //初始化数据查询
+    // thisProxy.initInquireData();
 
-    // 绑定窗口调整时
-    $(window).resize(function () {
-     // 使窗口调整时表格容器大小自适应
-     thisProxy.resizeTableContainer();
-     });
+    //绑定查询按钮事件
+    thisProxy.bindEventOnButton();
+
+    // // 绑定窗口调整时
+    // $(window).resize(function () {
+    //  // 使窗口调整时表格容器大小自适应
+    //  thisProxy.resizeTableContainer();
+    //  });
 
 };
 
@@ -174,40 +177,49 @@ HistoryFormModule.prototype.changeFilter = function () {
 };
 
 /**
+ *  绑定查询按钮事件
+ *
+ * */
+HistoryFormModule.prototype.bindEventOnButton = function () {
+    // 当前对象this代理
+    var thisProxy = this;
+    // 查询按钮绑定事件
+    $('.inquire', thisProxy.canvas).on('click',function () {
+        thisProxy.initInquireData();
+    });
+};
+
+/**
  * 初始化数据查询
  * */
 
 HistoryFormModule.prototype.initInquireData = function () {
     // 当前对象this代理
     var thisProxy = this;
-    // 查询按钮绑定事件
-    $('.inquire', thisProxy.canvas).on('click',function () {
-        // 禁用表单事件
-        thisProxy.desabledForm(true);
-        // 启用loading动画
-        thisProxy.loading.start();
-        // 清除提示、警告、查询条件、数据生成时间等
-        thisProxy.clear();
+    // 禁用表单事件
+    thisProxy.desabledForm(true);
+    // 启用loading动画
+    thisProxy.loading.start();
+    // 清除提示、警告、查询条件、数据生成时间等
+    thisProxy.clear();
 
-
-        // 校验表单是否有效
-        var valid = thisProxy.validateForm();
-        // 若校验通过则查询数据
-        if(valid){
-            // 更新当前查询条件
-            thisProxy.updateCondition();
-            // 计算表格容器大小,使其大小自适应
-            // (因为更新显示了模块内当前查询条件栏内容，所以重新计算表格容器的高度)
-            thisProxy.resizeTableContainer();
-            // 查询数据
-            thisProxy.inquireData();
-        }else {
-            // 启用表单事件
-            thisProxy.desabledForm(false);
-            // 关闭loading动画
-            thisProxy.loading.stop();
-        }
-    });
+    // 校验表单是否有效
+    var valid = thisProxy.validateForm();
+    // 若校验通过则查询数据
+    if(valid){
+        // 更新当前查询条件
+        // thisProxy.updateCondition();
+        // 计算表格容器大小,使其大小自适应
+        // (因为更新显示了模块内当前查询条件栏内容，所以重新计算表格容器的高度)
+        // thisProxy.resizeTableContainer();
+        // 查询数据
+        thisProxy.inquireData();
+    }else {
+        // 启用表单事件
+        thisProxy.desabledForm(false);
+        // 关闭loading动画
+        thisProxy.loading.stop();
+    }
 
 
 };
@@ -549,6 +561,25 @@ HistoryFormModule.prototype.isHiddenTableContainer = function (bool) {
         $tableContainer.removeClass('hidden');
     }
 }
+
+
+/**
+ *
+ *
+ * */
+
+HistoryFormModule.prototype.setActive = function (bool) {
+    // 当前对象this代理
+    var thisProxy = this;
+    // 当前对象this代理
+    var thisProxy = this;
+    if(bool){
+        // 查询数据
+        thisProxy.initInquireData();
+    }
+
+};
+
 
 
 

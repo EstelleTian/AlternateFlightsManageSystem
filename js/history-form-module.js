@@ -451,11 +451,11 @@ HistoryFormModule.prototype.updateTime = function () {
     // 校验时间是否有效
     if($.isValidVariable(thisProxy.generateTime)){
         // 取得数据生成时间节点
-        var $node = $('.form-panel .time', thisProxy.canvas);
+        var $node = $('.panel-heading .time', thisProxy.canvas);
         // 格式化处理时间
         var time = thisProxy.formaterGenerateTime(thisProxy.generateTime);
         // 显示数据生成时间
-        $node.text('数据生成时间: '+time).attr('title','数据生成时间: '+time);
+        $node.text('数据生成时间: ' + time).attr('title','数据生成时间: '+time);
     }
 
 };

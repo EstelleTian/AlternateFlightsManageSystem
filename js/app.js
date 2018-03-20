@@ -73,10 +73,11 @@ var app = function () {
                 defaultScope: '2',
                 // 初始化表格
                 initGridTable: function (table) {
+                    var pagerId = 'arr-table-pager';
                     var opt = {
                         moduleObj: arrObj, // 表格所在模块对象
                         tableId: 'arr-table',
-                        pagerId: 'arr-table-pager',
+                        pagerId: pagerId,
                         colNames: GridTableConfig.common.colName,
                         colModel: GridTableConfig.common.colModel,
                         cmTemplate: GridTableConfig.colModelTemplate,
@@ -99,7 +100,35 @@ var app = function () {
                     };
                     table = new GridTable(opt);
                     table.initGridTableObject();
-                    // table.gridTableObject.jqGrid("destroyFrozenColumns");
+                    // 设置 Pager 按钮
+                    table.gridTableObject
+                        .navButtonAdd('#' + pagerId, {
+                            caption: "导出",
+                            title: "导出Excel",
+                            buttonicon: "glyphicon-export",
+                            onClickButton: function () {
+                                // table.export(opt.name);
+                            },
+                            position: "first"
+                        }) .navButtonAdd('#' + pagerId, {
+                        caption: "高级查询",
+                        title: "高级查询",
+                        buttonicon: "glyphicon-search",
+                        onClickButton: function () {
+                            table.showAdvanceFilter();
+                        },
+                        position: "first"
+                    }).navButtonAdd('#' + pagerId, {
+                            caption: "快速过滤",
+                            title: "快速过滤",
+                            buttonicon: "glyphicon-filter",
+                            onClickButton: function () {
+                                //清理协调窗口
+                                table.clearCollaborateContainer();
+                                table.showQuickFilter();
+                            },
+                            position: "first"
+                        });
                     return table;
                 }
             });
@@ -117,10 +146,11 @@ var app = function () {
                 // 默认选中的范围值
                 defaultScope : 'ALL',
                 initGridTable : function (table) {
+                    var pagerId = 'alternate-table-pager';
                     var opt = {
                         moduleObj : alternateObj, // 表格所在模块对象
                         tableId: 'alternate-table',
-                        pagerId: 'alternate-table-pager',
+                        pagerId: pagerId,
                         colNames: GridTableConfig.alertnate.colName,
                         colModel: GridTableConfig.alertnate.colModel,
                         cmTemplate: GridTableConfig.colModelTemplate,
@@ -134,6 +164,35 @@ var app = function () {
                     };
                     table = new GridTable(opt);
                     table.initGridTableObject();
+                    // 设置 Pager 按钮
+                    table.gridTableObject
+                        .navButtonAdd('#' + pagerId, {
+                            caption: "导出",
+                            title: "导出Excel",
+                            buttonicon: "glyphicon-export",
+                            onClickButton: function () {
+                                // table.export(opt.name);
+                            },
+                            position: "first"
+                        }) .navButtonAdd('#' + pagerId, {
+                        caption: "高级查询",
+                        title: "高级查询",
+                        buttonicon: "glyphicon-search",
+                        onClickButton: function () {
+                            table.showAdvanceFilter();
+                        },
+                        position: "first"
+                    }).navButtonAdd('#' + pagerId, {
+                        caption: "快速过滤",
+                        title: "快速过滤",
+                        buttonicon: "glyphicon-filter",
+                        onClickButton: function () {
+                            //清理协调窗口
+                            table.clearCollaborateContainer();
+                            table.showQuickFilter();
+                        },
+                        position: "first"
+                    });
                     return table;
                 }
             });
@@ -148,9 +207,10 @@ var app = function () {
                 tableId: 'alternate-history-table',
                 url: DataUrl.ALTERNATE_HISTORY,
                 initGridTable: function (table) {
+                    var pagerId = 'alternate-history-table-pager';
                     var opt = {
                         tableId: 'alternate-history-table',
-                        pagerId: 'alternate-history-table-pager',
+                        pagerId: pagerId,
                         colNames: GridTableConfig.alertnateHistory.colName,
                         colModel: GridTableConfig.alertnateHistory.colModel,
                         cmTemplate: GridTableConfig.colModelTemplate,
@@ -164,6 +224,36 @@ var app = function () {
                     };
                     table = new GridTable(opt);
                     table.initGridTableObject();
+                    // 设置 Pager 按钮
+                    table.gridTableObject
+                        .navButtonAdd('#' + pagerId, {
+                            caption: "导出",
+                            title: "导出Excel",
+                            buttonicon: "glyphicon-export",
+                            onClickButton: function () {
+                                // table.export(opt.name);
+                            },
+                            position: "first"
+                        }) .navButtonAdd('#' + pagerId, {
+                        caption: "高级查询",
+                        title: "高级查询",
+                        buttonicon: "glyphicon-search",
+                        onClickButton: function () {
+                            table.showAdvanceFilter();
+                        },
+                        position: "first"
+                    }).navButtonAdd('#' + pagerId, {
+                        caption: "快速过滤",
+                        title: "快速过滤",
+                        buttonicon: "glyphicon-filter",
+                        onClickButton: function () {
+                            //清理协调窗口
+                            table.clearCollaborateContainer();
+                            table.showQuickFilter();
+                        },
+                        position: "first"
+                    });
+
                     return table;
                 }
             });
@@ -182,10 +272,11 @@ var app = function () {
                 // 默认选中的范围值
                 defaultScope : '2',
                 initGridTable : function (table) {
+                    var pagerId = 'over-table-pager';
                     var opt = {
                         moduleObj : overObj, // 表格所在模块对象
                         tableId: 'over-table',
-                        pagerId: 'over-table-pager',
+                        pagerId: pagerId,
                         colNames: GridTableConfig.common.colName,
                         colModel: GridTableConfig.common.colModel,
                         cmTemplate: GridTableConfig.colModelTemplate,
@@ -199,7 +290,35 @@ var app = function () {
                     };
                     table = new GridTable(opt);
                     table.initGridTableObject();
-                    // table.gridTableObject.jqGrid("destroyFrozenColumns");
+                    // 设置 Pager 按钮
+                    table.gridTableObject
+                        .navButtonAdd('#' + pagerId, {
+                            caption: "导出",
+                            title: "导出Excel",
+                            buttonicon: "glyphicon-export",
+                            onClickButton: function () {
+                                // table.export(opt.name);
+                            },
+                            position: "first"
+                        }) .navButtonAdd('#' + pagerId, {
+                        caption: "高级查询",
+                        title: "高级查询",
+                        buttonicon: "glyphicon-search",
+                        onClickButton: function () {
+                            table.showAdvanceFilter();
+                        },
+                        position: "first"
+                    }).navButtonAdd('#' + pagerId, {
+                        caption: "快速过滤",
+                        title: "快速过滤",
+                        buttonicon: "glyphicon-filter",
+                        onClickButton: function () {
+                            //清理协调窗口
+                            table.clearCollaborateContainer();
+                            table.showQuickFilter();
+                        },
+                        position: "first"
+                    });
                     return table;
                 }
             });

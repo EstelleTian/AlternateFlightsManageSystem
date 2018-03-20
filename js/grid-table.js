@@ -2296,3 +2296,32 @@ GridTable.prototype.showQuickFilter = function () {
     thisProxy.resizeFrozenTable();*/
 
 };
+
+/**
+ * 显示高级查询对话框
+ */
+GridTable.prototype.showAdvanceFilter = function () {
+    // 代理
+    var thisProxy = this;
+    // 给表格对象绑定查询操作
+    thisProxy.gridTableObject.jqGrid("searchGrid", {
+        sopt: ['cn', 'nc', 'eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en'],
+        caption: "高级查询",
+        multipleSearch: true,
+        multipleGroup: true,
+        searchOnEnter: true,
+        closeOnEscape: true,
+        resize: false,
+        zIndex: 1004,
+        width: 600
+    });
+    if (!thisProxy.advanceFilterFlag) {
+        var callback = function () {
+            thisProxy.gridTableObject.jqGrid('setGridParam', {data: thisProxy.tableData}).trigger('reloadGrid');
+
+        }
+        $("#fbox_" + thisProxy.tableId + "_reset").off("click", callback).on("click", callback);
+        $("#fbox_" + thisProxy.tableId + "_search").off("click", callback).on("click", callback);
+        thisProxy.advanceFilterFlag = true;
+    }
+};

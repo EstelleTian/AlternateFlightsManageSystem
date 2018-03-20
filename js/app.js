@@ -481,33 +481,42 @@ var app = function () {
 
 
         //拼接军民合用子菜单
-        GridTableCollaborateDom.COMPLEX.append(complex);
+        var LEVEL2 = GridTableCollaborateDom.LEVEL2;
+
+        LEVEL2 = LEVEL2.replace( /{airport}/g, civil );
+
+        var COMPLEX = '<ul class="collaborate-menu collaborate-menu-complex">' + complex + '</ul>';
+
+        LEVEL2 = LEVEL2.replace( /{complex}/g, COMPLEX );
+
         // 追加到二级菜单中的军民合用菜单项下
-        $('.complex', GridTableCollaborateDom.LEVEL2).append(GridTableCollaborateDom.COMPLEX);
+
         // 拼接其它子菜单
-        GridTableCollaborateDom.OTHER.append(other);
-        // 追加到二级菜单中的其它菜单项下
-        $('.other', GridTableCollaborateDom.LEVEL2).append(GridTableCollaborateDom.OTHER);
-        // 民用菜单项追加到二级菜单开头
-        GridTableCollaborateDom.LEVEL2.prepend(civil);
+
+        var OTHER = '<ul class="collaborate-menu collaborate-menu-other">' + other + '</ul>';
+
+        LEVEL2 = LEVEL2.replace( /{other}/g, OTHER );
+
+        GridTableCollaborateDom.LEVEL2 = LEVEL2;
+
 
 
         /**
          *  克隆二级菜单并追加到相应一级菜单项下
          * */
         // 进港计划模块 预选备降项
-        cloneCollaborateDom($('.pre-alternate',GridTableCollaborateDom.ARR_DOM), GridTableCollaborateDom.LEVEL2);
-        // 进港计划模块 确定备降项
-        cloneCollaborateDom($('.confirm-alternate',GridTableCollaborateDom.ARR_DOM), GridTableCollaborateDom.LEVEL2);
-        // 备降计划模块 更改预选
-        cloneCollaborateDom($('.update-pre-alternate',GridTableCollaborateDom.ALTERNATE_DOM), GridTableCollaborateDom.LEVEL2);
-        // 备降计划模块 更改备降
-        cloneCollaborateDom($('.update-alternate',GridTableCollaborateDom.ALTERNATE_DOM), GridTableCollaborateDom.LEVEL2);
-
-        // 疆内飞越计划模块 预选备降项
-        cloneCollaborateDom($('.pre-alternate',GridTableCollaborateDom.OVER_DOM), GridTableCollaborateDom.LEVEL2);
-        // 疆内飞越计划模块 确定备降项
-        cloneCollaborateDom($('.confirm-alternate',GridTableCollaborateDom.OVER_DOM), GridTableCollaborateDom.LEVEL2);
+        // cloneCollaborateDom($('.pre-alternate',GridTableCollaborateDom.ARR_DOM), GridTableCollaborateDom.LEVEL2);
+        // // 进港计划模块 确定备降项
+        // cloneCollaborateDom($('.confirm-alternate',GridTableCollaborateDom.ARR_DOM), GridTableCollaborateDom.LEVEL2);
+        // // 备降计划模块 更改预选
+        // cloneCollaborateDom($('.update-pre-alternate',GridTableCollaborateDom.ALTERNATE_DOM), GridTableCollaborateDom.LEVEL2);
+        // // 备降计划模块 更改备降
+        // cloneCollaborateDom($('.update-alternate',GridTableCollaborateDom.ALTERNATE_DOM), GridTableCollaborateDom.LEVEL2);
+        //
+        // // 疆内飞越计划模块 预选备降项
+        // cloneCollaborateDom($('.pre-alternate',GridTableCollaborateDom.OVER_DOM), GridTableCollaborateDom.LEVEL2);
+        // // 疆内飞越计划模块 确定备降项
+        // cloneCollaborateDom($('.confirm-alternate',GridTableCollaborateDom.OVER_DOM), GridTableCollaborateDom.LEVEL2);
         // cloneCollaborateDom(GridTableCollaborateDom.OVER_DOM, GridTableCollaborateDom.LEVEL2);
         // cloneCollaborateDom(GridTableCollaborateDom.ARR_DOM, GridTableCollaborateDom.LEVEL2);
     };

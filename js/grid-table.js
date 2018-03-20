@@ -140,7 +140,7 @@ function GridTable(params) {
     /*
      * 表格右键可交互标记
      * */
-    this.collaborateFlag = false;
+    this.collaborateFlag = true;
 }
 
 
@@ -586,9 +586,8 @@ GridTable.prototype.collaborateArr = function (opt) {
     if(!thisProxy.collaborateFlag){
         return;
     }
-
     // 获取协调DOM元素
-    var collaboratorDom = GridTableCollaborateDom.ARR_DOM;
+    var  collaboratorDom = GridTableCollaborateDom.collaborateContainer;
     // 校验DOM元素是否有效
     if(!$.isValidVariable(collaboratorDom)){
         return
@@ -598,6 +597,9 @@ GridTable.prototype.collaborateArr = function (opt) {
      * */
         //获取航班状态
     var status = opt.flight.status;
+    // var $menuDom = $('.collaborate-menu', collaboratorDom)
+    // $menuDom.html("")
+
     if($.isValidVariable(status)){
         // 状态为预选
         if(status == 1){
@@ -627,13 +629,29 @@ GridTable.prototype.collaborateArr = function (opt) {
             $('.occupied', collaboratorDom).show();
         }
     }else {
-        // 预选备降、确定备降和正班占用菜单项显示
-        $('.pre-alternate', collaboratorDom).show();
-        $('.confirm-alternate', collaboratorDom).show();
-        $('.occupied', collaboratorDom).show();
+        var LEVEL2 = GridTableCollaborateDom.LEVEL2;
+        //TODO 是否有权限
+
+        var preAlternateLi = GridTableCollaborateDom.preAlternateLi;
+        preAlternateLi = preAlternateLi.replace( /{level2}/,  LEVEL2)
+
+        var confirmAlternateLi = GridTableCollaborateDom.confirmAlternateLi
+        confirmAlternateLi = confirmAlternateLi.replace( /{level2}/,  LEVEL2)
+
+        var occupiedLi = GridTableCollaborateDom.occupiedLi
+
+        var childrenStr = preAlternateLi + confirmAlternateLi + occupiedLi;
+        collaboratorDom = collaboratorDom.replace( /{child}/,  childrenStr)
+
+
+        // // 预选备降、确定备降和正班占用菜单项显示
+        // $('.pre-alternate', collaboratorDom).show();
+        // $('.confirm-alternate', collaboratorDom).show();
+        // $('.occupied', collaboratorDom).show();
     }
 
     // 追加协调DOM至容器
+    collaboratorDom = $(collaboratorDom);
     $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
 
     // 校验是否关闭定时请求

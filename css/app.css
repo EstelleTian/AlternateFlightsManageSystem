@@ -82,6 +82,7 @@ ul, li {
     min-height: 3rem;
     font-size: 1.6rem;
     background: url(../img/nav-repeat2.jpg) no-repeat #305b7b !important;
+    flex-direction: row;
 
 }
 .menu-bar ul, .menu-bar ul li {
@@ -118,6 +119,10 @@ ul, li {
 .menu-bar ul li.active > a {
     background: #204562;
     color: #ffffff;
+}
+#menu-list {
+    display: flex;
+    flex: 1 0 auto;
 }
 .main-area {
     display: flex;

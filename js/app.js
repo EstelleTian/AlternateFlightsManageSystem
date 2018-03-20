@@ -289,6 +289,15 @@ var app = function () {
         moduleObjs[index].setActive(true);
     };
 
+    /**
+     * 阻止右键点击默认事件
+     *
+     * */
+    var preventContextmenu = function () {
+        document.oncontextmenu = function () {
+            return false;
+        };
+    };
 
     /**
      *初始化用户权限
@@ -344,9 +353,9 @@ var app = function () {
 
     /**
      * 初始化所需各项基本参数
-     * @param time 定时间隔 ms
+     * @param time 定时间隔 ms 指定时间后再次请求一次
      *
-     *  因为数据从后端请求获取，所以定时刷新校验数据有效性
+     *  定时刷新校验数据有效性
      * */
     var initBasicData = function (time) {
         var url = ipHost + 'airport/retrieveAirportConfig'
@@ -386,29 +395,35 @@ var app = function () {
      * */
     var setScopeList = function () {
         // var scopeListData = basicData.airportConfig;
-
-        // 进港计划模块
-        var arrFlightsScope = scopeListData.arrFlightsScope;
-        if ($.isValidObject(arrFlightsScope)) {
-            arrObj.setScope(arrFlightsScope);
+        if($.isValidObject(userProperty.id_4000)){
+            // 进港计划模块
+            var arrFlightsScope = scopeListData.arrFlightsScope;
+            if ($.isValidObject(arrFlightsScope)) {
+                arrObj.setScope(arrFlightsScope);
+            }
+        }
+        if($.isValidObject(userProperty.id_4100)){
+            // 疆内飞越模块
+            var overFlightsScope = scopeListData.overFlightsScope;
+            if ($.isValidObject(overFlightsScope)) {
+                overObj.setScope(overFlightsScope);
+            }
+        }
+        if($.isValidObject(userProperty.id_4200)){
+            // 备降计划模块
+            if ($.isValidObject(basicData.alternateAirport)) {
+                var alternateFlightsScope = basicData.alternateAirport;
+                alternateObj.setScope(alternateFlightsScope);
+            }
         }
 
-        // 疆内飞越模块
-        var overFlightsScope = scopeListData.overFlightsScope;
-        if ($.isValidObject(overFlightsScope)) {
-            overObj.setScope(overFlightsScope);
-        }
         // 出港计划模块
         /* var depFlightsScope = scopeListData.depFlightsScope;
          if ($.isValidObject(depFlightsScope)) {
          depObj.setScope(depFlightsScope);
          }*/
 
-        // 备降计划模块
-        if ($.isValidObject(basicData.alternateAirport)) {
-            var alternateFlightsScope = basicData.alternateAirport;
-            alternateObj.setScope(alternateFlightsScope);
-        }
+
     };
 
     /**
@@ -720,14 +735,14 @@ var app = function () {
 
 
     var initModuleLayout = function () {
-        // 利用Handlebars模版生成对应HTML结构
+        // 顶部导航栏
         var myTemplate = Handlebars.compile($("#menu-template").html());
         $('#menu-bar').html(myTemplate(userProperty));
 
-        // 利用Handlebars模版生成对应HTML结构
+        // 模块内容部分
         var template = Handlebars.compile($("#section-template").html());
         $('.main-area').html(template(userProperty));
-    }
+    };
 
     var initComponents = function (time) {
         if($.isValidObject(userProperty) && $.isValidObject(basicData)
@@ -754,10 +769,13 @@ var app = function () {
         statusCode : statusCode,
         collaborateFlag : collaborateFlag,
         init : function () {
+            // 阻止右键点击默认事件
+            preventContextmenu();
+
             // 获取用户权限
-            initUserAuthority(1000*60*2);
+            initUserAuthority(1000*2);
             // 初始化所需各项基本参数
-            initBasicData(2000);
+            initBasicData(1000*2);
             // 初始化组件
             initComponents(1000*1);
 

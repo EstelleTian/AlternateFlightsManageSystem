@@ -2087,13 +2087,37 @@ GridTable.prototype.followTargetPosition = function (collaboratorDom, cellObj) {
  * 目标：给没有id属性的航班增加id属性，取值为flightDataId属性的值
  */
 GridTable.prototype.convertData = function (flight) {
+
+    //根据列名增加对应样式
+    //ATD 实际起飞时间 "background-color:#6FFFFF;color:#000000;"
+    var atdStyle = this.addStyleToCol('atd', "background-color:#6FFFFF;color:#000000;");
+    //ATA 实际着陆时间 "background-color:#6FFFFF;color:#000000;"
+    var ataStyle = this.addStyleToCol('ata', "background-color:#6FFFFF;color:#000000;");
+
+    //ETD 目标撤轮挡时间 EOBT "background-color:#3399FF;color:#000000;"
+    var etdStyle = this.addStyleToCol('petd', "background-color:#3399FF;color:#000000;");
+
+    flight = Object.assign( flight, atdStyle, ataStyle, etdStyle );
+
     // 航班数据无id且有flightDataId
     if($.isValidVariable(flight.flightDataId) && !$.isValidVariable(flight.id)){
         // 设置航班id 为 flightDataId, 用于右键协调时获取对应航班数据(rowid值是以id属性值来定义的)
         flight.id = flight.flightDataId
     }
     return flight;
+
+
 };
+
+//根据列名增加对应样式
+GridTable.prototype.addStyleToCol = function( name, style ){
+   var obj = {};
+   if( $.isValidVariable(name) ){
+       obj[name+'_style'] = style
+   }
+   return obj;
+};
+
 
 //调整冻结列高度
 GridTable.prototype.resizeFrozenTable = function(){

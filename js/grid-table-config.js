@@ -117,7 +117,7 @@ var GridTableConfig = function () {
             task:'任务'
         }
     };
-    // 备降计划表、
+    // 备降计划表
     var alertnate = {
         colName: ['计划批号','备降场', '备降状态','航班号', '机号', '机型', '机型分类', '占用机位', '起飞机场', '降落机场','计划ETD', '动态ETD', 'ATD','计划ETA','动态ETA','ATA','实际落地机场', '机位状态','备降起飞' ],
         colTitle: {
@@ -255,32 +255,31 @@ var GridTableConfig = function () {
         ]
     }
     // 备降历史数据查询表
-
     var alertnateHistory = {
         colName: ['计划批号','备降场', '备降状态','航班号', '机号', '机型', '机型分类', '占用机位', '起飞机场', '降落机场','计划ETD', '动态ETD', 'ATD','计划ETA','动态ETA','ATA','实际落地机场', '机位状态','备降起飞','计划日期' ],
-            colTitle: {
-            flightDataId: '计划批号',
-                altairport: '备降场',
-                status: '备降状态',
-                flightId: '航班号',
-                registeNum: '机号',
-                aircraftType: '机型',
-                aircraftTypeCategory: '机型分类',
-                occupyPosition: '占用机位',
-                depap: '起飞机场',
-                arrap: '降落机场',
-                petd: '计划ETD',
-                detd: '动态ETD',
-                atd: 'ATD',
-                peta: '计划ETA',
-                deta: '动态ETA',
-                ata: 'ATA',
-                rarrap : '实际落地机场',
-                positionStatus: '机位状态',
-                alternateDeptime: '备降起飞',
-                executeDate: '计划日期'
+        colTitle: {
+        flightDataId: '计划批号',
+            altairport: '备降场',
+            status: '备降状态',
+            flightId: '航班号',
+            registeNum: '机号',
+            aircraftType: '机型',
+            aircraftTypeCategory: '机型分类',
+            occupyPosition: '占用机位',
+            depap: '起飞机场',
+            arrap: '降落机场',
+            petd: '计划ETD',
+            detd: '动态ETD',
+            atd: 'ATD',
+            peta: '计划ETA',
+            deta: '动态ETA',
+            ata: 'ATA',
+            rarrap : '实际落地机场',
+            positionStatus: '机位状态',
+            alternateDeptime: '备降起飞',
+            executeDate: '计划日期'
 
-        },
+    },
         colModel: [
 
             // 计划批号
@@ -429,7 +428,7 @@ var GridTableConfig = function () {
                 cellcontent = '';
             }
             /**
-             *  处理时间单元格
+             *  处理时间单元格，用以单元格title显示值的格式
              * */
             // 单元格值长度
             var len = cellcontent.length;
@@ -443,6 +442,12 @@ var GridTableConfig = function () {
             }
             // 设置title属性
             attrs = ' title="' + cellcontent + '"';
+
+            // 显示单元格样式style
+            var style = rowObject[colModel.name + '_style'];
+            if ($.isValidVariable(style)) {
+                attrs = attrs + ' style="' + style + '"';
+            }
 
             /**
              * 处理状态列

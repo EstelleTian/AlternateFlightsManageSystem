@@ -42,7 +42,7 @@ var alternateAirport = function () {
     //阻止右键点击默认事件
     preventDefaultEvent()
     //导航栏备降场容量添加点击事件
-    $('.alternate-airport').on('click', function () {
+    $('.menu-bar').on('click','.alternate-airport', function () {
       getTableColmodel(originAirportConfig, isRefresh)
     })
   }

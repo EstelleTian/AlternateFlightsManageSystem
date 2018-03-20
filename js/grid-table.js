@@ -137,10 +137,10 @@ function GridTable(params) {
      * */
     this.fireDataFlag = true;
 
-    /*/!**
+    /*
      * 表格右键可交互标记
-     * *!/
-    this.collaborateFlag = false;*/
+     * */
+    this.collaborateFlag = false;
 }
 
 
@@ -583,7 +583,7 @@ GridTable.prototype.collaborateArr = function (opt) {
     var thisProxy = this;
 
     // 表格右键交互限制
-    if(!app.collaborateFlag){
+    if(!thisProxy.collaborateFlag){
         return;
     }
 
@@ -1290,7 +1290,7 @@ GridTable.prototype.collaborateOver = function (opt) {
     // 代理
     var thisProxy = this;
     // 表格右键交互限制
-    if(!app.collaborateFlag){
+    if(!thisProxy.collaborateFlag){
         return;
     }
     // 获取协调DOM元素

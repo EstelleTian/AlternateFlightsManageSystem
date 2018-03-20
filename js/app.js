@@ -568,31 +568,45 @@ var app = function () {
      * 绑定进港计划模块切换复杂天气模式关联疆内飞越模块表格右键可交互标记
      * */
     var changeCollaborateFlag = function () {
-        // 取得checkbox
-        var $box = $('input#change-weather-model', '.arr-module');
-        // checkbox绑定点击事件
-        $box.on('click',function () {
-            // 取得checkbox勾选状态
-            var bool = $box.prop('checked');
-            // 若勾选
-            if(bool){
-                // 更新表格右键可交互标记
-                collaborateFlag = true;
-                app.collaborateFlag = true;
-            }else {
-                // 更新表格右键可交互标记
-                collaborateFlag = false;
-                app.collaborateFlag = false;
-                // 清除进港表格协调菜单
-                if($.isValidObject(arrObj.table) && $.isValidVariable(arrObj.table.clearCollaborateContainer)){
-                    arrObj.table.clearCollaborateContainer();
+
+        if($.isValidObject(userProperty.id_4000) || $.isValidObject(userProperty.id_4100)){
+            // 取得checkbox
+            var $box = $('.menu-bar input#change-weather-model');
+            // checkbox绑定点击事件
+            $box.on('click',function () {
+                // 取得checkbox勾选状态
+                var bool = $box.prop('checked');
+
+                // 进港计划
+                if($.isValidObject(arrObj)){
+                    // 切换复杂天气模式
+                    arrObj.changeWeatherModel(bool);
+                    // 更新进港计划表格右键可交互标记
+                    if($.isValidObject(arrObj.table)){
+                        arrObj.table.collaborateFlag = bool;
+                        // 清除进港表格协调菜单
+                        if(!bool && $.isValidVariable(arrObj.table.clearCollaborateContainer)){
+                            arrObj.table.clearCollaborateContainer();
+                        }
+                    }
                 }
-                // 清除飞越表格协调菜单
-                if($.isValidObject(overObj.table) && $.isValidVariable(overObj.table.clearCollaborateContainer)){
-                    overObj.table.clearCollaborateContainer();
+                // 飞越计划
+                if($.isValidObject(overObj)){
+                    // 切换复杂天气模式
+                    overObj.changeWeatherModel(bool);
+                    // 更新飞越计划表格右键可交互标记
+                    if($.isValidObject(overObj.table)){
+                        overObj.table.collaborateFlag = bool;
+                        // 清除飞越表格协调菜单
+                        if(!bool && $.isValidVariable(overObj.table.clearCollaborateContainer)){
+                            overObj.table.clearCollaborateContainer();
+                        }
+                    }
                 }
-            }
-        });
+
+            });
+        }
+
     };
 
     /**
@@ -737,11 +751,17 @@ var app = function () {
     var initModuleLayout = function () {
         // 顶部导航栏
         var myTemplate = Handlebars.compile($("#menu-template").html());
-        $('#menu-bar').html(myTemplate(userProperty));
+        $('.menu-list').html(myTemplate(userProperty));
 
         // 模块内容部分
         var template = Handlebars.compile($("#section-template").html());
         $('.main-area').html(template(userProperty));
+
+        // 模块内容部分
+        var temp = Handlebars.compile($("#option-template").html());
+        $('.option').html(temp(userProperty));
+
+
     };
 
     var initComponents = function (time) {

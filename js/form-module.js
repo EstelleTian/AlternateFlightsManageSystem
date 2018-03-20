@@ -121,7 +121,7 @@ FormModule.prototype.initFormModuleObject = function () {
     thisProxy.changeKeyword();
 
     //  切换复杂天气模式
-    thisProxy.changeWeatherModel();
+    // thisProxy.changeWeatherModel();
 
     // 切换过滤条件(任务类型为X)
     thisProxy.changeFilter();
@@ -274,58 +274,46 @@ FormModule.prototype.formaterGenerateTime = function (time) {
 /**
  * 切换复杂天气模式
  * */
-FormModule.prototype.changeWeatherModel = function () {
+FormModule.prototype.changeWeatherModel = function (bool) {
     // 当前对象this代理
     var thisProxy = this;
-    // 取得checkbox
-    var $box = $('input#change-weather-model', thisProxy.canvas);
 
-    if($.isValidVariable($box) && $box.length < 1){
+    // 若勾选
+    if(bool){
+        // 启用自定义定时器时间
+        thisProxy.enableCustomeIntervalFlag = true;
+    }else {
+        // 关闭自定义定时器时间
+        thisProxy.enableCustomeIntervalFlag = false;
+    }
+    thisProxy.abortRequest(true);
+    thisProxy.openRequest(true);
+    // 向后端提交此次天气模式的切换
+    var url = DataUrl.WEATHER_MODEL;
+    if(!$.isValidVariable(url)){
         return;
     }
-    // checkbox绑定点击事件
-    $box.on('click',function () {
-        // 取得checkbox勾选状态
-        var bool = $box.prop('checked');
-        // 若勾选
-        if(bool){
-            // 启用自定义定时器时间
-            thisProxy.enableCustomeIntervalFlag = true;
-        }else {
-            // 关闭自定义定时器时间
-            thisProxy.enableCustomeIntervalFlag = false;
-        }
-        thisProxy.abortRequest(true);
-        thisProxy.openRequest(true);
-        // 向后端提交此次天气模式的切换
-        var url = DataUrl.WEATHER_MODEL;
-        if(!$.isValidVariable(url)){
-            return;
-        }
-        url = url + '?isCheck='+ bool;
+    url = url + '?isCheck='+ bool;
 
-        $.ajax({
-            url:url,
-            type: 'POST',
-            dataType: 'json',
-            success: function (data) {
+    $.ajax({
+        url:url,
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
 
-                // 数据无效
-                if (!data) {
+            // 数据无效
+            if (!data) {
 
-                };
-                // 成功
-                if (data.status == 200) {
+            };
+            // 成功
+            if (data.status == 200) {
 
-                }
-            },
-            error: function ( status, error) {
-                console.error('ajax requset  fail, error:');
-                console.error(error);
             }
-        });
-
-
+        },
+        error: function ( status, error) {
+            console.error('ajax requset  fail, error:');
+            console.error(error);
+        }
     });
 
 };

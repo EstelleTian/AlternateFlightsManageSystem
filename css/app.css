@@ -85,20 +85,20 @@ ul, li {
     flex-direction: row;
 
 }
-.menu-bar ul, .menu-bar ul li {
+.menu-list, .menu-list li {
     list-style: none;
     display: flex;
     align-items: center;
     margin: 0;
     padding: 0;
 }
-.menu-bar ul li {
-    flex: 1 1 auto;
+.menu-list li {
+    flex: 0 1 auto;
     justify-content: center;
     display: inline-flex;
 }
 
-.menu-bar ul li a{
+.menu-list li a, .option li a{
     text-decoration: none;
     color: #FFFFFF;
     height: 3rem;
@@ -113,14 +113,14 @@ ul, li {
     display: inline-flex;
 
 }
-.menu-bar ul li a:hover {
+.menu-list li a:hover {
     background: #204562;
 }
-.menu-bar ul li.active > a {
+.menu-list li.active > a {
     background: #204562;
     color: #ffffff;
 }
-#menu-list {
+.menu-list {
     display: flex;
     flex: 1 0 auto;
 }
@@ -708,7 +708,9 @@ ul, li {
 
 .magic-radio,
 .magic-checkbox {
-    position: absolute; }
+    position: absolute;
+    visibility: hidden;
+}
 
 .magic-radio[disabled],
 .magic-checkbox[disabled] {

@@ -72,7 +72,7 @@ var alternateAirport = function () {
       BootstrapDialogFactory.dialog(option)
       return
     }
-    $('.login-time').text('登录时间：' + formatterTime(loginTime));
+    $('.login-time').text('登录时间:' + formatterTime(loginTime));
     $('.user-name').text(userName);
   }
   /**
@@ -172,7 +172,7 @@ var alternateAirport = function () {
           $('.error_tip').hide();
           tableData = data;
           var generateTime = data.generateTime
-          $('.alter_volume_time').text('数据生成时间：' + formatterTime(generateTime))
+          $('.alter_volume_time').text('数据生成时间: ' + formatterTime(generateTime))
           //合计可用
           $('.available_capacity').text(data.availableCapacity).attr('title', data.availableCapacity)
           //data转换
@@ -745,7 +745,7 @@ var alternateAirport = function () {
       var date = time.substring(6, 8);
       var hour = time.substring(8, 10);
       var min = time.substring(10, 12);
-      var str = year + '-' + mon + '-' + date + ' ' + hour + "：" + min;
+      var str = year + '-' + mon + '-' + date + ' ' + hour + ":" + min;
       return str;
     }
   }

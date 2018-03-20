@@ -420,15 +420,6 @@ var GridTableConfig = function () {
             var attrs = '';
             // 无效数值不做处理
             if (!$.isValidVariable(value)) {
-                /**
-                 * 航班结束(finished属性为'1')高亮显示
-                 * */
-                var finished = rowObject.finished;
-                if($.isValidVariable(finished)){
-                    if(finished == '1'){
-                        attrs += ' style= "background: #c2d0d6;"';
-                    }
-                }
                 return attrs;
             }
             // 单元格原始值,未formatter
@@ -464,16 +455,6 @@ var GridTableConfig = function () {
                 var matter = formatterStatus(cellcontent);
                 // 设置title属性为转换后的值
                 attrs = ' title="' + matter + '"'
-            }
-
-            /**
-             * 航班结束(finished属性为'1')高亮显示
-             * */
-            var finished = rowObject.finished;
-            if($.isValidVariable(finished)){
-                if(finished == '1'){
-                    attrs += ' style= "background: #c2d0d6;"';
-                }
             }
 
             return attrs;

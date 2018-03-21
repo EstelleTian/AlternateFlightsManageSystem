@@ -15,17 +15,17 @@ var GridTableCollaborateDom = function () {
     var collaborateContainer = '<div class="grid-table-collaborate-container"><ul class="collaborate-menu">{child}</ul></div>';
 
     //预选备降
-    var preAlternateLi = '<li class="pre-alternate"><a  >预选备降<span class="glyphicon glyphicon-play"></span></a>{level2}</li>';
+    var preAlternateLi = '<li class="pre-alternate"><a>预选备降<span class="glyphicon glyphicon-play"></span></a>{level2}</li>';
     //更改预选
-    var updatePreAlternateLi = '<li class="update-pre-alternate"><a  >更改预选<span class="glyphicon glyphicon-play"></span></a></li>';
+    var updatePreAlternateLi = '<li class="update-pre-alternate"><a>更改预选<span class="glyphicon glyphicon-play"></span></a>{level2}</li>';
 
     //确认备降
-    var confirmAlternateLi = '<li class="confirm-alternate"><a  >确定备降<span class="glyphicon glyphicon-play"></span></a>{level2}</li>';
+    var confirmAlternateLi = '<li class="confirm-alternate"><a>确定备降<span class="glyphicon glyphicon-play"></span></a>{level2}</li>';
     //更改备降
-    var updateConfirmAlternateLi = '<li class="update-alternate"><a  >更改备降<span class="glyphicon glyphicon-play"></span></a></li>';
+    var updateConfirmAlternateLi = '<li class="update-alternate"><a>更改备降<span class="glyphicon glyphicon-play"></span></a>{level2}</li>';
 
     //正班占用
-    var occupiedLi = '<li data-val="occupied" class="occupied"><a  >正班占用</a></li>';
+    var occupiedLi = '<li data-val="occupied" class="occupied"><a>正班占用</a></li>';
 
 
     var LEVEL2 = '<ul class="collaborate-menu level-2">{airport}' +

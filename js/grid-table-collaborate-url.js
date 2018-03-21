@@ -5,11 +5,17 @@
 var CellOpreationUrl = {
 
     // 预选备降(进港、飞越)
-    PRE_ALTERNATE : ipHost+'airport/preSelectAlternateSpecial',
-    // 确认备降(进港、飞越)
-    CONFIRM_ALTERNATE : ipHost+'airport/confirmAlternateSpecial',
+    PRE_ALTERNATE : ipHost+'airport/preelectAlternate',
+    // 更改预选备降(进港、飞越)
+    UPDATE_PRE_ALTERNATE : ipHost+'airport/changePreelectAlternate',
+    // 确认备降(进港、飞越)（可选机场）
+    CONFIRM_ALTERNATE : ipHost+'airport/confirmAlternate',
+    // 更改确认备降(进港、飞越)（可选机场）
+    UPDATE_CONFIRM_ALTERNATE : ipHost+'airport/changeConfirmAlternate',
+    // 确认备降(进港、飞越)（不可选机场）
+    ASCERTAIN_ALTERNATE : ipHost+'airport/ascertainAlternate',
     // 正班占用
-    OCCUPIED : ipHost+'airport/positiveOccupy',
+    OCCUPIED : ipHost+'airport/positiveOccupancy',
     // 释放停机位
     RELEASE_POSTION : ipHost+'airport/releasePosition',
     // 取消备降

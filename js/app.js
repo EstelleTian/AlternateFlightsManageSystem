@@ -46,10 +46,10 @@ var app = function () {
      *  确保第一个模块为活动模块
      * */
     var initDefaultActiveModule = function () {
-        $('.menu-bar li:first').addClass('active');
+        $('.menu-list li:first').addClass('active');
         $('.main-area section:first').addClass('active');
         // 下标大于0的移除active class
-        $('.menu-bar li:gt(0)').removeClass('active');
+        $('.menu-list li:gt(0)').removeClass('active');
         $('.main-area section:gt(0)').removeClass('active');
 
     };
@@ -371,7 +371,7 @@ var app = function () {
      * */
     var initActiveModule = function () {
 
-        $('.menu-bar li').on('click',function () {
+        $('.menu-list li').on('click',function () {
             // 取得当前点击对象
             var $that = $(this);
 
@@ -380,12 +380,13 @@ var app = function () {
                 return;
             }
             index = i;
-            // 切换活动模块
-            activeModuleToggle(index);
-            $('.menu-bar li').removeClass('active');
+
+            $('.menu-list li').removeClass('active');
             $('.main-area section').removeClass('active');
             $that.addClass('active');
             $('.main-area section').eq(index).addClass('active');
+            // 切换活动模块
+            activeModuleToggle(index);
             //处理表格自适应TODO
             $(window).trigger('resize')
         });
@@ -450,6 +451,8 @@ var app = function () {
                         initActiveModule();
                         // 绑定进港计划模块切换复杂天气模式关联疆内飞越模块表格右键可交互标记
                         changeCollaborateFlag();
+                        // 查看协调记录
+                        initRecord();
                     }else{
                         console.warn('获取用户权限为空');
                         timer(initUserAuthority,time);
@@ -911,6 +914,42 @@ var app = function () {
     }
 
 
+    var initRecord = function () {
+        // var id = '107667461';
+        // var param = {}
+        // openModule('查看协调记录',param)
+        $('.record').on('click',function () {
+            var id = '107667461';
+            var param = {}
+            // var param = {
+            //     moduleName:'record',
+            //     data:{
+            //         id:id
+            //     }
+            // };
+            openModule('查看协调记录',param)
+        });
+        /**
+         * 打开dhtmlxWindiw弹窗
+         * @param title 弹窗名称 type{string}
+         * @param param {自定义参数用于攒弹窗内做数据渲染 type{object}}
+         */
+        function openModule (title, param) {
+            var param = JSON.stringify(param);
+            var winTitle = title;
+            var dialogId = 'detail' + new Date().getTime();
+            var winUrl = 'flight-coordination-record.html?param=' + param;
+            var winParams = {
+                id: dialogId,
+                width:800,
+                height: 600,
+                center: true,
+                move: true
+            };
+            var winObj = DhxIframeDialog.create(winTitle, winUrl, winParams)
+        }
+    };
+
 
 
     return {
@@ -919,7 +958,6 @@ var app = function () {
         init : function () {
             // 阻止右键点击默认事件
             preventContextmenu();
-
             // 获取用户权限
             initUserAuthority(1000*2);
             // 初始化所需各项基本参数

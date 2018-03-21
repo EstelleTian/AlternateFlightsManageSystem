@@ -330,6 +330,11 @@ var app = function () {
             //机位管理模块
             initPostionModule();
         }
+
+        if($.isValidObject(userProperty.id_4300)){
+            // 备降容量模块
+            alternateAirport.init();
+        }
         /*// 出港计划模块
         depObj = new FormModule({
             canvasId: 'dep-module',

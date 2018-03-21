@@ -823,6 +823,3 @@ var alternateAirport = function () {
     },
   }
 }();
-$(document).ready(function () {
-  alternateAirport.init();
-});

@@ -2,19 +2,29 @@ var FlightCoordinationRecordObj = function () {
     var table = null;
 
     /**
+     * 延时器,在指定的毫秒数后调用函数
+     * fn 待执行函数
+     * time 毫秒 指定的毫秒数后调用
+     * */
+    var timer = function (fn,time) {
+        setTimeout(function () {
+            fn(time)
+        },time);
+    };
+
+    /**
      * 初始化表格
      * */
     var initTable = function () {
         //
-        var pagerId = 'arr-table-pager';
+        var pagerId = 'record-table-pager';
         var opt = {
-            moduleObj: arrObj, // 表格所在模块对象
-            tableId: 'arr-table',
+            tableId: 'record-table',
             pagerId: pagerId,
-            colNames: FlightCoordinationRecordConfig.colNames,
+            colNames: FlightCoordinationRecordConfig.colName,
             colModel: FlightCoordinationRecordConfig.colModel,
             cmTemplate: FlightCoordinationRecordConfig.colModelTemplate,
-            colTitle: FlightCoordinationRecordConfig.common.colTitle,
+            colTitle: FlightCoordinationRecordConfig.colTitle,
             params: {
                 // sortname: 'peta',
                 shrinkToFit: true,
@@ -56,8 +66,30 @@ var FlightCoordinationRecordObj = function () {
     /**
      * 获取数据
      * */
-    var retrieveData = function () {
-
+    var retrieveData = function (time) {
+        var flightDataId = ModuleLoader.data.id;
+        var url = DataUrl.COORDINATION_RECORD;
+        $.ajax({
+            type: "GET",
+            url: url,
+            // data: "",
+            dataType: "JSON",
+            success: function (data) {
+                if ($.isValidObject(data) && data.status == 200) {
+                    console.log(data);
+                } else if (data.status == 500) {
+                    console.warn(data.error.message);
+                    timer(initUserAuthority,time);
+                } else {
+                    console.warn('获取协调记录为空');
+                    timer(retrieveData,time);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+                timer(retrieveData,time);
+            }
+        });
     };
 
     /**
@@ -73,10 +105,10 @@ var FlightCoordinationRecordObj = function () {
 
             initTable();
             // 获取数据
-            retrieveData();
+            // retrieveData(1000*2);
         }
     }
 }();
 $(document).ready(function () {
-    // FlightCoordinationRecordObj.init();
+    FlightCoordinationRecordObj.init();
 });

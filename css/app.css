@@ -1,12 +1,15 @@
 
-body {
+html,body {
     margin: 0;
     padding: 0;
-    position: absolute;
     height: 100%;
     width: 100%;
-    /*min-width: 960px;*/
     overflow: hidden;
+}
+body {
+    position: absolute;
+    /*min-width: 960px;*/
+
     font-size: 12px;
     line-height: 1;
 }

@@ -915,20 +915,20 @@ var app = function () {
 
 
     var initRecord = function () {
-        // var id = '107667461';
-        // var param = {}
-        // openModule('查看协调记录',param)
-        $('.record').on('click',function () {
-            var id = '107667461';
-            var param = {}
-            // var param = {
-            //     moduleName:'record',
-            //     data:{
-            //         id:id
-            //     }
-            // };
-            openModule('查看协调记录',param)
-        });
+        var id = '107667461';
+        var param = {
+            moduleName:'record',
+            data:{
+                id:id
+            }
+        };
+        openModule('查看协调记录',param)
+        // $('.record').on('click',function () {
+        //     var id = '107667461';
+        //     var param = {}
+        //
+        //     openModule('查看协调记录',param)
+        // });
         /**
          * 打开dhtmlxWindiw弹窗
          * @param title 弹窗名称 type{string}
@@ -941,7 +941,7 @@ var app = function () {
             var winUrl = 'flight-coordination-record.html?param=' + param;
             var winParams = {
                 id: dialogId,
-                width:800,
+                width: 1080,
                 height: 600,
                 center: true,
                 move: true

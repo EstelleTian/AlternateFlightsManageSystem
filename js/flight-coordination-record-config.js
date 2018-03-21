@@ -27,7 +27,7 @@ var FlightCoordinationRecordCell = {
 		 * @returns
 		 */
 		searchToUpperCase : function(e) {
-			$(this).val($(this).val().toUpperCase());
+			// $(this).val($(this).val().toUpperCase());
 			$(this).change();
 		},
 		/**
@@ -113,60 +113,93 @@ var FlightCoordinationRecordConfig = {
 			}
 			return a.localeCompare(b) * direction;
 		}
-	},	
-		
-	/**
-	 * 表格列名称
-	 */
-	colNames : [ 'id', '数据版本', '航班数据ID', '航班号', '协调类型', '协调前', '协调后', '协调备注',
-			'协调状态', '协调时间', '协调用户EN', '协调用户' , '用户IP' ],
+	},
 
-	/**
-	 * 表格列模式
-	 */
-	colModel : [ {
-		name : 'id',
-		index : 'id',
-		hidden : true
-	}, {
-		name : 'version',
-		index : 'version',
-		hidden : true
-	}, {
-		name : 'fid',
-		index : 'fid',
-		hidden : true
-	}, {
-		name : 'flightid',
-		index : 'flightid'
-	}, {
-		name : 'type',
-		index : 'type'
-	}, {
-		name : 'originalValue',
-		index : 'originalValue'
-	}, {
-		name : 'value',
-		index : 'value'
-	}, {
-		name : 'comments',
-		index : 'comments'
-	},{
-		name : 'status',
-		index : 'status'
-	}, {
-		name : 'timestamp',
-		index : 'timestamp',
-		formatter : FlightCoordinationRecordCell.timeFormater
-	}, {
-		name : 'username',
-		index : 'username',
-		hidden : true
-	}, {
-		name : 'usernameZh',
-		index : 'usernameZh'
-	}, {
-		name : 'ipAddress',
-		index : 'ipAddress'
-	} ]
+
+
+    colName : ['id','计划批号', '航班号', '机号','协调类型','协调前','协调后','协调时间','协调用户','协调用户','用户IP','协调备降',],
+    colModel: [
+		// 协调记录主键
+        {
+            name: 'id',
+            index: 'id',
+            hidden : true
+        },
+        // 计划批号
+        {
+            name: 'flightDataId',
+            index: 'flightDataId',
+            hidden : true
+        },
+        // 航班号
+        {
+            name: 'flightId',
+            index: 'flightId'
+        },
+        // 机号
+        {
+            name: 'registeNum',
+            index: 'registeNum'
+        },
+        // 协调类型
+        {
+            name : 'type',
+            index : 'type'
+        },
+        //协调前
+        {
+            name : 'originalValue',
+            index : 'originalValue'
+        },
+        //协调后
+        {
+            name : 'value',
+            index : 'value'
+        },
+        //协调时间
+        {
+            name : 'coordinateTime',
+            index : 'coordinateTime'
+        },
+		//协调用户
+        {
+            name : 'userName',
+            index : 'userName'
+        },
+		//协调用户
+        {
+            name : 'userDescription',
+            index : 'userDescription'
+        },
+		//用户IP
+        {
+            name : 'ipAddress',
+            index : 'ipAddress'
+        },
+		//协调备降
+        {
+            name : 'comments',
+            index : 'comments',
+            hidden : true
+        },
+
+
+
+        ],
+    colTitle: {
+        id:'协调记录主键',
+        flightDataId:'计划批号',
+        status:'备降状态',
+        flightId:'航班号',
+        registeNum:'机号',
+        type:'协调类型',
+        originalValue:'协调前',
+        value:'协调后',
+        coordinateTime:'协调时间',
+        userName:'协调用户',
+        userDescription:'协调用户',
+        ipAddress:'用户IP',
+        comments: '协调备降'
+    }
+
 };

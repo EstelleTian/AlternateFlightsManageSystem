@@ -55,5 +55,7 @@ var DataUrl = {
     // 机位删除
     POSTION_DEL : ipHost + 'airport/deletePostionType',
     // 机位修改
-    POSTION_UPDATE : ipHost + 'airport/updatePostionType'
+    POSTION_UPDATE : ipHost + 'airport/updatePostionType',
+    // 协调记录
+    COORDINATION_RECORD : ipHost + 'airport/retrieveCoordinationRecords',
 }

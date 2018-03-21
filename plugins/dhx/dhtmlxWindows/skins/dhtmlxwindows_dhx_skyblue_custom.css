@@ -1,0 +1,9 @@
+/**
+ *
+ */
+.dhxwins_vp_dhx_skyblue div.dhxwin_hdr div.dhxwin_btns div.dhxwin_button.dhxwin_button_open {
+	background: url(../imgs/dhxwins_skyblue/dhxwins_buttons_custom.gif) 0px 0px;
+}
+.dhxwins_vp_dhx_skyblue div.dhxwin_hdr div.dhxwin_btns div.dhxwin_button_dis.dhxwin_button_open_dis {
+	background: url(../imgs/dhxwins_skyblue/dhxwins_buttons_custom.gif) 0px -15px;
+}

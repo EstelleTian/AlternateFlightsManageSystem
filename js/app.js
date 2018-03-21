@@ -915,14 +915,18 @@ var app = function () {
 
 
     var initRecord = function () {
+        // var id = '107667461';
+        // var param = {}
+        // openModule('查看协调记录',param)
         $('.record').on('click',function () {
             var id = '107667461';
-            var param = {
-                moduleName:'record',
-                data:{
-                    id:id
-                }
-            };
+            var param = {}
+            // var param = {
+            //     moduleName:'record',
+            //     data:{
+            //         id:id
+            //     }
+            // };
             openModule('查看协调记录',param)
         });
         /**

@@ -404,14 +404,17 @@ var GridTableConfig = function () {
     var colModelTemplate = {
         width: 100,
         align: 'center',
-        sortable: true,
-        search: true,
-        searchoptions: {
-            sopt: ['cn', 'nc', 'eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en'],
-            dataEvents: [{
-                type: 'keyup',
-                fn: GridTableUtil.searchToUpperCase
-            }]
+        sortable : true,
+        search : true,
+        searchoptions : {
+            sopt : ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en'],
+            dataEvents:[
+                {	type: 'keyup',
+                    fn: function (e) {
+                        $(this).change();
+                    },
+                }
+            ]
         },
         // 单元格相关属性处理
         cellattr: function (rowId, value, rowObject, colModel, arrData) {

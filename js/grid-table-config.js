@@ -518,6 +518,7 @@ var GridTableConfig = function () {
     };
     // 航班状态列数值格式化转换
     function formatterStatus(cellvalue, options, rowObject) {
+        debugger
         var code = app.statusCode;
         if($.isValidObject(code) && $.isValidVariable(code[cellvalue])){
            return code[cellvalue].text;

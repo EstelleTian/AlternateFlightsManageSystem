@@ -27,6 +27,15 @@ var GridTableCollaborateDom = function () {
     //正班占用
     var occupiedLi = '<li data-val="occupied" class="occupied"><a>正班占用</a></li>';
 
+    //释放停机位
+    var releasePostionLi = '<li data-val="release-postion" class="release-postion"><a>释放停机位</a></li>';
+
+    //取消备降
+    var cancelAlternateLi = '<li data-val="cancel-alternate" class="cancel-alternate"><a>取消备降</a></li>';
+
+    //查看协调记录
+    var collaborateRecordLi = '<li class="collaborate-record"><a>查看协调记录</a></li>';
+
 
     var LEVEL2 = '<ul class="collaborate-menu level-2">{airport}' +
         '<li class="other"><a>其它<span class="glyphicon glyphicon-play"></span></a>{other}</li>' +
@@ -41,6 +50,9 @@ var GridTableCollaborateDom = function () {
         confirmAlternateLi: confirmAlternateLi,
         updateConfirmAlternateLi: updateConfirmAlternateLi,
         occupiedLi: occupiedLi,
+        collaborateRecordLi: collaborateRecordLi,
+        releasePostionLi: releasePostionLi,
+        cancelAlternateLi: cancelAlternateLi,
         LEVEL2: LEVEL2
     }
 

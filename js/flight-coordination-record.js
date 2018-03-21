@@ -130,7 +130,7 @@ var FlightCoordinationRecordObj = function () {
 
     return {
         init: function () {
-
+            // 初始化表格
             initTable();
             // 获取数据
             retrieveData(1000*2);

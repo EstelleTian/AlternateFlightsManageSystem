@@ -986,8 +986,6 @@ GridTable.prototype.collaborateAlternate = function (opt) {
  * TODO 查看协调记录
  */
 GridTable.prototype.collaborateRecordRequest = function(opt){
-    console.log('点击了查看协调记录')
-
     var thisProxy = this;
     var id = opt.flight.flightDataId;
     var param = {
@@ -997,6 +995,7 @@ GridTable.prototype.collaborateRecordRequest = function(opt){
         }
     };
     thisProxy.openModule('查看协调记录',param);
+    thisProxy.clearCollaborateContainer();
 }
 /**
  * 预选备降请求

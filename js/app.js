@@ -953,8 +953,7 @@ var app = function () {
         collaborateFlag : collaborateFlag,
         init : function () {
             // 阻止右键点击默认事件
-            // preventContextmenu();
-
+            preventContextmenu();
             // 获取用户权限
             initUserAuthority(1000*2);
             // 初始化所需各项基本参数

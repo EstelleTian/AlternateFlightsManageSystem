@@ -16,7 +16,7 @@ var GridTableUtil = {
      * @returns
      */
     searchToUpperCase: function (e) {
-        $(this).val($(this).val().toUpperCase());
+        // $(this).val($(this).val().toUpperCase());
         $(this).change();
     },
 

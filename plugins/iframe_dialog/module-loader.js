@@ -46,7 +46,6 @@ var ModuleLoader = function(){
     }
     //获取参数
     var urlParam = getRequest();
-    console.log(urlParam)
     return{
         init:function(){
             Loadlink(urlParam);

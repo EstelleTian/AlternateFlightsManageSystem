@@ -76,7 +76,7 @@ var FlightCoordinationRecordObj = function () {
             dataType: "JSON",
             success: function (data) {
                 if ($.isValidObject(data) && data.status == 200) {
-                    console.log(data);
+                    // 绘制表格数据
                     fireDataChange(data);
                 } else if (data.status == 500) {
                     console.warn(data.error.message);

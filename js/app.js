@@ -456,8 +456,6 @@ var app = function () {
                         initActiveModule();
                         // 绑定进港计划模块切换复杂天气模式关联疆内飞越模块表格右键可交互标记
                         changeCollaborateFlag();
-                        // 查看协调记录
-                        initRecord();
                     }else{
                         console.warn('获取用户权限为空');
                         timer(initUserAuthority,time);
@@ -917,43 +915,6 @@ var app = function () {
             timer(initComponents,time)
         }
     }
-
-
-    var initRecord = function () {
-        var id = '107667461';
-        var param = {
-            moduleName:'record',
-            data:{
-                id:id
-            }
-        };
-        openModule('查看协调记录',param)
-        // $('.record').on('click',function () {
-        //     var id = '107667461';
-        //     var param = {}
-        //
-        //     openModule('查看协调记录',param)
-        // });
-        /**
-         * 打开dhtmlxWindiw弹窗
-         * @param title 弹窗名称 type{string}
-         * @param param {自定义参数用于攒弹窗内做数据渲染 type{object}}
-         */
-        function openModule (title, param) {
-            var param = JSON.stringify(param);
-            var winTitle = title;
-            var dialogId = 'detail' + new Date().getTime();
-            var winUrl = 'flight-coordination-record.html?param=' + param;
-            var winParams = {
-                id: dialogId,
-                width: 1080,
-                height: 600,
-                center: true,
-                move: true
-            };
-            var winObj = DhxIframeDialog.create(winTitle, winUrl, winParams)
-        }
-    };
 
 
 

@@ -117,7 +117,7 @@ var FlightCoordinationRecordConfig = {
 
 
 
-    colName : ['id','计划批号', '航班号', '机号','协调类型','协调前','协调后','协调时间','协调用户','协调用户','用户IP','协调备降',],
+    colName : ['id','计划批号', '航班号', '协调类型','协调前','协调后','协调时间','协调用户','协调用户','用户IP','协调备降',],
     colModel: [
 		// 协调记录主键
         {
@@ -135,11 +135,6 @@ var FlightCoordinationRecordConfig = {
         {
             name: 'flightId',
             index: 'flightId'
-        },
-        // 机号
-        {
-            name: 'registeNum',
-            index: 'registeNum'
         },
         // 协调类型
         {

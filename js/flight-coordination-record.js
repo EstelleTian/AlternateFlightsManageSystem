@@ -68,7 +68,7 @@ var FlightCoordinationRecordObj = function () {
      * */
     var retrieveData = function (time) {
         var flightDataId = ModuleLoader.data.id;
-        var url = DataUrl.COORDINATION_RECORD;
+        var url = DataUrl.COORDINATION_RECORD+'?flightDataId='+flightDataId;
         $.ajax({
             type: "GET",
             url: url,
@@ -77,6 +77,7 @@ var FlightCoordinationRecordObj = function () {
             success: function (data) {
                 if ($.isValidObject(data) && data.status == 200) {
                     console.log(data);
+                    fireDataChange(data);
                 } else if (data.status == 500) {
                     console.warn(data.error.message);
                     timer(initUserAuthority,time);
@@ -96,8 +97,35 @@ var FlightCoordinationRecordObj = function () {
      * 绘制表格数据
      * */
 
-    var fireDataChange = function () {
+    var fireDataChange = function (data) {
+        // 校验数据是否有效
+        if(!$.isValidObject(data) || !$.isValidObject(data.altfCoordinationRecords)){
+            // 清空表格数据
+            table.jqGrid('clearGridData');
+            return;
+        }
 
+        // deep copy 保存源数据
+        // thisProxy.data = $.extend(true, {}, dataObj);
+        // 取得协调记录集合
+        var records = data.altfCoordinationRecords;
+        table.tableDataMap = {};
+        table.tableData = {};
+        var tableData = [];
+        var tableMap = {};
+        // 遍历 data为数组，采用map遍历不会打乱顺序
+        records.map(function (item, index, arr) {
+            var id = item.id;
+            tableData.push(item);
+            tableMap[id] = item;
+        })
+        table.tableDataMap = tableMap;
+        table.tableData = tableData;
+        // 绘制表格数据
+        table.drawGridTableData();
+        // 调整表格大小以适应所在容器
+        table.gridTableObject.jqGrid('resizeSize')
+        table.resizeToFitContainer();
     };
 
     return {
@@ -105,7 +133,7 @@ var FlightCoordinationRecordObj = function () {
 
             initTable();
             // 获取数据
-            // retrieveData(1000*2);
+            retrieveData(1000*2);
         }
     }
 }();

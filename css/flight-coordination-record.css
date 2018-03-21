@@ -1,4 +1,8 @@
 html,body, .record-table-container {
     height: 100%;
     width: 100%;
+    overflow: hidden;
+}
+.ui-jqgrid-bdiv div:first-child{
+    overflow-x: hidden;
 }

@@ -987,6 +987,16 @@ GridTable.prototype.collaborateAlternate = function (opt) {
  */
 GridTable.prototype.collaborateRecordRequest = function(opt){
     console.log('点击了查看协调记录')
+
+    var thisProxy = this;
+    var id = opt.flight.flightDataId;
+    var param = {
+        moduleName:'record',
+        data:{
+            id:id
+        }
+    };
+    thisProxy.openModule('查看协调记录',param);
 }
 /**
  * 预选备降请求
@@ -2540,3 +2550,24 @@ GridTable.prototype.showAdvanceFilter = function () {
         thisProxy.advanceFilterFlag = true;
     }
 };
+
+/**
+ * dhx弹框
+ *
+ * */
+GridTable.prototype.openModule = function (title, param) {
+    // 代理
+    var thisProxy = this;
+    var param = JSON.stringify(param);
+    var winTitle = title;
+    var dialogId = 'detail' + new Date().getTime();
+    var winUrl = 'flight-coordination-record.html?param=' + param;
+    var winParams = {
+        id: dialogId,
+        width: 1080,
+        height: 600,
+        center: true,
+        move: true
+    };
+    var winObj = DhxIframeDialog.create(winTitle, winUrl, winParams)
+}

@@ -819,9 +819,14 @@ var app = function () {
         config.map(function (item, index, arr) {
                 item.value = item.value.split(',');
         });
+        // 封装数据
+        var data = {
+            code : userProperty, // 用户权限
+            config : config
+        };
         // 利用Handlebars模版生成对应HTML结构
         var myTemplate = Handlebars.compile($("#template").html());
-        $('#position-box').html(myTemplate(config));
+        $('#position-box').html(myTemplate(data));
     };
 
     var bindSortable = function (data) {
@@ -848,6 +853,10 @@ var app = function () {
         })
         //初始化
         sort.init();
+        // 权限校验:无权限则不可拖动
+        if(!$.isValidObject(userProperty.id_4440)){
+            sort.selector.sortable( "disable" );
+        }
     };
 
     /**

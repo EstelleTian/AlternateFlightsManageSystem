@@ -69,6 +69,10 @@ SortablePart.prototype.initEvent = function () {
 
     // 添加机位分类
     thisProxy.addBtn.on('click',function () {
+        // 是否有权限
+        if(!$.isValidObject(userProperty.id_4410)){
+            return;
+        }
         if(thisProxy.sorted){
             var text = '排序有变更,请先保存排序后再添加机位分类';
             thisProxy.alertDialog(text)
@@ -80,6 +84,10 @@ SortablePart.prototype.initEvent = function () {
     });
     //还原排序
     thisProxy.revertBtn.on('click',function () {
+        // 是否有权限
+        if(!$.isValidObject(userProperty.id_4440)){
+            return;
+        }
         if(thisProxy.sorted){
             // 还原排序确认框
             var text = "<p class='modal-text'>确定还原排序吗？</p>";
@@ -88,6 +96,10 @@ SortablePart.prototype.initEvent = function () {
     });
     //保存排序
     thisProxy.saveBtn.on('click',function () {
+        // 是否有权限
+        if(!$.isValidObject(userProperty.id_4440)){
+            return;
+        }
         if(thisProxy.sorted){
             // 保存排序排序确认框
             var text = "确定保存当前排序吗？";
@@ -435,11 +447,15 @@ SortablePart.prototype.appendSinglePositin = function(data){
         // 更新到数据集合
         thisProxy.data[obj.id] = obj;
     });
-    //
+    // 封装数据
+    var data = {
+        code : userProperty, // 用户权限
+        config : config
+    };
 
     // 利用Handlebars模版生成对应HTML结构
     var myTemplate = Handlebars.compile($("#template").html());
-    var nodes = myTemplate(config);
+    var nodes = myTemplate(data);
     // 追加到列表
     $(nodes).appendTo(thisProxy.selector);
 };
@@ -453,6 +469,10 @@ SortablePart.prototype.appendSinglePositin = function(data){
 
 SortablePart.prototype.deletePosition  = function (opt) {
     var thisProxy = this;
+    // 是否有权限
+    if(!$.isValidObject(userProperty.id_4430)){
+        return;
+    }
     // 若当前发生排序了
     if(thisProxy.sorted){
         var text = '排序有变更,请先保存排序后再删除机位分类';
@@ -571,6 +591,10 @@ SortablePart.prototype.deleteSinglePositin = function(opt){
 SortablePart.prototype.updatePosition  = function (opt) {
 
     var thisProxy = this;
+    // 是否有权限
+    if(!$.isValidObject(userProperty.id_4420)){
+        return;
+    }
     if(thisProxy.sorted){
         var text = '排序有变更,请先保存排序后再修改机位分类';
         thisProxy.alertDialog(text)
@@ -699,6 +723,12 @@ SortablePart.prototype.updateSinglePositin = function(data){
         // 更新到数据集合
         thisProxy.data[obj.id] = obj;
     });
+    // 封装数据
+    var data = {
+        code : userProperty, // 用户权限
+        config : config
+    };
+
     // 利用Handlebars模版生成对应HTML结构
     var myTemplate = Handlebars.compile($("#template").html());
     var nodes = myTemplate(config);

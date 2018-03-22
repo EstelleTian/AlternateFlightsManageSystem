@@ -136,10 +136,6 @@
     </li>
     {{/if}}
 
-
-
-
-
 </script>
 <!--模块内容模板-->
 <script id="section-template" type="text/x-handlebars-template">
@@ -471,11 +467,14 @@
             </div>
             <div class="panel-body">
                 <ul class="form-panel flex-end" >
+                    {{#if this.id_4410}}
                     <li class="form-item">
                         <button class="atfm-btn atfm-btn-blue ladda-button add-btn">
                             添加机位分类
                         </button>
                     </li>
+                    {{/if}}
+                    {{#if this.id_4440}}
 
                     <li class="form-item">
                         <button class="atfm-btn atfm-btn-blue ladda-button revert-btn">
@@ -487,6 +486,7 @@
                             保存排序
                         </button>
                     </li>
+                    {{/if}}
                     <!--提示信息-->
                     <li class="form-item">
                         <span class="alert"></span>
@@ -514,7 +514,7 @@
 <!--机位列表模模板-->
 <script id="template" type="text/x-handlebars-template">
 
-        {{#each this}}
+        {{#each config}}
         <!--机位-->
         <li class="position" data-id={{id}} data-text="{{text}}">
             <!--头部-->
@@ -522,8 +522,12 @@
                 <div class="position-name">
                     {{key}}
                 </div>
+                {{#if ../code.id_4420}}
                 <a class="icon glyphicon glyphicon-edit" pos-id="{{id}}" pos-key="{{key}}" data-event="edit" ></a>
+                {{/if}}
+                {{#if ../code.id_4430}}
                 <a class="icon glyphicon glyphicon-trash" pos-id="{{id}}" pos-key="{{key}}" data-event="delete" ></a>
+                {{/if}}
             </header>
             <!--内容-->
             <div class="position-wrap">

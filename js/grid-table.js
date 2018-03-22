@@ -586,7 +586,16 @@ GridTable.prototype.collaborateArr = function (opt) {
     /**
      * 菜单项显隐处理
      * */
-        //获取航班状态
+    //权限校验
+    // 进港模块所有右键操作项权限码
+    var codes = ['4500','4510', '4520','4530','4540','4550'];
+    // 校验当前用户是否拥有进港模块所有右键操作项权限码中任意一个
+    if (!thisProxy.hasAnyoneProperty(codes)) {
+        // 没有则右键不可用
+        return;
+    }
+
+   //获取航班状态
     var status = opt.flight.status;
 
     //二级菜单(各个机场列表)
@@ -606,39 +615,74 @@ GridTable.prototype.collaborateArr = function (opt) {
     if($.isValidVariable(status)){
         // 状态为预选
         if(status == 1){
+            // 状态为预选 所有右键操作项权限码
+            var codes_1 = [ '4520','4530','4550'];
+            // 校验是否拥有状态为预选所有右键操作项权限码中任意一个
+            if (!thisProxy.hasAnyoneProperty(codes_1)) {
+                // 没有则右键不可用
+                return;
+            }
             //更改预选
-            updatePreAlternateLi = updatePreAlternateLi.replace( /{level2}/,  LEVEL2);
-            //确认备降
-            confirmAlternateLi = confirmAlternateLi.replace( /{level2}/,  '').replace('<span class="glyphicon glyphicon-play"></span>', '');
+            updatePreAlternateLi = $.isValidObject(userProperty.id_4530) ? updatePreAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+            //确认备降(无子菜单项)
+            confirmAlternateLi =$.isValidObject(userProperty.id_4520) ? confirmAlternateLi.replace( /{level2}/,  '').replace('<span class="glyphicon glyphicon-play"></span>', '') : '';
+            // 正班占用
+            occupiedLi = $.isValidObject(userProperty.id_4550) ? occupiedLi : '';
 
             childrenStr = updatePreAlternateLi + confirmAlternateLi + occupiedLi;
 
         }else if(status == 2) {  // 状态为备降
+            // 状态为备降所有右键操作项权限码
+            var codes_2 = [ '4540','4550'];
+            // 校验是否拥有状态为备降所有右键操作项权限码中任意一个
+            if (!thisProxy.hasAnyoneProperty(codes_2)) {
+                // 没有则右键不可用
+                return;
+            }
             //更改备降
-            updateConfirmAlternateLi = updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2);
+            updateConfirmAlternateLi =$.isValidObject(userProperty.id_4540) ?  updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2) :'';
+            // 正班占用
+            occupiedLi = $.isValidObject(userProperty.id_4550) ? occupiedLi : '';
 
             childrenStr = updateConfirmAlternateLi + occupiedLi;
 
         }else if(status == 4){ // 状态为正班占用
+            // 状态为备降所有右键操作项权限码
+            var codes_3 = [ '4530','4540'];
+            // 校验是否拥有状态为备降所有右键操作项权限码中任意一个
+            if (!thisProxy.hasAnyoneProperty(codes_3)) {
+                // 没有则右键不可用
+                return;
+            }
             //更改预选
-            updatePreAlternateLi = updatePreAlternateLi.replace( /{level2}/,  LEVEL2);
+            updatePreAlternateLi = $.isValidObject(userProperty.id_4530) ?  updatePreAlternateLi.replace( /{level2}/,  LEVEL2) : '';
             //更改备降
-            updateConfirmAlternateLi = updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2);
+            updateConfirmAlternateLi =  $.isValidObject(userProperty.id_4540) ? updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2) : '';
 
             childrenStr = updatePreAlternateLi + updateConfirmAlternateLi;
 
-        }else {
+        }else { //状态为非空其他(除以上状态外的)
+
             // 预选备降、确定备降和正班占用菜单项显示
             $('.pre-alternate', collaboratorDom).show();
             $('.confirm-alternate', collaboratorDom).show();
             $('.occupied', collaboratorDom).show();
         }
-    }else {
-        //TODO 是否有权限
+    }else { // 状态为空
 
-        preAlternateLi = preAlternateLi.replace( /{level2}/,  LEVEL2)
-
-        confirmAlternateLi = confirmAlternateLi.replace( /{level2}/,  LEVEL2)
+        // 状态为空所有右键操作项权限码
+        var code = [ '4500','4510','4550'];
+        // 校验是否拥有状态为空所有右键操作项权限码中任意一个
+        if (!thisProxy.hasAnyoneProperty(code)) {
+            // 没有则右键不可用
+            return;
+        }
+        //预选备降
+        preAlternateLi = $.isValidObject(userProperty.id_4500) ? preAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+        //确认备降(有子菜单)
+        confirmAlternateLi = $.isValidObject(userProperty.id_4510) ? confirmAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+        // 正班占用
+        occupiedLi = $.isValidObject(userProperty.id_4550) ? occupiedLi : '';
 
         childrenStr = preAlternateLi + confirmAlternateLi + occupiedLi;
 
@@ -764,6 +808,14 @@ GridTable.prototype.collaborateArr = function (opt) {
 GridTable.prototype.collaborateAlternate = function (opt) {
     // 代理
     var thisProxy = this;
+    //权限校验
+    // 备降计划模块所有右键操作项权限码
+    var codeArr = ['4520','4530','4540','4550','4230','4240','4600'];
+    // 校验当前用户是否拥有备降计划模块所有右键操作项权限码中任意一个
+    if (!thisProxy.hasAnyoneProperty(codeArr)) {
+        // 没有则右键不可用
+        return;
+    }
 
     // 若航班结束,则右键不可用
     if(opt.flight.finished == '1') {
@@ -806,44 +858,136 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             //备降状态：预选  机位状态：预占用
             if( posstatus == 1 ){
                 //更改预选，确认备降（不可选机场接口），正班占用，释放停机位，取消备降，查看协调记录
-                updatePreAlternateLi = updatePreAlternateLi.replace( /{level2}/,  LEVEL2);
-                confirmAlternateLi = confirmAlternateLi.replace( /{level2}/,  '').replace('<span class="glyphicon glyphicon-play"></span>', '');
+                // 右键操作项权限码
+                var codes_11 = ['4520','4530','4550','4230','4240','4600'];
+                // 校验当前用户是右键操作项权限码中任意一个
+                if (!thisProxy.hasAnyoneProperty(codes_11)) {
+                    // 没有则右键不可用
+                    return;
+                }
+                //更改预选
+                updatePreAlternateLi =  $.isValidObject(userProperty.id_4530) ?  updatePreAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+                // 确认备降（不可选机场接口）
+                confirmAlternateLi =  $.isValidObject(userProperty.id_4520) ? confirmAlternateLi.replace( /{level2}/,  '').replace('<span class="glyphicon glyphicon-play"></span>', '') : '';
+                //正班占用
+                occupiedLi = $.isValidObject(userProperty.id_4550) ? occupiedLi : '';
+                //释放停机位
+                releasePostionLi = $.isValidObject(userProperty.id_4230) ? releasePostionLi : '';
+
+                // 取消备降
+                cancelAlternateLi = $.isValidObject(userProperty.id_4240) ? cancelAlternateLi : '';
+
+                // 查看协调记录
+                collaborateRecordLi = $.isValidObject(userProperty.id_4600) ? collaborateRecordLi : '';
 
                 childrenStr = updatePreAlternateLi + confirmAlternateLi + occupiedLi + releasePostionLi + cancelAlternateLi + collaborateRecordLi;
             }else if( posstatus == 3 ){ //备降状态：预选  机位状态：已释放
                 //更改预选，更改备降，正班占用，取消备降，查看协调记录
-                updatePreAlternateLi = updatePreAlternateLi.replace( /{level2}/,  LEVEL2);
-                updateConfirmAlternateLi = updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2);
+                // 右键操作项权限码
+                var codes_13 = ['4530','4540','4550','4240','4600'];
+                // 校验当前用户是右键操作项权限码中任意一个
+                if (!thisProxy.hasAnyoneProperty(codes_13)) {
+                    // 没有则右键不可用
+                    return;
+                }
+                //更改预选
+                updatePreAlternateLi = $.isValidObject(userProperty.id_4530) ? updatePreAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+                //更改备降
+                updateConfirmAlternateLi =  $.isValidObject(userProperty.id_4540) ? updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+                //正班占用
+                occupiedLi = $.isValidObject(userProperty.id_4550) ? occupiedLi : '';
+                // 取消备降
+                cancelAlternateLi = $.isValidObject(userProperty.id_4240) ? cancelAlternateLi : '';
+                // 查看协调记录
+                collaborateRecordLi = $.isValidObject(userProperty.id_4600) ? collaborateRecordLi : '';
                 childrenStr = updatePreAlternateLi + updateConfirmAlternateLi + occupiedLi  + cancelAlternateLi + collaborateRecordLi;
             }
         }else if( status == 2 ){//备降状态：备降
             //备降状态：预选  机位状态：已占用
             if( posstatus == 2 ){
                 //更改备降，正班占用，释放停机位，取消备降，查看协调记录
-                updateConfirmAlternateLi = updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2);
+                var codes_22 = ['4540','4550','4230','4240','4600'];
+                // 校验当前用户是右键操作项权限码中任意一个
+                if (!thisProxy.hasAnyoneProperty(codes_22)) {
+                    // 没有则右键不可用
+                    return;
+                }
+                //更改备降
+                updateConfirmAlternateLi = $.isValidObject(userProperty.id_4540) ? updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+                //正班占用
+                occupiedLi = $.isValidObject(userProperty.id_4550) ? occupiedLi : '';
+                //释放停机位
+                releasePostionLi = $.isValidObject(userProperty.id_4230) ? releasePostionLi : '';
+                // 取消备降
+                cancelAlternateLi = $.isValidObject(userProperty.id_4240) ? cancelAlternateLi : '';
+                // 查看协调记录
+                collaborateRecordLi = $.isValidObject(userProperty.id_4600) ? collaborateRecordLi : '';
                 childrenStr = updateConfirmAlternateLi + occupiedLi + releasePostionLi  + cancelAlternateLi + collaborateRecordLi;
             }else if( posstatus == 3 ){ //备降状态：预选  机位状态：已释放
                 //更改预选，更改备降，正班占用，取消备降，查看协调记录
-                updatePreAlternateLi = updatePreAlternateLi.replace( /{level2}/,  LEVEL2);
-                updateConfirmAlternateLi = updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2);
+                var codes_23 = ['4530','4540','4550','4230','4240','4600'];
+                // 校验当前用户是右键操作项权限码中任意一个
+                if (!thisProxy.hasAnyoneProperty(codes_23)) {
+                    // 没有则右键不可用
+                    return;
+                }
+                //更改预选
+                updatePreAlternateLi = $.isValidObject(userProperty.id_4530) ? updatePreAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+                //更改备降
+                updateConfirmAlternateLi = $.isValidObject(userProperty.id_4540) ? updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+                //正班占用
+                occupiedLi = $.isValidObject(userProperty.id_4550) ? occupiedLi : '';
+                // 取消备降
+                cancelAlternateLi = $.isValidObject(userProperty.id_4240) ? cancelAlternateLi : '';
+                // 查看协调记录
+                collaborateRecordLi = $.isValidObject(userProperty.id_4600) ? collaborateRecordLi : '';
                 childrenStr = updatePreAlternateLi + updateConfirmAlternateLi + occupiedLi + cancelAlternateLi + collaborateRecordLi;
             }
         }else if( status == 4 ){//备降状态：正班
             //备降状态：正班  机位状态：已占用
             if( posstatus == 2 ){
                 //更改预选，更改备降，释放停机位，取消备降，查看协调记录
-                updatePreAlternateLi = updatePreAlternateLi.replace( /{level2}/,  LEVEL2);
-                updateConfirmAlternateLi = updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2);
+                var codes_42 = ['4530','4540','4230','4240','4600'];
+                // 校验当前用户是右键操作项权限码中任意一个
+                if (!thisProxy.hasAnyoneProperty(codes_42)) {
+                    // 没有则右键不可用
+                    return;
+                }
+                //更改预选
+                updatePreAlternateLi = $.isValidObject(userProperty.id_4530) ? updatePreAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+                //更改备降
+                updateConfirmAlternateLi = $.isValidObject(userProperty.id_4540) ? updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+                //释放停机位
+                releasePostionLi = $.isValidObject(userProperty.id_4230) ? releasePostionLi : '';
+                // 取消备降
+                cancelAlternateLi = $.isValidObject(userProperty.id_4240) ? cancelAlternateLi : '';
+                // 查看协调记录
+                collaborateRecordLi = $.isValidObject(userProperty.id_4600) ? collaborateRecordLi : '';
 
                 childrenStr = updatePreAlternateLi + updateConfirmAlternateLi + releasePostionLi  + cancelAlternateLi + collaborateRecordLi;
             }else if( posstatus == 3 ){ //备降状态：正班  机位状态：已释放
                 //更改预选，更改备降，正班占用，取消备降，查看协调记录
-                updatePreAlternateLi = updatePreAlternateLi.replace( /{level2}/,  LEVEL2);
-                updateConfirmAlternateLi = updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2);
+                var codes_43 = ['4530','4540','4550','4240','4600'];
+                // 校验当前用户是右键操作项权限码中任意一个
+                if (!thisProxy.hasAnyoneProperty(codes_43)) {
+                    // 没有则右键不可用
+                    return;
+                }
+                //更改预选
+                updatePreAlternateLi = $.isValidObject(userProperty.id_4530) ? updatePreAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+                //更改备降
+                updateConfirmAlternateLi = $.isValidObject(userProperty.id_4540) ? updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+                //正班占用
+                occupiedLi = $.isValidObject(userProperty.id_4550) ? occupiedLi : '';
+                // 取消备降
+                cancelAlternateLi = $.isValidObject(userProperty.id_4240) ? cancelAlternateLi : '';
+                // 查看协调记录
+                collaborateRecordLi = $.isValidObject(userProperty.id_4600) ? collaborateRecordLi : '';
+
                 childrenStr = updatePreAlternateLi + updateConfirmAlternateLi + occupiedLi + cancelAlternateLi + collaborateRecordLi;
             }
         }else if( status == 3 ){//备降状态：返航
-            childrenStr = collaborateRecordLi;
+            childrenStr = $.isValidObject(userProperty.id_4600) ? collaborateRecordLi :'';
         }
 
         //将协调内容添加进容器
@@ -2570,3 +2714,23 @@ GridTable.prototype.openModule = function (title, param) {
     };
     var winObj = DhxIframeDialog.create(winTitle, winUrl, winParams)
 }
+
+/**
+ * 校验是否拥有指定权限码中任意一个
+ * codes 数组
+ *
+ * */
+GridTable.prototype.hasAnyoneProperty = function (codes) {
+    // 代理
+    var thisProxy = this;
+    if(!$.isValidObject(codes)){
+        return false;
+    }
+    var len = codes.length;
+    for(var i=0; i<len; i++){
+        if($.isValidObject(userProperty['id_'+codes[i]])){
+            return true;
+        }
+    }
+    return false;
+};

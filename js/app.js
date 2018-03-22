@@ -4,11 +4,11 @@
  * 模块入口
  *
  */
-
+// 用户权限
+var userProperty = null;
 
 var app = function () {
-    // 用户权限
-    var userProperty = null;
+
     // 所需各项基本参数
     var basicData = null;
     // 定时器总开关

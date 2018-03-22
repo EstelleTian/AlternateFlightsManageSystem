@@ -36,7 +36,7 @@ var alternateAirport = function () {
   //当前选中单元格对象
   var cellObj = '';
   //定时刷新时间
-  var refreshTime = 1000 * 10;
+  var refreshTime = 1000 * 60;
 
   /**
    *设置表格下方文本

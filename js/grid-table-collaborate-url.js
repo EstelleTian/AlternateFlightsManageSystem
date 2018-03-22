@@ -3,7 +3,6 @@
  */
 
 var CellOpreationUrl = {
-
     // 预选备降(进港、飞越)
     PRE_ALTERNATE : ipHost+'airport/preelectAlternate',
     // 更改预选备降(进港、飞越)
@@ -29,7 +28,10 @@ var CellOpreationUrl = {
     // 出港预选备降
     PRE_ALTERNATE_DEP :ipHost+'airport/preSelectAlternateDep',
     // 出港确认备降
-    CONFIRM_ALTERNATE_DEP :ipHost+'airport/confirmAlternateDep'
+    CONFIRM_ALTERNATE_DEP :ipHost+'airport/confirmAlternateDep',
+    //备降计划、备降历史 导出
+    EXPORT_ALTERNATE_TO_EXCEL :ipHost+'airport/exportAlternateToExcel',
+
 
 };
 

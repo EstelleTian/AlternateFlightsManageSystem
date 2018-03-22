@@ -586,16 +586,7 @@ GridTable.prototype.collaborateArr = function (opt) {
     /**
      * 菜单项显隐处理
      * */
-    //权限校验
-    // 进港模块所有右键操作项权限码
-    var codes = ['4500','4510', '4520','4530','4540','4550'];
-    // 校验当前用户是否拥有进港模块所有右键操作项权限码中任意一个
-    if (!thisProxy.hasAnyoneProperty(codes)) {
-        // 没有则右键不可用
-        return;
-    }
-
-   //获取航班状态
+        //获取航班状态
     var status = opt.flight.status;
 
     //二级菜单(各个机场列表)
@@ -2714,6 +2705,54 @@ GridTable.prototype.openModule = function (title, param) {
     };
     var winObj = DhxIframeDialog.create(winTitle, winUrl, winParams)
 }
+
+/**
+ *
+ * 表格导出Excel(jqgrid原生)
+ *  name 文件名称
+ *
+ * */
+
+GridTable.prototype.export = function (name) {
+    var thisProxy = this;
+    var time = $.getFullTime(new Date());// 创建当前时间
+    var fileName = name +'-'+ time; // 设置文件名称
+    thisProxy.gridTableObject.jqGrid("exportToExcel", {
+        includeLabels: true,
+        includeGroupHeader: true,
+        includeFooter: true,
+        fileName: fileName, // 文件名称
+        onBeforeExport : function( xlsx ) { // 预设置
+            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+            // 设置列宽
+            $('col', sheet).each( function () {
+                $(this).attr( 'width', '15' );
+            });
+        },
+    })
+};
+
+
+/**
+ * 导出（后台接口）
+ *
+ * */
+GridTable.prototype.exportAlternateToExcel = function ( name, params ) {
+    var url = '';
+    if( name == 'alternate' ){
+        var scope = params.scope || '';
+        var keyword = params.keyword || '';
+        url = CellOpreationUrl.EXPORT_ALTERNATE_TO_EXCEL +"?scope=" + scope + "&keyWord=" + keyword;
+    }else if(name == 'history'){
+        var start = params.start || '';
+        var end = params.end || '';
+        url = CellOpreationUrl.EXPORT_ALTERNATE_TO_EXCEL +"?start=" + start + "&end=" + end;
+    }else{
+        return;
+    }
+    window.location.href = encodeURI(url);
+}
+
 
 /**
  * 校验是否拥有指定权限码中任意一个

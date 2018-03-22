@@ -640,6 +640,8 @@ var alternateAirport = function () {
    * @param time
    */
   var startTimer = function (func, instance, isNext, time) {
+      // 清除定时器
+      clearTimeout(thisProxy.timer);
     if (typeof func == "function") {
       timer = setTimeout(function () {
         func(instance, isNext);

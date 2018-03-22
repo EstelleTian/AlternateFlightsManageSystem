@@ -8,7 +8,6 @@
 var userProperty = null;
 
 var app = function () {
-
     // 所需各项基本参数
     var basicData = null;
     // 定时器总开关
@@ -467,19 +466,19 @@ var app = function () {
                         changeCollaborateFlag();
                     }else{
                         console.warn('获取用户权限为空');
-                        timer(initUserAuthority,time);
+                        Common.timeoutCallback(initUserAuthority,time);
                     }
                 } else if (data.status == 500) {
                     console.warn(data.error.message);
-                    timer(initUserAuthority,time);
+                    Common.timeoutCallback(initUserAuthority,time);
                 } else {
                     console.warn('获取用户权限为空');
-                    timer(initUserAuthority,time);
+                    Common.timeoutCallback(initUserAuthority,time);
                 }
             },
             error: function (xhr, status, error) {
                 console.error(error);
-                timer(initUserAuthority,time);
+                Common.timeoutCallback(initUserAuthority,time);
             }
         });
 
@@ -509,15 +508,15 @@ var app = function () {
                     subCollaborateDomData = basicData.alternateAirport;
                 } else if (data.status == 500) {
                     console.warn(data.error.message);
-                    timer(initBasicData,time);
+                    Common.timeoutCallback(initBasicData,time);
                 } else {
                     console.warn('获取机场配置为空');
-                    timer(initBasicData,time);
+                    Common.timeoutCallback(initBasicData,time);
                 }
             },
             error: function (xhr, status, error) {
                 console.error(error);
-                timer(initBasicData,time);
+                Common.timeoutCallback(initBasicData,time);
             }
         });
 
@@ -559,27 +558,6 @@ var app = function () {
 
 
     };
-
-    /**
-     * 初始化各模块右键协调窗口DOM
-     * @param time 定时间隔 ms
-     *
-     *  因为部分协调窗口列表项从后端请求，所以定时刷新校验数据有效性
-     * */
-    var initCollaborateDom = function (time) {
-        // 若数据有效则更新各模块范围列表项，
-        if($.isValidObject(alternateAirport.airportConfig) && $.isValidObject(alternateAirport.airportConfig.alternateAirport)){
-            var collaborateDomData  = alternateAirport.airportConfig.alternateAirport;
-            // 拼接各模块协调窗口列表项
-            concatCollaborateDom(collaborateDomData);
-        }else {
-            // 数据无效则开启延时回调自身
-            var timer = setTimeout(function () {
-                initCollaborateDom(time);
-            },time);
-        }
-    };
-
     /**
      * 拼接各模块协调窗口列表项
      * */
@@ -869,17 +847,6 @@ var app = function () {
     };
 
     /**
-     * 延时器,在指定的毫秒数后调用函数
-     * fn 待执行函数
-     * time 毫秒 指定的毫秒数后调用
-     * */
-    var timer = function (fn,time) {
-        setTimeout(function () {
-            fn(time)
-        },time);
-    };
-
-    /**
      * 转换用户权限数据
      *
      * data 数组
@@ -930,7 +897,7 @@ var app = function () {
             // 切换活动模块
             activeModuleToggle(index);
         }else {
-            timer(initComponents,time)
+            Common.timeoutCallback(initComponents,time)
         }
     }
 
@@ -953,6 +920,3 @@ var app = function () {
     }
 }();
 
-$(document).ready(function () {
-    app.init();
-});

@@ -40,40 +40,11 @@ var alternateAirport = function () {
    */
   var initDataBasic = function () {
     //阻止右键点击默认事件
-    preventDefaultEvent()
+    preventDefaultEvent();
     //导航栏备降场容量添加点击事件
     $('.menu-list').on('click','.alternate-airport', function () {
       getTableColmodel(originAirportConfig, isRefresh)
     })
-  }
-  /**
-   * 初始化用户信息
-   */
-  var initSystemParam = function () {
-    var userName = sessionStorage.getItem('userName');
-    var loginTime = sessionStorage.getItem('loginTime');
-    if (userName == undefined || loginTime == undefined) {
-      var option = {
-        title: '警告',
-        content: '用户未登录,请登录！',
-        showCancelBtn: false,
-        status: 2,
-        buttons: [
-          {
-            name: '确定',
-            isHidden: false,
-            status: 2,
-            callback: function () {
-              window.location = "index.html";
-            }
-          }
-        ]
-      }
-      BootstrapDialogFactory.dialog(option)
-      return
-    }
-    $('.login-time').text('登录时间:' + formatterTime(loginTime));
-    $('.user-name').text(userName);
   }
   /**
    *设置表格下方文本
@@ -789,37 +760,10 @@ var alternateAirport = function () {
 
     airVolumeTable.parents(".ui-jqgrid-bdiv").off('scroll', position).on('scroll', position);
   };
-  /**
-   * 用户登出
-   */
-  var userLogOut = function () {
-    $(".user_logout").click(function () {
-      $.ajax({
-        type: "POST",
-        url: ipHost + "logon/userLogout/",
-        data: {},
-        success: function (data) {
-          if ($.isValidObject(data) && data.status == 200) {
-            sessionStorage.removeItem("userName", "");
-            sessionStorage.removeItem("loginTime", "");
-            window.location = "index.html";
-          }
-          if (data.status == 500) {
-            alert(data.error.message + '请稍候再试!')
-          }
-        },
-        error: function () {
-          console.error('retrieve statistic data failed, state:');
-          console.error(status);
-        }
-      })
-    })
-  }
+
   return {
     init: function () {
-      initSystemParam();//初始化用户信息
       initDataBasic();//初始化数据基础
-      userLogOut();//用户登出事件
     },
   }
 }();

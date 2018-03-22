@@ -107,7 +107,7 @@ var app = function () {
                             title: "导出Excel",
                             buttonicon: "glyphicon-export",
                             onClickButton: function () {
-                                // table.export(opt.name);
+                                table.export('arr-table');
                             },
                             position: "first"
                         }) .navButtonAdd('#' + pagerId, {
@@ -165,13 +165,18 @@ var app = function () {
                     table = new GridTable(opt);
                     table.initGridTableObject();
                     // 设置 Pager 按钮
+                    // 备降计划 --- 导出
                     table.gridTableObject
                         .navButtonAdd('#' + pagerId, {
                             caption: "导出",
                             title: "导出Excel",
                             buttonicon: "glyphicon-export",
                             onClickButton: function () {
-                                // table.export(opt.name);
+                                var params = {
+                                    scope : alternateObj.scope,
+                                    keyWord : alternateObj.keyword
+                                }
+                                table.exportAlternateToExcel( 'alternate', params);
                             },
                             position: "first"
                         }) .navButtonAdd('#' + pagerId, {
@@ -231,7 +236,11 @@ var app = function () {
                             title: "导出Excel",
                             buttonicon: "glyphicon-export",
                             onClickButton: function () {
-                                // table.export(opt.name);
+                                var params = {
+                                    start : alternateHistoryObj.start,
+                                    end : alternateHistoryObj.end
+                                }
+                                table.exportAlternateToExcel( 'history', params);
                             },
                             position: "first"
                         }) .navButtonAdd('#' + pagerId, {
@@ -297,7 +306,7 @@ var app = function () {
                             title: "导出Excel",
                             buttonicon: "glyphicon-export",
                             onClickButton: function () {
-                                // table.export(opt.name);
+                                table.export('over-table');
                             },
                             position: "first"
                         }) .navButtonAdd('#' + pagerId, {

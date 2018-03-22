@@ -4,11 +4,11 @@
  * 模块入口
  *
  */
-
+// 用户权限
+var userProperty = null;
 
 var app = function () {
-    // 用户权限
-    var userProperty = null;
+
     // 所需各项基本参数
     var basicData = null;
     // 定时器总开关
@@ -712,7 +712,7 @@ var app = function () {
      * */
     var changeCollaborateFlag = function () {
 
-        if($.isValidObject(userProperty.id_4000) || $.isValidObject(userProperty.id_4100)){
+        if($.isValidObject(userProperty.id_4560)){
             // 取得checkbox
             var $box = $('.menu-bar input#change-weather-model');
             // checkbox绑定点击事件
@@ -828,9 +828,14 @@ var app = function () {
         config.map(function (item, index, arr) {
                 item.value = item.value.split(',');
         });
+        // 封装数据
+        var data = {
+            code : userProperty, // 用户权限
+            config : config
+        };
         // 利用Handlebars模版生成对应HTML结构
         var myTemplate = Handlebars.compile($("#template").html());
-        $('#position-box').html(myTemplate(config));
+        $('#position-box').html(myTemplate(data));
     };
 
     var bindSortable = function (data) {
@@ -857,6 +862,10 @@ var app = function () {
         })
         //初始化
         sort.init();
+        // 权限校验:无权限则不可拖动
+        if(!$.isValidObject(userProperty.id_4440)){
+            sort.selector.sortable( "disable" );
+        }
     };
 
     /**

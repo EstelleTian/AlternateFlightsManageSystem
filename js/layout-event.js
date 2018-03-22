@@ -50,6 +50,7 @@ var layoutEvent = function () {
                 data: {},
                 success: function (data) {
                     if ($.isValidObject(data) && data.status == 200) {
+                        sessionStorage.removeItem("userId", "");
                         sessionStorage.removeItem("userName", "");
                         sessionStorage.removeItem("loginTime", "");
                         window.location = "index.html";

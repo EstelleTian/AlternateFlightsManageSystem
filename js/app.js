@@ -4,6 +4,7 @@
  * 模块入口
  *
  */
+var userId = null;
 // 用户权限
 var userProperty = null;
 
@@ -433,14 +434,20 @@ var app = function () {
     };
 
     /**
+     * 初始化用户信息
+     * */
+    var initUserInfo = function () {
+        // 更新用户id
+        userId = sessionStorage.getItem('userId');
+    }
+    /**
      *初始化用户权限
      *
      * time 若数据无效，指定时间后再次请求一次
      *
      * */
     var initUserAuthority = function (time) {
-        var url = ipHost + 'airport/retrieveUserAuthority?userId=12';
-        // var url = ipHost + 'airport/retrieveUserAuthority';
+        var url = ipHost + 'airport/retrieveUserAuthority?userId=' + userId;
         $.ajax({
             type: "GET",
             url: url,
@@ -909,6 +916,8 @@ var app = function () {
         init : function () {
             // 阻止右键点击默认事件
             preventContextmenu();
+            // 初始化用户信息
+            initUserInfo();
             // 获取用户权限
             initUserAuthority(1000*2);
             // 初始化所需各项基本参数

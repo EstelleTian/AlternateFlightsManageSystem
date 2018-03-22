@@ -703,7 +703,7 @@ var app = function () {
      * */
     var changeCollaborateFlag = function () {
 
-        if($.isValidObject(userProperty.id_4000) || $.isValidObject(userProperty.id_4100)){
+        if($.isValidObject(userProperty.id_4560)){
             // 取得checkbox
             var $box = $('.menu-bar input#change-weather-model');
             // checkbox绑定点击事件

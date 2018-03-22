@@ -211,6 +211,8 @@ var app = function () {
                 canvasId: 'alternate-history-module',
                 tableId: 'alternate-history-table',
                 url: DataUrl.ALTERNATE_HISTORY,
+                // 定时器时间
+                interval : interval,
                 initGridTable: function (table) {
                     var pagerId = 'alternate-history-table-pager';
                     var opt = {

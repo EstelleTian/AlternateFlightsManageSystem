@@ -45,7 +45,6 @@ var HistoryFormModule = function (params) {
      * */
     this.start = '';
 
-
     /**
      *  终止日期
      * */
@@ -56,6 +55,29 @@ var HistoryFormModule = function (params) {
      *
      * */
     this.filter = false;
+
+    /**
+     * 定时器总开关 默认开启 true
+     * */
+
+    this.timerValve = true;
+
+    /**
+     *  定时器
+     * */
+    this.timer = null;
+
+    /**
+     *  定时器时间
+     * */
+
+    this.interval = params.interval;
+
+    /**
+     * ajax请求
+     * */
+    this.xhr = null;
+
 };
 
 /**
@@ -185,15 +207,17 @@ HistoryFormModule.prototype.bindEventOnButton = function () {
     var thisProxy = this;
     // 查询按钮绑定事件
     $('.inquire', thisProxy.canvas).on('click',function () {
-        thisProxy.initInquireData();
+        thisProxy.initInquireData(true);
     });
 };
 
 /**
  * 初始化数据查询
+ * refresh 是否开启定时
+ *
  * */
 
-HistoryFormModule.prototype.initInquireData = function () {
+HistoryFormModule.prototype.initInquireData = function (refresh) {
     // 当前对象this代理
     var thisProxy = this;
     // 禁用表单事件
@@ -219,6 +243,11 @@ HistoryFormModule.prototype.initInquireData = function () {
         thisProxy.desabledForm(false);
         // 关闭loading动画
         thisProxy.loading.stop();
+    }
+
+    //定时刷新
+    if (refresh) {
+        thisProxy.startTimer(thisProxy.initInquireData, true, thisProxy.interval);
     }
 
 
@@ -568,19 +597,78 @@ HistoryFormModule.prototype.isHiddenTableContainer = function (bool) {
  *
  * */
 
+/**
+ * 设置模块是否为活动模块
+ *
+ * @param bool
+ * */
 HistoryFormModule.prototype.setActive = function (bool) {
     // 当前对象this代理
     var thisProxy = this;
+    if(bool){
+        // 开启请求
+        thisProxy.openRequest();
+    }else {
+        // 关闭请求
+        thisProxy.abortRequest();
+    }
+};
+
+/**
+ * 开启请求
+ *
+ * */
+HistoryFormModule.prototype.openRequest = function (now) {
     // 当前对象this代理
     var thisProxy = this;
-    if(bool){
-        // 查询数据
-        thisProxy.initInquireData();
-    }
+    // 开启定时总开关
+    thisProxy.timerValve = true;
+    // 初始化数据查询
+    thisProxy.initInquireData(true);
 
 };
 
+/**
+ * 关闭请求
+ *
+ * clearCollaborate  是否清除表格协调窗口
+ * */
+HistoryFormModule.prototype.abortRequest = function (clearCollaborate) {
+    // 当前对象this代理
+    var thisProxy = this;
 
+    if($.isValidVariable(thisProxy.xhr)){
+        // 取消掉已经发出的ajax请求
+        thisProxy.xhr.abort();
+    }
+    // 清除定时器
+    clearTimeout(thisProxy.timer);
+    // 关闭定时器总开关
+    thisProxy.timerValve = false;
+};
+
+/**
+ * 定时器
+ * @param fn 执行函数
+ * @param instance 对象实例
+ * @isNext 是否继续定时执行
+ * @param time 时间间隔
+ * */
+
+
+HistoryFormModule.prototype.startTimer = function (fn, isNext, time) {
+    // 当前对象this代理
+    var thisProxy = this;
+    // 清除定时器
+    clearTimeout(thisProxy.timer);
+    if (thisProxy.timerValve) { // 定时器开关
+        if (typeof fn == 'function') {
+            thisProxy.timer =  setTimeout(function () {
+                fn.call(thisProxy,isNext);
+            }, time)
+        }
+    }
+};
 
 
 

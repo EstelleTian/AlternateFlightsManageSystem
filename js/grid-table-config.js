@@ -148,8 +148,7 @@ var GridTableConfig = function () {
             {
                 name: 'flightDataId',
                 index: 'flightDataId',
-                width: 120,
-                frozen: false
+                width: 120
             },
             // 备降场
             {
@@ -166,8 +165,7 @@ var GridTableConfig = function () {
             {
                 name: 'flightId',
                 index: 'flightId',
-                width: 120,
-                frozen: true
+                width: 120
             },
             // 机号
             {
@@ -286,8 +284,7 @@ var GridTableConfig = function () {
             {
                 name: 'flightDataId',
                 index: 'flightDataId',
-                width: 120,
-                frozen: false
+                width: 120
             },
             // 备降场
             {
@@ -304,8 +301,7 @@ var GridTableConfig = function () {
             {
                 name: 'flightId',
                 index: 'flightId',
-                width: 120,
-                frozen: true
+                width: 120
             },
             // 机号
             {

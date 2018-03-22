@@ -2,8 +2,7 @@
  * Created by caowei on 2018/1/16.
  */
 var alternateAirport = function () {
-  //IP地址
-  // var ipHost = "http://192.168.243.104:8085/";
+  var xhr = null;
   //备降场表格对象
   var airVolumeTable = '';
   //备降场表格原始数据
@@ -31,21 +30,14 @@ var alternateAirport = function () {
   }
   //定时器总开关
   var isRefresh = true;
+  // 定时器
+  var timer = null;
+
   //当前选中单元格对象
   var cellObj = '';
   //定时刷新时间
-  var refreshTime = 1000 * 60;
-  /**
-   * 初始化表格
-   */
-  var initDataBasic = function () {
-    //阻止右键点击默认事件
-    preventDefaultEvent();
-    //导航栏备降场容量添加点击事件
-    $('.menu-list').on('click','.alternate-airport', function () {
-      getTableColmodel(originAirportConfig, isRefresh)
-    })
-  }
+  var refreshTime = 1000 * 10;
+
   /**
    *设置表格下方文本
    * @param textObj
@@ -58,81 +50,18 @@ var alternateAirport = function () {
       $('.position-air').append(str[0]);
     })
   }
-  /**
-   *获取表格列配置
-   */
-  var getTableColmodel = function (airportConfig, isRefresh) {
-    var url = ipHost + 'airport/retrieveAirport'
-    $.ajax({
-      type: "GET",
-      url: url,
-      data: "",
-      dataType: "JSON",
-      success: function (data) {
-        if ($.isValidObject(data) && data.status == 200) {
-          //判断配置是否改变
-          if ($.isEquals(originAirportConfig.airportConfig, data.airportConfig)) {
-            getTableData(tableConfig)
-          } else {
-            // 配置不同重新渲染表格
-            //卸载表格
-            $.jgrid.gridUnload('alernate_flight_grid_table');
-            //重置表格配置
-            tableConfig = {
-              colName: ['备降场 ', '合计可用 '],
-              colTitle: {
-                airport: '备降场 ',
-                total: '合计可用 ',
-              },
-              colModel: [{
-                name: 'airport',
-                index: 'airport',
-              }, {
-                name: 'total',
-                index: 'total',
-              }],
-              data: [],
-              typeArr: []
-            }
-            //复制配置数据
-            originAirportConfig = data;
-            //列配置转换
-            tableConfig = colConfigConvert(originAirportConfig.airportConfig)
-            if($.isValidObject(originAirportConfig.airportConfig)){
-              //表格下部分文字显示
-              $('.des').show()
-              //表格下部文字设置
-              setDownText(originAirportConfig.airportConfig)
-            }else{
-              //表格下部文字隐藏
-              $('.des').hide()
-            }
-            //获取表格数据
-            if (tableConfig.colModel.length > 3) {
-              getTableData(tableConfig)
-            } else {
-              setTimeout(getTableData(tableConfig, isRefresh), 3000);
-            }
-          }
-        } else if (data.status == 500) {
-          console.warn(data.error.message)
-        } else {
-          console.warn('获取机场配置为空')
-        }
-      },
-      error: function (xhr, status, error) {
-        console.error(error)
-      }
-    });
-  }
+
   /**
    * 获取表格数据
    * @param tableConfig
    * @param isRefresh
    */
   var getTableData = function (tableConfig) {
+
+    // 开启定时器总开关
+    isRefresh = true;
     var url = ipHost + 'airport/retrieveAirport'
-    $.ajax({
+      xhr = $.ajax({
       type: "GET",
       url: url,
       data: "",
@@ -140,35 +69,73 @@ var alternateAirport = function () {
       // async: false,
       success: function (data) {
         if ($.isValidObject(data) && data.status == 200) {
-          $('.error_tip').hide();
-          tableData = data;
-          var generateTime = data.generateTime
-          $('.alter_volume_time').text('数据生成时间: ' + formatterTime(generateTime))
-          //合计可用
-          $('.available_capacity').text(data.availableCapacity).attr('title', data.availableCapacity)
-          //data转换
-          tableConfig = dataConfigConvert(data.airportMessage, tableConfig)
-          // 初始化表格
-          if (tableConfig.colModel.length > 3) {
-            initGridTable(tableConfig, 'alernate_flight_grid_table', 'ale-datas-pager')
-          } else {
-          }
-          //当右键协调显示时  刷新当前选中单元格 以及position方法
-          if ($.isValidObject(cellObj) && $('.flight-grid-table-collaborate-container').is(':visible')) {
-            var currnetCellObj = getCellObject(cellObj.rowid, cellObj.iRow, cellObj.iCol)
-            currnetCellObj.addClass('selected-cell')
-            $('.flight-grid-table-collaborate-container').position({
-              of: currnetCellObj,
-              my: 'left top',
-              at: 'right top',
-              collision: 'flipfit',
-            });
-            followTargetPosition($('.flight-grid-table-collaborate-container'), currnetCellObj)
-          }
-          //定时器
-          if (isRefresh) {
-            startTimer(getTableColmodel, originAirportConfig, isRefresh, refreshTime);
-          }
+
+            // 配置不同重新渲染表格
+            //卸载表格
+            $.jgrid.gridUnload('alernate_flight_grid_table');
+            //重置表格配置
+            tableConfig = {
+                colName: ['备降场 ', '合计可用 '],
+                colTitle: {
+                    airport: '备降场 ',
+                    total: '合计可用 ',
+                },
+                colModel: [{
+                    name: 'airport',
+                    index: 'airport',
+                }, {
+                    name: 'total',
+                    index: 'total',
+                }],
+                data: [],
+                typeArr: []
+            }
+            //复制配置数据
+            originAirportConfig = data;
+            //列配置转换
+            tableConfig = colConfigConvert(originAirportConfig.airportConfig)
+            if($.isValidObject(originAirportConfig.airportConfig)){
+                //表格下部分文字显示
+                $('.des').show()
+                //表格下部文字设置
+                setDownText(originAirportConfig.airportConfig)
+            }else{
+                //表格下部文字隐藏
+                $('.des').hide()
+            }
+            //获取表格数据
+            if (tableConfig.colModel.length > 3) {
+                $('.error_tip').hide();
+                tableData = data;
+                var generateTime = data.generateTime
+                $('.alter_volume_time').text('数据生成时间: ' + formatterTime(generateTime))
+                //合计可用
+                $('.available_capacity').text(data.availableCapacity).attr('title', data.availableCapacity)
+                //data转换
+                tableConfig = dataConfigConvert(data.airportMessage, tableConfig)
+                // 初始化表格
+                if (tableConfig.colModel.length > 3) {
+                    initGridTable(tableConfig, 'alernate_flight_grid_table', 'ale-datas-pager')
+                }
+                //当右键协调显示时  刷新当前选中单元格 以及position方法
+                if ($.isValidObject(cellObj) && $('.flight-grid-table-collaborate-container').is(':visible')) {
+                    var currnetCellObj = getCellObject(cellObj.rowid, cellObj.iRow, cellObj.iCol)
+                    currnetCellObj.addClass('selected-cell');
+                    $('.flight-grid-table-collaborate-container').position({
+                        of: currnetCellObj,
+                        my: 'left top',
+                        at: 'right top',
+                        collision: 'flipfit',
+                    });
+                    followTargetPosition($('.flight-grid-table-collaborate-container'), currnetCellObj)
+                }
+                //定时器                if (isRefresh) {
+
+                if (isRefresh) {
+                    startTimer(getTableData, originAirportConfig, isRefresh, refreshTime);
+                }
+            }
+
         } else if (data.status == 500) {
           console.warn(data.error.message)
         }
@@ -447,6 +414,11 @@ var alternateAirport = function () {
     clearCollaborateContainer();
     // 记录当前选中的单元格对象
     opt.cellObj.addClass('selected-cell');
+    // 是否有权限
+      if(!$.isValidObject(userProperty.id_4310)){
+        return
+      }
+
     //修改容量值
     if ($('.alter_volume').is(":visible")) {
       collaborateAlter(opt);
@@ -669,7 +641,7 @@ var alternateAirport = function () {
    */
   var startTimer = function (func, instance, isNext, time) {
     if (typeof func == "function") {
-      setTimeout(function () {
+      timer = setTimeout(function () {
         func(instance, isNext);
       }, time);
     }
@@ -761,9 +733,43 @@ var alternateAirport = function () {
     airVolumeTable.parents(".ui-jqgrid-bdiv").off('scroll', position).on('scroll', position);
   };
 
+    /**
+     *  设置当前模块为活动模块
+     *  bool true 设置为活动模块 fale 取消当前模块为活动模块
+     *
+     * */
+    var setActive = function (bool) {
+        if(bool){
+            // 开启请求,获取表格数据
+            getTableData();
+        }else {
+            // 中止请求
+            abortRequest();
+        }
+    };
+
+    /**
+     *
+     * 中止请求
+     * */
+    var abortRequest = function () {
+        if(xhr){
+            // 取消掉已经发出的ajax请求
+            xhr.abort();
+            xhr = null;
+        }
+        clearTimeout(timer);
+        // 开启定时器总关闭
+        isRefresh = false;
+    };
+
   return {
     init: function () {
-      initDataBasic();//初始化数据基础
+        //阻止右键点击默认事件
+        preventDefaultEvent();
+        return {
+            setActive : setActive
+        }
     },
   }
 }();

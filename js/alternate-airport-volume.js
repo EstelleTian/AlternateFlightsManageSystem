@@ -233,7 +233,6 @@ var alternateAirport = function () {
    * @param pagerId 表格统计条数的pagerId
    */
   var initGridTable = function (config, tableId, pagerId) {
-      console.log(airVolumeTable)
     airVolumeTable = $('#' + tableId).jqGrid({
       styleUI: 'Bootstrap',
       datatype: 'local',

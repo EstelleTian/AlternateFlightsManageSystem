@@ -19,6 +19,8 @@ var app = function () {
     var subCollaborateDomData = null;
     // 航班状态码
     var statusCode = {};
+    // 机位状态码
+    var positionStatus = {};
     // 表格右键可交互标记（进港和疆内飞越表格右键是否可交的限制条件依据）
     var collaborateFlag = false;
 
@@ -439,20 +441,14 @@ var app = function () {
     };
 
     /**
-     * 初始化用户信息
-     * */
-    var initUserInfo = function () {
-        // 更新用户id
-        userId = sessionStorage.getItem('userId');
-    }
-    /**
      *初始化用户权限
      *
      * time 若数据无效，指定时间后再次请求一次
      *
      * */
     var initUserAuthority = function (time) {
-        var url = ipHost + 'airport/retrieveUserAuthority?userId=' + userId;
+        userId = sessionStorage.getItem('userId'); // 本地测试专用
+        var url = ipHost + 'airport/retrieveUserAuthority?userId=' + userId; // 本地测试专用
         // var url = ipHost + 'airport/retrieveUserAuthority';
         $.ajax({
             type: "GET",
@@ -482,8 +478,8 @@ var app = function () {
                         initChangeWeatherModel();
                         // 绑定开启复杂天气模式按钮点击事件
                         initChangeWeatherModel();
-                        // 绑定进港计划模块切换复杂天气模式关联疆内飞越模块表格右键可交互标记
-                        // changeCollaborateFlag();
+                        // 初始化显示用户信息
+                        initUserInfo();
                     }else{
                         console.warn('获取用户权限为空');
                         Common.timeoutCallback(initUserAuthority,time);
@@ -667,7 +663,7 @@ var app = function () {
     };
 
     /**
-     * 更新状态列数值参数
+     * 更新航班状态列数值参数
      * */
     var setStatusCode = function () {
         if($.isValidObject(basicData.airportConfig) && $.isValidObject(basicData.airportConfig.alternateStatus)){
@@ -680,6 +676,22 @@ var app = function () {
             app.statusCode = statusCode;
         }
     };
+
+    /**
+     * 更新机位状态列数值参数
+     * */
+    var setPositionStatusCode = function () {
+        if($.isValidObject(basicData.airportConfig) && $.isValidObject(basicData.airportConfig.positionStatus)){
+            var positionStatus = basicData.airportConfig.positionStatus;
+            statusCode = {};
+            positionStatus.map(function (item, index, arr) {
+                var val = item.value;
+                statusCode[val] = item;
+            });
+            app.positionStatus = statusCode;
+        }
+    };
+
 
     /**
      * 设置colModel指定项是否隐藏
@@ -840,6 +852,15 @@ var app = function () {
 
     };
 
+    /**
+     * 初始化用户信息
+     * */
+    var initUserInfo = function () {
+        // 显示用户名
+        var userName =  userProperty.userNameCn || userProperty.userName || '';
+        $('.user-name').text(userName);
+    }
+
     var initComponents = function (time) {
         if($.isValidObject(userProperty) && $.isValidObject(basicData)
             && $.isValidObject(scopeListData) && $.isValidObject(subCollaborateDomData)){
@@ -849,6 +870,8 @@ var app = function () {
             concatCollaborateDom();
             // 更新状态列数值参数
             setStatusCode();
+            // 更新机位状态列数值参数
+            setPositionStatusCode();
             // 获取活动模块下标
             index = $('.main-area section.active').index();
             // 切换活动模块
@@ -861,13 +884,12 @@ var app = function () {
 
 
     return {
-        statusCode : statusCode,
+        statusCode : statusCode,// 航班状态码
+        positionStatus : positionStatus, // 机位状态码
         collaborateFlag : collaborateFlag,
         init : function () {
             // 阻止右键点击默认事件
             preventContextmenu();
-            // 初始化用户信息
-            initUserInfo();
             // 获取用户权限
             initUserAuthority(1000*2);
             // 初始化所需各项基本参数

@@ -242,7 +242,8 @@ var GridTableConfig = function () {
             // 机位状态
             {
                 name: 'positionStatus',
-                index: 'positionStatus'
+                index: 'positionStatus',
+                formatter: formatterPositionStatus
             },
             // 备降起飞
             {
@@ -379,7 +380,8 @@ var GridTableConfig = function () {
             // 机位状态
             {
                 name: 'positionStatus',
-                index: 'positionStatus'
+                index: 'positionStatus',
+                formatter : formatterPositionStatus
             },
             // 备降起飞
             {
@@ -451,7 +453,7 @@ var GridTableConfig = function () {
             }
 
             /**
-             * 处理状态列
+             * 处理航班状态列
              * */
             // 取得列值
             var colName = colModel.name;
@@ -462,6 +464,20 @@ var GridTableConfig = function () {
                 // 设置title属性为转换后的值
                 attrs = ' title="' + matter + '"'
             }
+
+            /**
+             * 处理机位状态列
+             * */
+                // 取得列值
+            var colName = colModel.name;
+            // 限制状态列
+            if(colName == 'positionStatus'){
+                // 取得单元格内容转换后的值
+                var matter = formatterPositionStatus(cellcontent);
+                // 设置title属性为转换后的值
+                attrs = ' title="' + matter + '"'
+            }
+
 
             return attrs;
         },
@@ -522,6 +538,16 @@ var GridTableConfig = function () {
         var code = app.statusCode;
         if($.isValidObject(code) && $.isValidVariable(code[cellvalue])){
            return code[cellvalue].text;
+        }else {
+            return cellvalue;
+        }
+
+    }
+    // 机位状态列数值格式化转换
+    function formatterPositionStatus(cellvalue, options, rowObject) {
+        var code = app.positionStatus;
+        if($.isValidObject(code) && $.isValidVariable(code[cellvalue])){
+            return code[cellvalue].text;
         }else {
             return cellvalue;
         }

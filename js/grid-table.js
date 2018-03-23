@@ -140,7 +140,7 @@ function GridTable(params) {
     /*
      * 表格右键可交互标记
      * */
-    this.collaborateFlag = true;
+    this.collaborateFlag = false;
 }
 
 

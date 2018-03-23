@@ -466,8 +466,10 @@ var app = function () {
                         var property = data.userAuthority;
                         // 转换用户权限数据
                         userProperty = convertProperty(property);
-                        userProperty.userOmc = data.userOmc || false;
-                        userProperty.airport = data.airport || "";
+                        userProperty.userName = data.userName; // 用户名
+                        userProperty.userNameCn = data.userNameCn; // 用户名
+                        userProperty.useBranch = data.useBranch; // 是否为支线机场用户 true:支线用户  false:不是支线用户
+                        userProperty.airport = data.airport || ""; // 用户自己机场名称
                         // 依据用户权限处理模块显示
                         initModuleLayout();
                         // 设置默认活动模块

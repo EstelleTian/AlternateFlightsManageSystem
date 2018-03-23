@@ -441,9 +441,10 @@ var alternateAirport = function () {
 
     //验证用户权限，如果是分支机场，只能修改自己的
     if( $.isValidObject(userProperty.id_4310) ){
-        var userOmc = userProperty.userOmc;
-        //false 分支机场  true 总机场（全显）
-        if( userOmc == false){
+        // 是否为支线机场用户 true:支线用户  false:不是支线用户
+        var useBranch = userProperty.useBranch;
+        //true 分支机场  false 总机场（全显）
+        if( useBranch == true){
             var userAirport = userProperty.airport;
             var curAirport = opt.airport;
             //若不想的

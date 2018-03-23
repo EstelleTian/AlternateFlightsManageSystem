@@ -1,16 +1,9 @@
+
+/**
+ * 查看协调记录
+ * */
 var FlightCoordinationRecordObj = function () {
     var table = null;
-
-    /**
-     * 延时器,在指定的毫秒数后调用函数
-     * fn 待执行函数
-     * time 毫秒 指定的毫秒数后调用
-     * */
-    var timer = function (fn,time) {
-        setTimeout(function () {
-            fn(time)
-        },time);
-    };
 
     /**
      * 初始化表格
@@ -80,15 +73,15 @@ var FlightCoordinationRecordObj = function () {
                     fireDataChange(data);
                 } else if (data.status == 500) {
                     console.warn(data.error.message);
-                    timer(initUserAuthority,time);
+                    Common.timeoutCallback(initUserAuthority,time);
                 } else {
                     console.warn('获取协调记录为空');
-                    timer(retrieveData,time);
+                    Common.timeoutCallback(retrieveData,time);
                 }
             },
             error: function (xhr, status, error) {
                 console.error(error);
-                timer(retrieveData,time);
+                Common.timeoutCallback(retrieveData,time);
             }
         });
     };

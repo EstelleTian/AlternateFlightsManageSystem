@@ -101,7 +101,7 @@ var FlightCoordinationRecordObj = function () {
         // 校验数据是否有效
         if(!$.isValidObject(data) || !$.isValidObject(data.altfCoordinationRecords)){
             // 清空表格数据
-            table.jqGrid('clearGridData');
+            table.gridTableObject.jqGrid('clearGridData');
             return;
         }
 

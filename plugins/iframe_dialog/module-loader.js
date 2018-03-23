@@ -25,13 +25,6 @@ var ModuleLoader = function(){
         var fileName = JSON.parse(obj['param'])['moduleName'] ;
         for(var x in urlsObj){
             if(fileName == x){
-                var srcs = urlsObj[x].script;
-                for(var i=0;i<srcs.length;i++){
-                    //创建标签
-                    var script = document.createElement("script");
-                    script.src = srcs[i];
-                    body.appendChild(script);
-                }
                 var links = urlsObj[x].link;
                 for(var j=0;j<links.length;j++){
                     //创建标签
@@ -40,6 +33,15 @@ var ModuleLoader = function(){
                     link.href = links[j]
                     head.appendChild(link);
                 }
+                var srcs = urlsObj[x].script;
+                for(var i=0;i<srcs.length;i++){
+                    //创建标签
+                    var script = document.createElement("script");
+                    script.src = srcs[i];
+                    script.async=false;
+                    body.appendChild(script);
+                }
+
             }
         }
 

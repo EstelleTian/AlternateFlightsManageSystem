@@ -434,60 +434,77 @@ var alternateAirport = function () {
     if (!$.isValidVariable(dom)) {
       return;
     }
-    var collaboratorDom = $(dom);
-    //表单验证绑定
-    var form = collaboratorDom.find('form');
-    form.find('input').val(opt.currentVal);
-    form.bootstrapValidator({
-      feedbackIcons: {
-        valid: 'glyphicon glyphicon-ok',
-        invalid: 'glyphicon glyphicon-remove',
-        validating: 'glyphicon glyphicon-refresh'
-      },
-      fields: {
-        flightId: {
-          validators: {
-            notEmpty: {},
-            onlyNumber: {},
-            hunEffectiveNumber: {},
-          }
+
+    //验证用户权限，如果是分支机场，只能修改自己的
+    if( $.isValidObject(userProperty.id_4310) ){
+        var userOmc = userProperty.userOmc;
+        //false 分支机场  true 总机场（全显）
+        if( userOmc == false){
+            var userAirport = userProperty.airport;
+            var curAirport = opt.airport;
+            //若不想的
+            if( userAirport != curAirport ){
+                return;
+            }
         }
-      }
-    });
-    $('#gbox_' + opt.tableId).append(collaboratorDom);
-    $('.alter_volume .flight-grid-table-collaborate-container').on('click', function (e) {
-      e.stopPropagation();
-    })
-    $('.alter_volume').on('click', function (event) {
-      if ($('.flight-grid-table-collaborate-container').is(':visible')) {
-        clearCollaborateContainer()
-      }
-    })
-    $('#flightId').focus().select()
-    // 定位协调DOM
-    collaboratorDom.position({
-      of: opt.cellObj,
-      my: 'left top',
-      at: 'right top',
-      collision: 'flipfit',
-    });
-    followTargetPosition(collaboratorDom, opt.cellObj)
-    $('#modificate_volume').on('click', function () {
-      //获取验证结果
-      var bootstrapValidator = form.data('bootstrapValidator');
-      var capacity = form.find('#flightId').val();
-      //手动再次触发验证
-      bootstrapValidator.validate();
-      if (bootstrapValidator.isValid()) {
-        getNewVolume(capacity, opt)
-      }
-    })
-    $('#cancale').on('click', function () {
-      clearCollaborateContainer();
-    })
-    $('.modal-close-btn').on('click', function () {
-      clearCollaborateContainer();
-    })
+        var collaboratorDom = $(dom);
+        //表单验证绑定
+        var form = collaboratorDom.find('form');
+        form.find('input').val(opt.currentVal);
+        form.bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                flightId: {
+                    validators: {
+                        notEmpty: {},
+                        onlyNumber: {},
+                        hunEffectiveNumber: {},
+                    }
+                }
+            }
+        });
+        $('#gbox_' + opt.tableId).append(collaboratorDom);
+        $('.alter_volume .flight-grid-table-collaborate-container').on('click', function (e) {
+            e.stopPropagation();
+        })
+        $('.alter_volume').on('click', function (event) {
+            if ($('.flight-grid-table-collaborate-container').is(':visible')) {
+                clearCollaborateContainer()
+            }
+        })
+        $('#flightId').focus().select()
+        // 定位协调DOM
+        collaboratorDom.position({
+            of: opt.cellObj,
+            my: 'left top',
+            at: 'right top',
+            collision: 'flipfit',
+        });
+        followTargetPosition(collaboratorDom, opt.cellObj)
+        $('#modificate_volume').on('click', function () {
+            //获取验证结果
+            var bootstrapValidator = form.data('bootstrapValidator');
+            var capacity = form.find('#flightId').val();
+            //手动再次触发验证
+            bootstrapValidator.validate();
+            if (bootstrapValidator.isValid()) {
+                getNewVolume(capacity, opt)
+            }
+        })
+        $('#cancale').on('click', function () {
+            clearCollaborateContainer();
+        })
+        $('.modal-close-btn').on('click', function () {
+            clearCollaborateContainer();
+        })
+    }
+
+
+
   };
 
   /**

@@ -466,6 +466,8 @@ var app = function () {
                         var property = data.userAuthority;
                         // 转换用户权限数据
                         userProperty = convertProperty(property);
+                        userProperty.userOmc = data.userOmc || false;
+                        userProperty.airport = data.airport || "";
                         // 依据用户权限处理模块显示
                         initModuleLayout();
                         // 设置默认活动模块

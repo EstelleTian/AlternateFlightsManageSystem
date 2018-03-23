@@ -35,7 +35,8 @@ var positionConfig = function () {
                 // 数据无效
                 if (!data) {
                     // 显示提示信息
-                    $('.position-module .alert').html('暂无数据').addClass('alert-danger active')
+                    $('.position-module .alert').html('暂无数据').addClass('alert-danger active');
+                    return;
                 }
                 ;
                 // 成功

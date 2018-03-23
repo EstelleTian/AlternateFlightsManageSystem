@@ -292,7 +292,8 @@ SortablePart.prototype.saveSort = function (btn) {
 
             // 数据无效
             if (!data) {
-                thisProxy.alertDialog('提交排序失败')
+                thisProxy.alertDialog('提交排序失败');
+                return;
             };
             // 成功
             if (data.status == 200) {
@@ -305,6 +306,13 @@ SortablePart.prototype.saveSort = function (btn) {
                 thisProxy.toggleButtonEnable();
                 // 弹框提示操作成功
                 thisProxy.tipDialog('提交排序成功');
+            }else if(data.status == 203){ // 无权限
+                if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
+                    var mess =data.error.message;
+                    thisProxy.alertDialog(mess)
+                }else {
+                    thisProxy.alertDialog('提交排序失败')
+                }
             }else if(data.status == 500){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
                     var mess =data.error.message;
@@ -400,7 +408,8 @@ SortablePart.prototype.addPositionSubmit = function () {
 
             // 数据无效
             if (!data) {
-                thisProxy.alertDialog('添加机位分类失败')
+                thisProxy.alertDialog('添加机位分类失败');
+                return;
             };
             // 成功
             if (data.status == 200) {
@@ -410,6 +419,13 @@ SortablePart.prototype.addPositionSubmit = function () {
                 thisProxy.refresh();
                 // 弹框提示成功
                 thisProxy.tipDialog('添加机位分类成功');
+            }else if(data.status == 203){ //  无权限
+                if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
+                    var mess = data.error.message
+                    thisProxy.alertDialog(mess)
+                }else {
+                    thisProxy.alertDialog('添加机位分类失败');
+                }
             }else if(data.status == 500){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
                     var mess = data.error.message
@@ -540,7 +556,8 @@ SortablePart.prototype.deletePositionSubmit = function (opt) {
         success: function (data) {
             // 数据无效
             if (!data) {
-                thisProxy.alertDialog('删除机位分类'+ opt.key+'失败')
+                thisProxy.alertDialog('删除机位分类'+ opt.key+'失败');
+                return;
             };
             // 成功
             if (data.status == 200) {
@@ -564,6 +581,12 @@ SortablePart.prototype.deletePositionSubmit = function (opt) {
                     thisProxy.alertDialog('删除机位分类'+ opt.key+'失败')
                 }
 
+            }else if(data.status == 203){ //  无权限
+                if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
+                    thisProxy.alertDialog('删除机位分类'+ opt.key+'失败:' +data.error.message);
+                }else {
+                    thisProxy.alertDialog('删除机位分类'+ opt.key+'失败');
+                }
             }
         },
         error: function ( status, error) {
@@ -672,7 +695,8 @@ SortablePart.prototype.updatePositionSubmit = function () {
 
             // 数据无效
             if (!data) {
-                thisProxy.alertDialog('修改机位分类'+ opt.key+'失败')
+                thisProxy.alertDialog('修改机位分类'+ opt.key+'失败');
+                return;
             };
             // 成功
             if (data.status == 200) {
@@ -694,9 +718,16 @@ SortablePart.prototype.updatePositionSubmit = function () {
                     thisProxy.alertDialog('修改机位分类'+ opt.key+'失败')
                 }
 
+            }else if(data.status == 203){ // 无权限
+                if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
+                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败:' +data.error.message);
+                }else {
+                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败')
+                }
             }
         },
         error: function ( status, error) {
+            thisProxy.alertDialog('修改机位分类'+ opt.key+'失败')
             console.error('ajax requset  fail, error:');
             console.error(error);
         }

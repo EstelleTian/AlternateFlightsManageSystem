@@ -453,7 +453,7 @@ var GridTableConfig = function () {
             }
 
             /**
-             * 处理航班状态列
+             * 处理备降状态列
              * */
             // 取得列值
             var colName = colModel.name;
@@ -533,7 +533,7 @@ var GridTableConfig = function () {
             return '';
         }
     };
-    // 航班状态列数值格式化转换
+    // 备降状态列数值格式化转换
     function formatterStatus(cellvalue, options, rowObject) {
         var code = app.statusCode;
         if($.isValidObject(code) && $.isValidVariable(code[cellvalue])){

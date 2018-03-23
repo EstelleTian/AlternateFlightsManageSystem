@@ -125,12 +125,11 @@ ul, li {
 }
 .menu-list {
     display: flex;
-    flex: 1 0 auto;
+    flex: 0 0 auto;
 }
 .option {
     display: flex;
-    position: relative;
-    right: 85rem;
+    margin-left: 20rem;
 }
 .option .alert-mess {
     padding: 8px;

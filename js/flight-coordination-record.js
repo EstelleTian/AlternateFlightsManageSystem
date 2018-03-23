@@ -78,15 +78,16 @@ var FlightCoordinationRecordObj = function () {
             dataType: "JSON",
             success: function (data) {
                 if ($.isValidObject(data) && data.status == 200) {
-                    // 更新协调类型集合
+
                     if($.isValidObject(data.recordType)){
+                        // 更新协调类型集合
                         recordType = convertTypeData(data.recordType);
                         FlightCoordinationRecordObj.recordType = recordType;
+                        // 初始化表格
+                        initTable();
+                        // 绘制表格数据
+                        fireDataChange(data);
                     }
-                    // 初始化表格
-                    initTable();
-                    // 绘制表格数据
-                    fireDataChange(data);
 
                 } else if (data.status == 500) {
                     console.warn(data.error.message);

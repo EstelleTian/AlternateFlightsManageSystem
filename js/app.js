@@ -452,8 +452,8 @@ var app = function () {
      *
      * */
     var initUserAuthority = function (time) {
-        // var url = ipHost + 'airport/retrieveUserAuthority?userId=' + userId;
-        var url = ipHost + 'airport/retrieveUserAuthority';
+        var url = ipHost + 'airport/retrieveUserAuthority?userId=' + userId;
+        // var url = ipHost + 'airport/retrieveUserAuthority';
         $.ajax({
             type: "GET",
             url: url,

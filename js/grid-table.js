@@ -809,9 +809,9 @@ GridTable.prototype.collaborateAlternate = function (opt) {
     }
 
     // 若航班结束,则右键不可用
-    if(opt.flight.finished == '1') {
-        return
-    };
+    // if(opt.flight.finished == '1') {
+    //     return
+    // };
 
     //航班状态
     var status = opt.flight.status*1 || -1;

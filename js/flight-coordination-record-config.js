@@ -4,76 +4,92 @@
  *
  * */
 var FlightCoordinationRecordCell = {
-	
-		/**
-		 * 时间格式化工具
-		 * 
-		 * @param cellvalue
-		 *            当前单元格数值
-		 * @param options
-		 *            JQGrid传入的配置项
-		 * @param rowObject
-		 *            当前行数据
-		 * @returns
-		 */
-		timeFormater : function(cellvalue, options, rowObject) {
-			if ($.isValidVariable(cellvalue)) {
-				return cellvalue.substring(6, 8) + '/' + cellvalue.substring(8, 12);
-			} else {
-				return cellvalue;
-			}
-		},
-		/**
-		 * 查询条件转大写
-		 * 
-		 * @param e
-		 * @returns
-		 */
-		searchToUpperCase : function(e) {
-			// $(this).val($(this).val().toUpperCase());
-			$(this).change();
-		},
-		/**
-		 * 单元格默认样式配置
-		 * 
-		 * @param rowId JQGrid当前行ID
-		 * @param value 当前单元格显示值
-		 * @param rowObject 当前行数据
-		 * @param colModel JQGrid当前列colModel对象
-		 * @param arrData 将要插入的数据项
-		 * @returns {String} 需要赋给单元格的属性 PS：注意不同属性间需要有空格分隔
-		 */
-		cellattrCustom: function(rowId, value, rowObject, colModel, arrData) {
-			// 需要赋予表格的属性
-			var attrs = '';
 
-			// 无效数值不做处理
-			if (!$.isValidVariable(value)) {
-				return attrs;
-			}
+    /**
+     * 时间格式化工具
+     *
+     * @param cellvalue
+     *            当前单元格数值
+     * @param options
+     *            JQGrid传入的配置项
+     * @param rowObject
+     *            当前行数据
+     * @returns
+     */
+    timeFormater: function (cellvalue, options, rowObject) {
+        if ($.isValidVariable(cellvalue)) {
+            return cellvalue.substring(6, 8) + '/' + cellvalue.substring(8, 12);
+        } else {
+            return cellvalue;
+        }
+    },
+    // 单元格时间格式化
+    formatterDateTime: function (cellvalue, options, rowObject) {
+        var val = cellvalue * 1;
+        if ($.isValidVariable(cellvalue) && !isNaN(val)) {
+            // 12位时间
+            if (cellvalue.length == 12) {
+                return cellvalue.substring(6, 8) + ' ' + cellvalue.substring(8, 10) + ':' + cellvalue.substring(10, 12);
+            } else if (cellvalue.length == 14) {  // 14位时间
+                return cellvalue.substring(6, 8) + ' ' + cellvalue.substring(8, 10) + ':' + cellvalue.substring(10, 12) + ':' + cellvalue.substring(12, 14);
+            }
+        } else {
+            return '';
+        }
+    },
 
-			var title = null;
-			if($.isValidVariable(rowObject[colModel.name + '_title'])){
-				title =  rowObject[colModel.name + '_title'];
-			}else{
-				title = rowObject[colModel.name];
-			}
-			
-			if(!$.isValidVariable(title)){
-				title = '';
-			}
-			attrs = attrs + ' title="' + title + '"';
-			
-			// 显示style
-			var style = rowObject[colModel.name + '_style'];
-			if ($.isValidVariable(style)) {
-				attrs = attrs + ' style="' + style + '"';
-			} else {
-				attrs = attrs + ' style="' + rowObject['default_style'] + '"';
-			}
-			
-			return attrs;
-		}
+
+    /**
+     * 查询条件转大写
+     *
+     * @param e
+     * @returns
+     */
+    searchToUpperCase: function (e) {
+        // $(this).val($(this).val().toUpperCase());
+        $(this).change();
+    },
+    /**
+     * 单元格默认样式配置
+     *
+     * @param rowId JQGrid当前行ID
+     * @param value 当前单元格显示值
+     * @param rowObject 当前行数据
+     * @param colModel JQGrid当前列colModel对象
+     * @param arrData 将要插入的数据项
+     * @returns {String} 需要赋给单元格的属性 PS：注意不同属性间需要有空格分隔
+     */
+    cellattrCustom: function (rowId, value, rowObject, colModel, arrData) {
+        // 需要赋予表格的属性
+        var attrs = '';
+
+        // 无效数值不做处理
+        if (!$.isValidVariable(value)) {
+            return attrs;
+        }
+
+        var title = null;
+        if ($.isValidVariable(rowObject[colModel.name + '_title'])) {
+            title = rowObject[colModel.name + '_title'];
+        } else {
+            title = rowObject[colModel.name];
+        }
+
+        if (!$.isValidVariable(title)) {
+            title = '';
+        }
+        attrs = attrs + ' title="' + title + '"';
+
+        // 显示style
+        var style = rowObject[colModel.name + '_style'];
+        if ($.isValidVariable(style)) {
+            attrs = attrs + ' style="' + style + '"';
+        } else {
+            attrs = attrs + ' style="' + rowObject['default_style'] + '"';
+        }
+
+        return attrs;
+    }
 };
 
 
@@ -157,7 +173,8 @@ var FlightCoordinationRecordConfig = {
         //协调时间
         {
             name : 'coordinateTime',
-            index : 'coordinateTime'
+            index : 'coordinateTime',
+            formatter : FlightCoordinationRecordCell.formatterDateTime
         },
 		//协调用户
         {

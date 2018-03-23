@@ -37,6 +37,17 @@ var FlightCoordinationRecordCell = {
             return '';
         }
     },
+    // 协调类型转换
+
+    formatterType: function (cellvalue, options, rowObject) {
+        var code = FlightCoordinationRecordObj.recordType;
+        if ($.isValidObject(code) && $.isValidVariable(code[cellvalue])) {
+            return code[cellvalue].text;
+        } else {
+            return cellvalue;
+        }
+
+    },
 
 
     /**
@@ -158,7 +169,8 @@ var FlightCoordinationRecordConfig = {
         // 协调类型
         {
             name : 'type',
-            index : 'type'
+            index : 'type',
+            formatter : FlightCoordinationRecordCell.formatterType
         },
         //协调前
         {

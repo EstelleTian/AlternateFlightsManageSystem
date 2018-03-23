@@ -8,6 +8,8 @@ var FlightCoordinationRecordObj = function () {
     var flightDataId ='';
     // 航班号
     var flightId = '';
+    // 协调类型集合
+    var recordType = ''
 
     /**
      * 初始化表格
@@ -76,8 +78,16 @@ var FlightCoordinationRecordObj = function () {
             dataType: "JSON",
             success: function (data) {
                 if ($.isValidObject(data) && data.status == 200) {
+                    // 更新协调类型集合
+                    if($.isValidObject(data.recordType)){
+                        recordType = convertTypeData(data.recordType);
+                        FlightCoordinationRecordObj.recordType = recordType;
+                    }
+                    // 初始化表格
+                    initTable();
                     // 绘制表格数据
                     fireDataChange(data);
+
                 } else if (data.status == 500) {
                     console.warn(data.error.message);
                     Common.timeoutCallback(initUserAuthority,time);
@@ -91,6 +101,23 @@ var FlightCoordinationRecordObj = function () {
                 Common.timeoutCallback(retrieveData,time);
             }
         });
+    };
+
+
+    /**
+     * 转换协调类型集合数据
+     * */
+    var convertTypeData = function (data) {
+        typeCode = {};
+        if($.isValidObject(data)){
+
+            data.map(function (item, index, arr) {
+                var val = item.value;
+                typeCode[val] = item;
+            });
+
+        }
+        return typeCode;
     };
 
     /**
@@ -129,9 +156,8 @@ var FlightCoordinationRecordObj = function () {
     };
 
     return {
+        recordType : recordType,
         init: function () {
-            // 初始化表格
-            initTable();
             // 获取数据
             retrieveData(1000*2);
         }

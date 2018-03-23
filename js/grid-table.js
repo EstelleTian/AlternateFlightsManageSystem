@@ -2738,6 +2738,10 @@ GridTable.prototype.export = function (name) {
  *
  * */
 GridTable.prototype.exportAlternateToExcel = function ( name, params ) {
+    // 是否有权限
+    if(!$.isValidObject(userProperty.id_4220)){
+        return;
+    };
     var url = '';
     if( name == 'alternate' ){
         var scope = params.scope || '';

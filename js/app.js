@@ -447,9 +447,9 @@ var app = function () {
      *
      * */
     var initUserAuthority = function (time) {
-        // userId = sessionStorage.getItem('userId'); // 本地测试专用
-        // var url = ipHost + 'airport/retrieveUserAuthority?userId=' + userId; // 本地测试专用
-        var url = ipHost + 'airport/retrieveUserAuthority';
+        userId = sessionStorage.getItem('userId'); // 本地测试专用
+        var url = ipHost + 'airport/retrieveUserAuthority?userId=' + userId; // 本地测试专用
+        // var url = ipHost + 'airport/retrieveUserAuthority';
         $.ajax({
             type: "GET",
             url: url,

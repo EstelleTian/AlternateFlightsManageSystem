@@ -22,7 +22,7 @@ var ModuleLoader = function(){
         var body = document.getElementsByTagName('body')[0];
         var head = document.getElementsByTagName('head')[0];
         //遍历url传来的参数
-        var fileName = JSON.parse(obj['param'])['moduleName'] ;
+        var fileName = obj.moduleName ||'';
         for(var x in urlsObj){
             if(fileName == x){
                 var links = urlsObj[x].link;
@@ -52,7 +52,7 @@ var ModuleLoader = function(){
         init:function(){
             Loadlink(urlParam);
         },
-        data:JSON.parse(urlParam.param)['data']
+        data:urlParam
     }
 }();
 window.onload = function(){

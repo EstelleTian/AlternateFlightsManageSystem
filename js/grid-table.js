@@ -1126,13 +1126,16 @@ GridTable.prototype.collaborateRecordRequest = function(opt){
     var flightDataId = opt.flight.flightDataId;
     // 航班号
     var flightId = opt.flight.flightId;
-    var param = {
-        moduleName:'record',
-        data:{
-            flightDataId:flightDataId,
-            flightId : flightId
-        }
-    };
+    // var param = {
+    //     moduleName:'record',
+    //     data:{
+    //         flightDataId:flightDataId,
+    //         flightId : flightId
+    //     }
+    // };
+
+    var param ='moduleName=record'+'&flightDataId='+ flightDataId +'&flightId='+flightId;
+
     thisProxy.openModule('查看协调记录',param);
     thisProxy.clearCollaborateContainer();
 }
@@ -2696,13 +2699,13 @@ GridTable.prototype.showAdvanceFilter = function () {
 GridTable.prototype.openModule = function (title, param) {
     // 代理
     var thisProxy = this;
-    var param = JSON.stringify(param);
+    // var param = JSON.stringify(param);
     var winTitle = title;
     var dialogId = 'detail' + new Date().getTime();
-    var winUrl = 'flight-coordination-record.html?param=' + param;
+    var winUrl = 'flight-coordination-record.html?' + param;
     var winParams = {
         id: dialogId,
-        width: 1080,
+        width: 1240,
         height: 600,
         center: true,
         move: true

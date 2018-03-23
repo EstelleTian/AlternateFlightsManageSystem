@@ -4,6 +4,10 @@
  * */
 var FlightCoordinationRecordObj = function () {
     var table = null;
+    // 计划批号
+    var flightDataId ='';
+    // 航班号
+    var flightId = '';
 
     /**
      * 初始化表格
@@ -33,7 +37,7 @@ var FlightCoordinationRecordObj = function () {
             title: "导出Excel",
             buttonicon: "glyphicon-export",
             onClickButton: function () {
-                // table.export(opt.name);
+                table.export(flightId+'('+flightDataId+')'+'协调记录');
             },
             position: "first"
         }).navButtonAdd('#' + pagerId, {
@@ -60,7 +64,10 @@ var FlightCoordinationRecordObj = function () {
      * 获取数据
      * */
     var retrieveData = function (time) {
-        var flightDataId = ModuleLoader.data.id;
+        // 计划批号
+        flightDataId = ModuleLoader.data.flightDataId;
+        // 航班号
+        flightId = ModuleLoader.data.flightId;
         var url = DataUrl.COORDINATION_RECORD+'?flightDataId='+flightDataId;
         $.ajax({
             type: "GET",

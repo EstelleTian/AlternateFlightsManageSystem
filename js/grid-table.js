@@ -2753,7 +2753,9 @@ GridTable.prototype.exportAlternateToExcel = function ( name, params ) {
     if( name == 'alternate' ){
         var scope = params.scope || '';
         var keyword = params.keyword || '';
-        url = CellOpreationUrl.EXPORT_ALTERNATE_TO_EXCEL +"?scope=" + scope + "&keyWord=" + keyword;
+        var start = params.start || '';
+        var end = params.end || '';
+        url = CellOpreationUrl.EXPORT_ALTERNATE_TO_EXCEL +"?scope=" + scope + "&keyWord=" + keyword+"&start=" + start + "&end=" + end;
     }else if(name == 'history'){
         var start = params.start || '';
         var end = params.end || '';

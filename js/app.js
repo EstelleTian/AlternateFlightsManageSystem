@@ -239,9 +239,12 @@ var app = function () {
                             title: "导出Excel",
                             buttonicon: "glyphicon-export",
                             onClickButton: function () {
+                                var d = $.getFullTime(new Date()).substring(0,8);
                                 var params = {
                                     scope : alternateObj.scope,
-                                    keyWord : alternateObj.keyword
+                                    keyWord : alternateObj.keyword,
+                                    start : d,
+                                    end : d
                                 }
                                 table.exportAlternateToExcel( 'alternate', params);
                             },

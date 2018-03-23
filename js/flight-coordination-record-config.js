@@ -1,5 +1,8 @@
 
-
+/**
+ * 协调记录表格单元格格式化处理
+ *
+ * */
 var FlightCoordinationRecordCell = {
 	
 		/**

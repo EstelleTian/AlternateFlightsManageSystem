@@ -247,7 +247,8 @@ var GridTableConfig = function () {
             // 备降起飞
             {
                 name: 'alternateDeptime',
-                index: 'alternateDeptime'
+                index: 'alternateDeptime',
+                formatter : formatterDateTime
             }
 
         ]
@@ -383,7 +384,8 @@ var GridTableConfig = function () {
             // 备降起飞
             {
                 name: 'alternateDeptime',
-                index: 'alternateDeptime'
+                index: 'alternateDeptime',
+                formatter : formatterDateTime
             },
             // 计划日期
             {

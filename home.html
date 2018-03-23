@@ -98,14 +98,14 @@
 <!--复杂天气切换模板-->
 <script id="option-template" type="text/x-handlebars-template">
     {{#if this.id_4560}}
-    <li >
-        <span class="alert"></span>
-    </li>
     <li>
         <a href="javascript:;" class="limit-option">
             <input class="magic-checkbox" type="checkbox"  id="change-weather-model">
             <label for="change-weather-model">开启复杂天气模式</label>
         </a>
+    </li>
+    <li >
+        <span class="alert"></span>
     </li>
 
     {{/if}}
@@ -118,7 +118,11 @@
     <a href="javascript:;">进港计划</a>
     </li>
     {{/if}}
-
+    {{#if this.id_4100}}
+    <li>
+        <a href="javascript:;" >疆内飞越</a>
+    </li>
+    {{/if}}
     {{#if this.id_4200}}
     <li>
         <a href="javascript:;" >备降计划</a>
@@ -129,11 +133,7 @@
         <a href="javascript:;" >备降历史</a>
     </li>
     {{/if}}
-    {{#if this.id_4100}}
-    <li>
-        <a href="javascript:;" >疆内飞越</a>
-    </li>
-    {{/if}}
+
     {{#if this.id_4300}}
     <li class="alternate-airport">
         <a href="javascript:;" >备降场容量</a>
@@ -203,6 +203,73 @@
                 <div class="result-panel">
                     <table id="arr-table"></table>
                     <div id="arr-table-pager"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {{/if}}
+    {{#if this.id_4100}}
+    <!--模块4 疆内飞越-->
+    <section class="over-module">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="poster">疆内飞越</div>
+                <div class="time"></div>
+            </div>
+            <div class="panel-body">
+                <!-- 表单面板-->
+                <ul class="form-panel" >
+                    <li class="form-item">
+                        <label class="title">范围</label>
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    飞越全部
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+
+                                </ul>
+                            </div>
+                        </div>
+
+                    </li>
+                    <li class="form-item">
+                        <label class="title">关键字</label>
+                        <input type="text" class="input-sm form-control key">
+                    </li>
+
+                    <li class="form-item one-child">
+                        <button class="atfm-btn atfm-btn-blue ladda-button inquire" data-style="zoom-out">
+                            <span class="ladda-label">查询</span>
+                        </button>
+                    </li>
+
+                    <li class="form-item">
+                        <a href="javascript:;" class="limit-option">
+                            <input class="magic-checkbox" type="checkbox" id="set-filter" >
+                            <label for="set-filter">任务为X不显示</label>
+                        </a>
+                    </li>
+
+                    <!--提示信息-->
+                    <li class="form-item">
+                        <span class="alert"></span>
+                    </li>
+
+                </ul>
+                <!-- 查询条件显示-->
+                <ul class="condition-panel hidden">
+                    <li class="form-item">
+                        当前查询条件:
+                    </li>
+                    <li class="form-item scope"></li>
+                    <li class="form-item key"></li>
+                </ul>
+                <!-- 数据可视化区(图表,表格)-->
+                <div class="result-panel">
+                    <table id="over-table"></table>
+                    <div id="over-table-pager"></div>
                 </div>
             </div>
         </div>
@@ -307,73 +374,7 @@
     </section>
     {{/if}}
 
-    {{#if this.id_4100}}
-    <!--模块3-->
-    <section class="over-module">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="poster">疆内飞越</div>
-                <div class="time"></div>
-            </div>
-            <div class="panel-body">
-                <!-- 表单面板-->
-                <ul class="form-panel" >
-                    <li class="form-item">
-                        <label class="title">范围</label>
-                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    飞越全部
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
 
-                                </ul>
-                            </div>
-                        </div>
-
-                    </li>
-                    <li class="form-item">
-                        <label class="title">关键字</label>
-                        <input type="text" class="input-sm form-control key">
-                    </li>
-
-                    <li class="form-item one-child">
-                        <button class="atfm-btn atfm-btn-blue ladda-button inquire" data-style="zoom-out">
-                            <span class="ladda-label">查询</span>
-                        </button>
-                    </li>
-
-                    <li class="form-item">
-                        <a href="javascript:;" class="limit-option">
-                            <input class="magic-checkbox" type="checkbox" id="set-filter" >
-                            <label for="set-filter">任务为X不显示</label>
-                        </a>
-                    </li>
-
-                    <!--提示信息-->
-                    <li class="form-item">
-                        <span class="alert"></span>
-                    </li>
-
-                </ul>
-                <!-- 查询条件显示-->
-                <ul class="condition-panel hidden">
-                    <li class="form-item">
-                        当前查询条件:
-                    </li>
-                    <li class="form-item scope"></li>
-                    <li class="form-item key"></li>
-                </ul>
-                <!-- 数据可视化区(图表,表格)-->
-                <div class="result-panel">
-                    <table id="over-table"></table>
-                    <div id="over-table-pager"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-    {{/if}}
 
     <!--模块4-->
     <!-- <section class="dep-module">

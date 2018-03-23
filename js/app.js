@@ -58,7 +58,7 @@ var app = function () {
 
     // 初始化模块
     var initModule = function () {
-        if ($.isValidObject(userProperty.id_4000)) {
+        if($.isValidObject(userProperty.id_4000)) {
             // 进港计划模块
             arrObj = new FormModule({
                 // 容器ID
@@ -136,6 +136,71 @@ var app = function () {
             });
             arrObj.initFormModuleObject();
             moduleObjs.push(arrObj);
+        }
+        if($.isValidObject(userProperty.id_4100)){
+            // 疆内飞越模块
+            overObj = new FormModule({
+                canvasId: 'over-module',
+                tableId: 'over-table',
+                url : DataUrl.OVER,
+                // 定时器时间
+                interval : interval,
+                // 默认选中的范围值
+                defaultScope : '2',
+                initGridTable : function (table) {
+                    var pagerId = 'over-table-pager';
+                    var opt = {
+                        moduleObj : overObj, // 表格所在模块对象
+                        tableId: 'over-table',
+                        pagerId: pagerId,
+                        colNames: GridTableConfig.common.colName,
+                        colModel: GridTableConfig.common.colModel,
+                        cmTemplate: GridTableConfig.colModelTemplate,
+                        colTitle: GridTableConfig.common.colTitle,
+                        colCollaborateUrl: CellOpreationUrl,
+                        params: {
+                            sortname: 'peta',
+                            shrinkToFit: true,
+                            sortorder: 'asc'
+                        }
+                    };
+                    table = new GridTable(opt);
+                    table.initGridTableObject();
+                    // 设置 Pager 按钮
+                    table.gridTableObject
+                        .navButtonAdd('#' + pagerId, {
+                            caption: "导出",
+                            title: "导出Excel",
+                            buttonicon: "glyphicon-export",
+                            onClickButton: function () {
+                                table.export('over-table');
+                            },
+                            position: "first"
+                        }) .navButtonAdd('#' + pagerId, {
+                        caption: "高级查询",
+                        title: "高级查询",
+                        buttonicon: "glyphicon-search",
+                        onClickButton: function () {
+                            table.showAdvanceFilter();
+                        },
+                        position: "first"
+                    }).navButtonAdd('#' + pagerId, {
+                        caption: "快速过滤",
+                        title: "快速过滤",
+                        buttonicon: "glyphicon-filter",
+                        onClickButton: function () {
+                            //清理协调窗口
+                            table.clearCollaborateContainer();
+                            table.showQuickFilter();
+                        },
+                        position: "first"
+                    });
+                    return table;
+                }
+            });
+            overObj.initFormModuleObject();
+            moduleObjs.push(overObj);
+
         }
         if($.isValidObject(userProperty.id_4200)){
             // 备降计划模块
@@ -272,71 +337,6 @@ var app = function () {
             });
             alternateHistoryObj.initHistoryFormModuleObject();
             moduleObjs.push(alternateHistoryObj);
-
-        }
-        if($.isValidObject(userProperty.id_4100)){
-            // 疆内飞越模块
-            overObj = new FormModule({
-                canvasId: 'over-module',
-                tableId: 'over-table',
-                url : DataUrl.OVER,
-                // 定时器时间
-                interval : interval,
-                // 默认选中的范围值
-                defaultScope : '2',
-                initGridTable : function (table) {
-                    var pagerId = 'over-table-pager';
-                    var opt = {
-                        moduleObj : overObj, // 表格所在模块对象
-                        tableId: 'over-table',
-                        pagerId: pagerId,
-                        colNames: GridTableConfig.common.colName,
-                        colModel: GridTableConfig.common.colModel,
-                        cmTemplate: GridTableConfig.colModelTemplate,
-                        colTitle: GridTableConfig.common.colTitle,
-                        colCollaborateUrl: CellOpreationUrl,
-                        params: {
-                            sortname: 'peta',
-                            shrinkToFit: true,
-                            sortorder: 'asc'
-                        }
-                    };
-                    table = new GridTable(opt);
-                    table.initGridTableObject();
-                    // 设置 Pager 按钮
-                    table.gridTableObject
-                        .navButtonAdd('#' + pagerId, {
-                            caption: "导出",
-                            title: "导出Excel",
-                            buttonicon: "glyphicon-export",
-                            onClickButton: function () {
-                                table.export('over-table');
-                            },
-                            position: "first"
-                        }) .navButtonAdd('#' + pagerId, {
-                        caption: "高级查询",
-                        title: "高级查询",
-                        buttonicon: "glyphicon-search",
-                        onClickButton: function () {
-                            table.showAdvanceFilter();
-                        },
-                        position: "first"
-                    }).navButtonAdd('#' + pagerId, {
-                        caption: "快速过滤",
-                        title: "快速过滤",
-                        buttonicon: "glyphicon-filter",
-                        onClickButton: function () {
-                            //清理协调窗口
-                            table.clearCollaborateContainer();
-                            table.showQuickFilter();
-                        },
-                        position: "first"
-                    });
-                    return table;
-                }
-            });
-            overObj.initFormModuleObject();
-            moduleObjs.push(overObj);
 
         }
         if($.isValidObject(userProperty.id_4300)){

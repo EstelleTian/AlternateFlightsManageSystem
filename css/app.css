@@ -127,8 +127,11 @@ ul, li {
     display: flex;
     flex: 1 0 auto;
 }
-.option .limit-option {
-    height: 100%;
+.option {
+    display: flex;
+}
+.option .alert-mess {
+    padding: 8px;
 }
 .main-area {
     display: flex;
@@ -224,13 +227,17 @@ ul, li {
     padding: 0 1rem;
     font-weight: 600;
 }
-.form-panel .form-item .alert {
+.form-panel .form-item .alert, .option .alert {
     display: none;
     align-items: center;
     margin: 0;
 }
-.form-panel .form-item .alert.active {
+.form-panel .form-item .alert.active, .option .alert.active {
     display: inline-block;
+    padding: 8px;
+}
+.limit-option >label {
+    top: 6px;
 }
 
 .panel-body .form-panel .form-item.one-child {

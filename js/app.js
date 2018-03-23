@@ -476,8 +476,11 @@ var app = function () {
                         initModule();
                         // 绑定菜单栏事件，切换模块显隐及活动模块
                         initActiveModule();
+                        initChangeWeatherModel();
+                        // 绑定开启复杂天气模式按钮点击事件
+                        initChangeWeatherModel();
                         // 绑定进港计划模块切换复杂天气模式关联疆内飞越模块表格右键可交互标记
-                        changeCollaborateFlag();
+                        // changeCollaborateFlag();
                     }else{
                         console.warn('获取用户权限为空');
                         Common.timeoutCallback(initUserAuthority,time);
@@ -700,66 +703,103 @@ var app = function () {
     };
 
     /**
-     * 绑定进港计划模块切换复杂天气模式关联疆内飞越模块表格右键可交互标记
+     * 绑定开启复杂天气模式按钮点击事件
      * */
-    var changeCollaborateFlag = function () {
-
+    var initChangeWeatherModel = function () {
+        // 若有权限
         if($.isValidObject(userProperty.id_4560)){
-            // 取得checkbox
-            var $box = $('.menu-bar input#change-weather-model');
-            // checkbox绑定点击事件
-            $box.on('click',function () {
-                // 取得checkbox勾选状态
-                var bool = $box.prop('checked');
-
-                // 进港计划
-                if($.isValidObject(arrObj)){
-                    // 切换复杂天气模式
-                    arrObj.changeWeatherModel(bool);
-                    // 更新进港计划表格右键可交互标记
-                    if($.isValidObject(arrObj.table)){
-                        arrObj.table.collaborateFlag = bool;
-                        // 清除进港表格协调菜单
-                        if(!bool && $.isValidVariable(arrObj.table.clearCollaborateContainer)){
-                            arrObj.table.clearCollaborateContainer();
-                        }
-                    }
-                }
-                // 飞越计划
-                if($.isValidObject(overObj)){
-                    // 切换复杂天气模式
-                    overObj.changeWeatherModel(bool);
-                    // 更新飞越计划表格右键可交互标记
-                    if($.isValidObject(overObj.table)){
-                        overObj.table.collaborateFlag = bool;
-                        // 清除飞越表格协调菜单
-                        if(!bool && $.isValidVariable(overObj.table.clearCollaborateContainer)){
-                            overObj.table.clearCollaborateContainer();
-                        }
-                    }
-                }
-
-            });
+            // 绑定点击事件
+            $('.menu-bar .limit-option').off('click').on('click','#change-weather-model',function () {
+                // 复选按钮勾选状态
+                var bool = $(this).prop('checked');
+                // 切换复杂天气模式开启/关闭
+                changeWeatherModel(bool);
+            })
         }
 
+    };
+    /**
+     * 切换复杂天气模式开启/关闭
+     * */
+    var changeWeatherModel = function (bool) {
+        // bool true 开启  false 取消天启
+        // 清除提示信息
+        $('.option .alert').removeClass('alert-danger active').html('');
+        // 向后端提交此次天气模式的切换
+        var url = DataUrl.WEATHER_MODEL;
+        url = url + '?isCheck='+ bool;
+        $.ajax({
+            url:url,
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+
+                if (!$.isValidObject(data)) { // 数据无效
+                    changeWeatherModelFail(bool);
+                }else {
+                    if(data.status == 200){ // 成功
+                        changeWeatherModelSuccess(bool);
+
+                    }else { // 失败
+                        changeWeatherModelFail(bool);
+
+                    }
+                }
+            },
+            error: function ( status, error) { // 失败
+                changeWeatherModelFail(bool);
+                console.error('ajax requset  fail, error:');
+                console.error(error);
+            }
+        });
     };
 
     /**
-     * 格式化数据生成时间
+     * 提交成功
      * */
-    var formaterGenerateTime = function (time) {
-        var str = '';
-        if(time.length == 12){
-            var year = time.substring(0, 4);
-            var mon = time.substring(4, 6);
-            var date = time.substring(6, 8);
-            var hour = time.substring(8, 10);
-            var min = time.substring(10, 12);
-            str = year + '-' + mon + '-' + date + ' ' + hour + ":" + min;
+    var changeWeatherModelSuccess = function (bool) {
+        // 进港计划
+        if($.isValidObject(arrObj)){
+            // 切换复杂天气模式
+            arrObj.changeWeatherModel(bool);
+            // 更新进港计划表格右键可交互标记
+            if($.isValidObject(arrObj.table)){
+                arrObj.table.collaborateFlag = bool;
+                // 清除进港表格协调菜单
+                if(!bool && $.isValidVariable(arrObj.table.clearCollaborateContainer)){
+                    arrObj.table.clearCollaborateContainer();
+                }
+            }
         }
+        // 飞越计划
+        if($.isValidObject(overObj)){
+            // 切换复杂天气模式
+            overObj.changeWeatherModel(bool);
+            // 更新飞越计划表格右键可交互标记
+            if($.isValidObject(overObj.table)){
+                overObj.table.collaborateFlag = bool;
+                // 清除飞越表格协调菜单
+                if(!bool && $.isValidVariable(overObj.table.clearCollaborateContainer)){
+                    overObj.table.clearCollaborateContainer();
+                }
+            }
+        }
+    }
+    /**
+     * 提交失败
+     *
+     * */
+    var changeWeatherModelFail = function (bool) {
+        var txt = bool ? '开启复杂天气模式失败' :'取消开启复杂天气模式失败';
+        // 取得checkbox
+        var $box = $('.menu-bar input#change-weather-model');
+        // 反选复选框状态
+        $box.prop('checked',!bool);
+        // 显示提示内容
+        $('.option .alert').html(txt).addClass('active alert-danger');
+    }
 
-        return str;
-    };
+
     /**
      * 转换用户权限数据
      *

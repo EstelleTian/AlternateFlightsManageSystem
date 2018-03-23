@@ -288,34 +288,6 @@ FormModule.prototype.changeWeatherModel = function (bool) {
     }
     thisProxy.abortRequest(true);
     thisProxy.openRequest(true);
-    // 向后端提交此次天气模式的切换
-    var url = DataUrl.WEATHER_MODEL;
-    if(!$.isValidVariable(url)){
-        return;
-    }
-    url = url + '?isCheck='+ bool;
-
-    $.ajax({
-        url:url,
-        type: 'POST',
-        dataType: 'json',
-        success: function (data) {
-
-            // 数据无效
-            if (!data) {
-
-            };
-            // 成功
-            if (data.status == 200) {
-
-            }
-        },
-        error: function ( status, error) {
-            console.error('ajax requset  fail, error:');
-            console.error(error);
-        }
-    });
-
 };
 
 /**
@@ -484,6 +456,7 @@ FormModule.prototype.inquireData = function () {
                 thisProxy.clear();
                 // 展示提示
                 thisProxy.showMsg('danger','请求接口错误');
+                return;
             };
             // 成功
             if (data.status == 200) {

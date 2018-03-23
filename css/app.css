@@ -127,6 +127,9 @@ ul, li {
     display: flex;
     flex: 1 0 auto;
 }
+.option .limit-option {
+    height: 100%;
+}
 .main-area {
     display: flex;
     flex-grow: 1;

@@ -129,6 +129,8 @@ ul, li {
 }
 .option {
     display: flex;
+    position: relative;
+    right: 85rem;
 }
 .option .alert-mess {
     padding: 8px;
@@ -839,4 +841,8 @@ ul, li {
 /********************进港计划,疆内飞越,出港计划宽度自适应****************************/
 .main-area >section .ui-jqgrid-bdiv div:first-child{
     overflow-x: hidden;
+}
+/********************进港计划,疆内飞越,出港计划宽度自适应****************************/
+.ui-jqgrid-pager{
+    font-size: 1.5rem;
 }

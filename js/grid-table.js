@@ -1122,11 +1122,15 @@ GridTable.prototype.collaborateAlternate = function (opt) {
  */
 GridTable.prototype.collaborateRecordRequest = function(opt){
     var thisProxy = this;
-    var id = opt.flight.flightDataId;
+    // 计划批号
+    var flightDataId = opt.flight.flightDataId;
+    // 航班号
+    var flightId = opt.flight.flightId;
     var param = {
         moduleName:'record',
         data:{
-            id:id
+            flightDataId:flightDataId,
+            flightId : flightId
         }
     };
     thisProxy.openModule('查看协调记录',param);

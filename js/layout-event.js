@@ -71,7 +71,7 @@ var layoutEvent = function () {
     return {
         init : function () {
             // 验证用户信息有效性
-            verifyUservalidity();
+            // verifyUservalidity();
             // 登出
             initLogout();
         }

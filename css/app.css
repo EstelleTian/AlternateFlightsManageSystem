@@ -405,7 +405,7 @@ ul, li {
 
 /**机位管理模块**/
 .flex-end {
-    justify-content: flex-end;
+    /*justify-content: flex-end;*/
 }
 .edited-option {
     padding: 4px 0;

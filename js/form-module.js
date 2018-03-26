@@ -133,6 +133,8 @@ FormModule.prototype.initFormModuleObject = function () {
     thisProxy.bindEventOnButton();
     // 切换快速过滤
     thisProxy.toggleQuickFilter();
+    // 调用initGridTable方法,初始化表格
+    thisProxy.table = thisProxy.initGridTable(thisProxy.table);
 
     // 绑定窗口调整时
     // $(window).resize(function () {
@@ -468,27 +470,12 @@ FormModule.prototype.inquireData = function () {
                 thisProxy.isHiddenTableContainer(false);
                 // 清除提示信息
                 thisProxy.clearMsg();
-                // 判断表格是否已经初始化
-                if(!$.isValidObject(thisProxy.table.gridTableObject)){
-                    // 校验自定义的initGridTable方法是否有效
-                    if($.isValidVariable(thisProxy.initGridTable) && typeof thisProxy.initGridTable == 'function'){
-                        // 调用initGridTable方法,初始化表格
-                        thisProxy.table = thisProxy.initGridTable(thisProxy.table);
-                        thisProxy.table.fireTableDataChange(data);
-                        // 若表格定时器更新数据开关开启则更新数据生成时间，用于表格数据与时间保持一致
-                        if(thisProxy.table.fireDataFlag){
-                            // 更新数据生成时间并显示
-                            thisProxy.updateTime();
-                        }
-                    }
-                }else {
-                    // 更新表格数据
-                    thisProxy.table.fireTableDataChange(data);
-                    // 若表格定时器更新数据开关开启则更新数据生成时间，用于表格数据与时间保持一致
-                    if(thisProxy.table.fireDataFlag){
-                        // 更新数据生成时间并显示
-                        thisProxy.updateTime();
-                    }
+                // 更新表格数据
+                thisProxy.table.fireTableDataChange(data);
+                // 若表格定时器更新数据开关开启则更新数据生成时间，用于表格数据与时间保持一致
+                if(thisProxy.table.fireDataFlag){
+                    // 更新数据生成时间并显示
+                    thisProxy.updateTime();
                 }
 
             } else if (data.status == 400) {

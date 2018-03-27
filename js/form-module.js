@@ -289,7 +289,7 @@ FormModule.prototype.changeWeatherModel = function (bool) {
         thisProxy.enableCustomeIntervalFlag = false;
     }
     thisProxy.abortRequest(true);
-    thisProxy.openRequest(true);
+    thisProxy.openRequest(false);
 };
 
 /**
@@ -700,7 +700,9 @@ FormModule.prototype.startTimer = function (fn, isNext, time) {
 
 /**
  * 开启请求
- *
+ *  now  是否立即查询数据
+ *  true 立即查询数据查询数据并开启定时刷新
+ *  false 不立即查询数据查询数据查询仅开启定时刷新
  *
  *
  * */

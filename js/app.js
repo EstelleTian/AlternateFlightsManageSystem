@@ -411,8 +411,6 @@ var app = function () {
             $('.main-area section').eq(index).addClass('active');
             // 切换活动模块
             activeModuleToggle(index);
-            //处理表格自适应TODO
-            $(window).trigger('resize')
         });
     };
     /**
@@ -778,6 +776,12 @@ var app = function () {
     var changeWeatherModelSuccess = function (bool) {
         // 进港计划
         if($.isValidObject(arrObj)){
+            // 若表格未初始化
+            if(!$.isValidObject(arrObj.table.gridTableObject)){
+                // 初始化表格
+                arrObj.table = arrObj.initGridTable(arrObj.table);
+            }
+
             // 切换复杂天气模式
             arrObj.changeWeatherModel(bool);
             // 更新进港计划表格右键可交互标记
@@ -791,6 +795,11 @@ var app = function () {
         }
         // 飞越计划
         if($.isValidObject(overObj)){
+            // 若表格未初始化
+            if(!$.isValidObject(overObj.table.gridTableObject)){
+                // 初始化表格
+                overObj.table = overObj.initGridTable(overObj.table);
+            }
             // 切换复杂天气模式
             overObj.changeWeatherModel(bool);
             // 更新飞越计划表格右键可交互标记

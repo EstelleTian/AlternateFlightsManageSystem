@@ -111,9 +111,6 @@ FormModule.prototype.initFormModuleObject = function () {
     // 表格jQuery对象
     thisProxy.table = $('#' + thisProxy.tableId);
 
-    // 表格容器大小自适应
-    thisProxy.resizeTableContainer();
-
     // 绑定范围选择切换
     thisProxy.changeScope();
 
@@ -134,50 +131,10 @@ FormModule.prototype.initFormModuleObject = function () {
     // 切换快速过滤
     thisProxy.toggleQuickFilter();
     // 调用initGridTable方法,初始化表格
-    thisProxy.table = thisProxy.initGridTable(thisProxy.table);
-
-    // 绑定窗口调整时
-    // $(window).resize(function () {
-    //     // 使窗口调整时表格容器大小自适应
-    //     thisProxy.resizeTableContainer();
-    // });
-
+    // thisProxy.table = thisProxy.initGridTable(thisProxy.table);
 };
 
-/**
- * 计算表格容器大小,使其大小自适应
- *
- * **/
-FormModule.prototype.resizeTableContainer = function () {
-    // 当前对象this代理
-    var thisProxy = this;
-    // 容器
-    var $container = $('.app-transition');
-    // 导航栏
-    var $nav = $('.navbar',$container);
-    // 菜单栏
-    var $menu = $('.menu-bar', $container);
-    // 主显示区
-    var $main = $('.main-area');
-    // 模块头部
-    var $head = $('.panel-heading',thisProxy.canvas);
-    // 模块体
-    var $body = $('.panel-body', thisProxy.canvas);
-    // 模块内的表单栏
-    var $form = $('.form-panel', thisProxy.canvas);
-    // 模块内的当前查询条件栏
-    var $condition = $('.condition-panel', thisProxy.canvas);
-    // 模块内数据结果可视化区
-    var $result = $('.result-panel', thisProxy.canvas);
-    // 求得主显示区高度:(总高度-导航栏-菜单栏-主显示区外边距)
-    var mainHeight = $container.outerHeight() - $nav.outerHeight(true) -$menu.outerHeight(true) - $main.css('marginTop').replace('px', '')*1- $main.css('marginBottom').replace('px', '')*1;
-    // 求得模块体高度:(主显示区高度-模块体内边距)
-    var bodyHeight = mainHeight - $body.css('paddingTop').replace('px', '')*1 - $body.css('paddingBottom').replace('px', '')*1;
-    // 求得模块内数据结果可视化区高度:(模块体高度-模块头-模块内的表单栏-模块内的当前查询条件栏)
-    var h =bodyHeight - $head.outerHeight() - $form.outerHeight() - $condition .outerHeight();
-    // 设置模块内数据结果可视化区高度
-    // $result.height(h);
-};
+
 
 /**
  * 设置默认选中的范围选项:范围列表项自定义属性值为1的项为默认选中项,备降模块取自定义属性值为ALL的为默认选中项
@@ -351,12 +308,6 @@ FormModule.prototype.initInquireData = function (refresh) {
     // 启用loading动画
     thisProxy.loading.start();
 
-    // 更新当前查询条件
-    // thisProxy.updateCondition();
-    // 计算表格容器大小,使其大小自适应
-    // (因为更新显示了模块内当前查询条件栏内容，所以重新计算表格容器的高度)
-    // thisProxy.resizeTableContainer();
-
     // 校验表单是否有效
     var valid = thisProxy.validateForm();
     // 若校验通过则查询数据
@@ -470,8 +421,28 @@ FormModule.prototype.inquireData = function () {
                 thisProxy.isHiddenTableContainer(false);
                 // 清除提示信息
                 thisProxy.clearMsg();
-                // 更新表格数据
-                thisProxy.table.fireTableDataChange(data);
+                // 判断表格是否已经初始化
+                if(!$.isValidObject(thisProxy.table.gridTableObject)){
+                    // 校验自定义的initGridTable方法是否有效
+                    if($.isValidVariable(thisProxy.initGridTable) && typeof thisProxy.initGridTable == 'function'){
+                        // 调用initGridTable方法,初始化表格
+                        thisProxy.table = thisProxy.initGridTable(thisProxy.table);
+                        thisProxy.table.fireTableDataChange(data);
+                        // 若表格定时器更新数据开关开启则更新数据生成时间，用于表格数据与时间保持一致
+                        if(thisProxy.table.fireDataFlag){
+                            // 更新数据生成时间并显示
+                            thisProxy.updateTime();
+                        }
+                    }
+                }else {
+                    // 更新表格数据
+                    thisProxy.table.fireTableDataChange(data);
+                    // 若表格定时器更新数据开关开启则更新数据生成时间，用于表格数据与时间保持一致
+                    if(thisProxy.table.fireDataFlag){
+                        // 更新数据生成时间并显示
+                        thisProxy.updateTime();
+                    }
+                }
                 // 若表格定时器更新数据开关开启则更新数据生成时间，用于表格数据与时间保持一致
                 if(thisProxy.table.fireDataFlag){
                     // 更新数据生成时间并显示
@@ -673,6 +644,8 @@ FormModule.prototype.setActive = function (bool) {
         // 关闭请求
         thisProxy.abortRequest();
     }
+    //处理表格自适应TODO
+    $(window).trigger('resize')
 };
 
 /**

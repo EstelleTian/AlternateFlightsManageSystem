@@ -106,42 +106,11 @@ HistoryFormModule.prototype.initHistoryFormModuleObject = function () {
 
     //绑定查询按钮事件
     thisProxy.bindEventOnButton();
-
     // 调用initGridTable方法,初始化表格
-    thisProxy.table = thisProxy.initGridTable(thisProxy.table);
-    // 使窗口调整时表格容器大小自适应
-    thisProxy.resizeTableContainer();
-
-    // // 绑定窗口调整时
-    // $(window).resize(function () {
-    //  // 使窗口调整时表格容器大小自适应
-    //  thisProxy.resizeTableContainer();
-    //  });
-
+    // thisProxy.table = thisProxy.initGridTable(thisProxy.table);
 };
 
-/**
- * 计算表格容器大小,使其大小自适应
- *
- * **/
-HistoryFormModule.prototype.resizeTableContainer = function () {
-    // 当前对象this代理
-    var thisProxy = this;
 
-    // 模块内的表单栏
-    var $form = $('.form-panel', thisProxy.canvas);
-    // 模块内的当前查询条件栏
-    var $condition = $('.condition-panel', thisProxy.canvas);
-    // 模块内数据结果可视化区
-    var $result = $('.result-panel', thisProxy.canvas);
-    // 求得模块内数据结果可视化区高度:(模块高度-模块内的表单栏-模块内的当前查询条件栏)
-    var h =thisProxy.canvas.outerHeight() - $form.outerHeight() - $condition.outerHeight();
-
-    var w = thisProxy.canvas.outerWidth();
-
-    // 设置模块内数据结果可视化区高度
-    $result.height(h).width(w);
-};
 
 /**
  * 设置默认选中的范围选项:范围列表项自定义居属性值为1的项为默认选中项
@@ -234,11 +203,6 @@ HistoryFormModule.prototype.initInquireData = function (refresh) {
     var valid = thisProxy.validateForm();
     // 若校验通过则查询数据
     if(valid){
-        // 更新当前查询条件
-        // thisProxy.updateCondition();
-        // 计算表格容器大小,使其大小自适应
-        // (因为更新显示了模块内当前查询条件栏内容，所以重新计算表格容器的高度)
-        // thisProxy.resizeTableContainer();
         // 查询数据
         thisProxy.inquireData();
     }else {
@@ -342,7 +306,17 @@ HistoryFormModule.prototype.inquireData = function () {
                 thisProxy.isHiddenTableContainer(false);
                 // 清除提示信息
                 thisProxy.clearMsg();
-                thisProxy.table.fireTableDataChange(data);
+                if(!$.isValidObject(thisProxy.table.gridTableObject)){
+                    // 校验自定义的initGridTable方法是否有效
+                    if($.isValidVariable(thisProxy.initGridTable) && typeof thisProxy.initGridTable == 'function'){
+                        // 调用initGridTable方法,初始化表格
+                        thisProxy.table = thisProxy.initGridTable(thisProxy.table);
+                        thisProxy.table.fireTableDataChange(data);
+                    }
+                }else {
+                    // 更新表格数据
+                    thisProxy.table.fireTableDataChange(data);
+                }
 
             } else if (data.status == 400) {
                 // 清空相关数据信息

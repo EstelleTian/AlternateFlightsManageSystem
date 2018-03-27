@@ -103,11 +103,14 @@ HistoryFormModule.prototype.initHistoryFormModuleObject = function () {
     //初始化查询按钮loading
     thisProxy.initLoading();
 
-    // //初始化数据查询
-    // thisProxy.initInquireData();
 
     //绑定查询按钮事件
     thisProxy.bindEventOnButton();
+
+    // 调用initGridTable方法,初始化表格
+    thisProxy.table = thisProxy.initGridTable(thisProxy.table);
+    // 使窗口调整时表格容器大小自适应
+    thisProxy.resizeTableContainer();
 
     // // 绑定窗口调整时
     // $(window).resize(function () {
@@ -339,18 +342,8 @@ HistoryFormModule.prototype.inquireData = function () {
                 thisProxy.isHiddenTableContainer(false);
                 // 清除提示信息
                 thisProxy.clearMsg();
+                thisProxy.table.fireTableDataChange(data);
 
-                if(!$.isValidObject(thisProxy.table.gridTableObject)){
-                    // 校验自定义的initGridTable方法是否有效
-                    if($.isValidVariable(thisProxy.initGridTable) && typeof thisProxy.initGridTable == 'function'){
-                        // 调用initGridTable方法,初始化表格
-                        thisProxy.table = thisProxy.initGridTable(thisProxy.table);
-                        thisProxy.table.fireTableDataChange(data);
-                    }
-                }else {
-                    // 更新表格数据
-                    thisProxy.table.fireTableDataChange(data);
-                }
             } else if (data.status == 400) {
                 // 清空相关数据信息
                 thisProxy.clear();

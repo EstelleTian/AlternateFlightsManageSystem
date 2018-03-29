@@ -762,7 +762,7 @@ SortablePart.prototype.updateSinglePositin = function(data){
 
     // 利用Handlebars模版生成对应HTML结构
     var myTemplate = Handlebars.compile($("#template").html());
-    var nodes = myTemplate(config);
+    var nodes = myTemplate(data);
     var oldNodes = $('.position[data-id="'+ config[0].id+'"]',thisProxy.selector);
     // 追加到列表
     $(nodes).insertBefore(oldNodes);

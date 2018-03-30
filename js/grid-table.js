@@ -2481,7 +2481,8 @@ GridTable.prototype.convertData = function (flight) {
     //ETD 目标撤轮挡时间 EOBT "background-color:#3399FF;color:#000000;"
     var etdStyle = this.addStyleToCol('petd', "background-color:#3399FF;color:#000000;");
 
-    flight = Object.assign( flight, atdStyle, ataStyle, etdStyle );
+    // flight = Object.assign( flight, atdStyle, ataStyle, etdStyle );
+    flight = $.extend( flight, atdStyle, ataStyle, etdStyle );
 
     // 航班数据无id且有flightDataId
     if($.isValidVariable(flight.flightDataId) && !$.isValidVariable(flight.id)){

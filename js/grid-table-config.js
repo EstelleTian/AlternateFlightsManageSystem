@@ -426,11 +426,13 @@ var GridTableConfig = function () {
                  * 特殊备降计划（当天日期以前未释放的计划）高亮显示(#FC9A00)
                  * */
                 var executeDate = rowObject.executeDate;
+                var specialStyle = '';
                 if($.isValidVariable(executeDate)){
                     var now = $.getFullTime( new Date()).substring(0,8);
                     var before = executeDate*1 < now*1;
                     if(before && rowObject.positionStatus != '3'){
-                        attrs += ' style= "background: #FC9A00;"';
+                        specialStyle = "background: #FC9A00;"
+                        attrs = attrs + ' style="' + specialStyle + '"';
                     }
                 }
                 return attrs;
@@ -457,10 +459,26 @@ var GridTableConfig = function () {
             // 设置title属性
             attrs = ' title="' + cellcontent + '"';
 
+            /**
+             * 特殊备降计划（当天日期以前未释放的计划）高亮显示(#FC9A00)
+             * */
+            var executeDate = rowObject.executeDate;
+            var specialStyle = '';
+            if($.isValidVariable(executeDate)){
+                var now = $.getFullTime( new Date()).substring(0,8);
+                var before = executeDate*1 < now*1;
+                if(before && rowObject.positionStatus != '3'){
+                    specialStyle = "background: #FC9A00;"
+                    // attrs = attrs + ' style="' + style + '"'+ ' "background: #FC9A00;"';
+                }
+            }
+
             // 显示单元格样式style
             var style = rowObject[colModel.name + '_style'];
             if ($.isValidVariable(style)) {
-                attrs = attrs + ' style="' + style + '"';
+                attrs = attrs + ' style="' + specialStyle +  style + '"';
+            }else {
+                attrs = attrs + ' style="' + specialStyle + '"';
             }
 
             /**
@@ -473,7 +491,7 @@ var GridTableConfig = function () {
                 // 取得单元格内容转换后的值
                 var matter = formatterStatus(cellcontent);
                 // 设置title属性为转换后的值
-                attrs = ' title="' + matter + '"'
+                attrs = attrs + ' title="' + matter + '"'
             }
 
             /**
@@ -486,19 +504,7 @@ var GridTableConfig = function () {
                 // 取得单元格内容转换后的值
                 var matter = formatterPositionStatus(cellcontent);
                 // 设置title属性为转换后的值
-                attrs = ' title="' + matter + '"'
-            }
-
-            /**
-             * 特殊备降计划（当天日期以前未释放的计划）高亮显示(#FC9A00)
-             * */
-            var executeDate = rowObject.executeDate;
-            if($.isValidVariable(executeDate)){
-                var now = $.getFullTime( new Date()).substring(0,8);
-                var before = executeDate*1 < now*1;
-                if(before && rowObject.positionStatus != '3'){
-                    attrs += ' style= "background: #FC9A00;"';
-                }
+                attrs = attrs + ' title="' + matter + '"'
             }
 
             return attrs;

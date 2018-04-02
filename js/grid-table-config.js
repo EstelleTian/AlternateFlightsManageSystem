@@ -422,6 +422,17 @@ var GridTableConfig = function () {
             var attrs = '';
             // 无效数值不做处理
             if (!$.isValidVariable(value)) {
+                /**
+                 * 特殊备降计划（当天日期以前未释放的计划）高亮显示(#FC9A00)
+                 * */
+                var executeDate = rowObject.executeDate;
+                if($.isValidVariable(executeDate)){
+                    var now = $.getFullTime( new Date()).substring(0,8);
+                    var before = executeDate*1 < now*1;
+                    if(before && rowObject.positionStatus != '3'){
+                        attrs += ' style= "background: #FC9A00;"';
+                    }
+                }
                 return attrs;
             }
             // 单元格原始值,未formatter
@@ -478,6 +489,17 @@ var GridTableConfig = function () {
                 attrs = ' title="' + matter + '"'
             }
 
+            /**
+             * 特殊备降计划（当天日期以前未释放的计划）高亮显示(#FC9A00)
+             * */
+            var executeDate = rowObject.executeDate;
+            if($.isValidVariable(executeDate)){
+                var now = $.getFullTime( new Date()).substring(0,8);
+                var before = executeDate*1 < now*1;
+                if(before && rowObject.positionStatus != '3'){
+                    attrs += ' style= "background: #FC9A00;"';
+                }
+            }
 
             return attrs;
         },

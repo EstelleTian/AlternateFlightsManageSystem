@@ -471,6 +471,16 @@ SortablePart.prototype.appendSinglePositin = function(data){
 
     // 利用Handlebars模版生成对应HTML结构
     var myTemplate = Handlebars.compile($("#template").html());
+    // 注册一个比较是否相等的Helper,判断v1是否等于v2
+    Handlebars.registerHelper("compare",function(v1,v2,options){
+        if(v1 == v2){
+            //满足添加继续执行
+            return options.fn(this);
+        }else {
+            //不满足条件执行{{else}}部分
+            return options.inverse(this);
+        }
+    });
     var nodes = myTemplate(data);
     // 追加到列表
     $(nodes).appendTo(thisProxy.selector);
@@ -762,6 +772,16 @@ SortablePart.prototype.updateSinglePositin = function(data){
 
     // 利用Handlebars模版生成对应HTML结构
     var myTemplate = Handlebars.compile($("#template").html());
+    // 注册一个比较是否相等的Helper,判断v1是否等于v2
+    Handlebars.registerHelper("compare",function(v1,v2,options){
+        if(v1 == v2){
+            //满足添加继续执行
+            return options.fn(this);
+        }else {
+            //不满足条件执行{{else}}部分
+            return options.inverse(this);
+        }
+    });
     var nodes = myTemplate(data);
     var oldNodes = $('.position[data-id="'+ config[0].id+'"]',thisProxy.selector);
     // 追加到列表

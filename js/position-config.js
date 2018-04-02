@@ -93,6 +93,17 @@ var positionConfig = function () {
         };
         // 利用Handlebars模版生成对应HTML结构
         var myTemplate = Handlebars.compile($("#template").html());
+        // 注册一个比较是否相等的Helper,判断v1是否等于v2
+        Handlebars.registerHelper("compare",function(v1,v2,options){
+            if(v1 == v2){
+                //满足添加继续执行
+                return options.fn(this);
+            }else {
+                //不满足条件执行{{else}}部分
+                return options.inverse(this);
+            }
+        });
+
         $('#position-box').html(myTemplate(data));
     };
 

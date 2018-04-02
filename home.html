@@ -532,7 +532,14 @@
                 <a class="icon glyphicon glyphicon-edit" pos-id="{{id}}" pos-key="{{key}}" data-event="edit" ></a>
                 {{/if}}
                 {{#if ../code.id_4430}}
+                <!--若数据的creator值等于'SYSTEM',则不绘制删除按钮-->
+                {{#compare creator 'SYSTEM'}}
+
+                {{else}}
+                <!--若数据的creator值不等于'SYSTEM',则绘制删除按钮-->
                 <a class="icon glyphicon glyphicon-trash" pos-id="{{id}}" pos-key="{{key}}" data-event="delete" ></a>
+
+                {{/compare}}
                 {{/if}}
             </header>
             <!--内容-->

@@ -2751,19 +2751,26 @@ GridTable.prototype.exportAlternateToExcel = function ( name, params ) {
         return;
     };
     var url = '';
-    if( name == 'alternate' ){
-        var scope = params.scope || '';
-        var keyword = params.keyword || '';
-        var start = params.start || '';
-        var end = params.end || '';
-        url = CellOpreationUrl.EXPORT_ALTERNATE_TO_EXCEL +"?scope=" + scope + "&keyWord=" + keyword+"&start=" + start + "&end=" + end;
-    }else if(name == 'history'){
-        var start = params.start || '';
-        var end = params.end || '';
-        url = CellOpreationUrl.EXPORT_ALTERNATE_TO_EXCEL +"?start=" + start + "&end=" + end;
-    }else{
+    var scope = params.scope || '';
+    var keyword = params.keyword || '';
+    url = CellOpreationUrl.EXPORT_ALTERNATE_TO_EXCEL +"?scope=" + scope + "&keyWord=" + keyword;
+    window.location.href = encodeURI(url);
+}
+/**
+ * 导出历史（后台接口）
+ *
+ * */
+GridTable.prototype.exportAlternateHistoryToExcel = function ( name, params ) {
+    // 是否有权限
+    if(!$.isValidObject(userProperty.id_4220)){
         return;
-    }
+    };
+    var url = '';
+    var scope = params.scope || '';
+    var keyword = params.keyword || '';
+    var start = params.start || '';
+    var end = params.end || '';
+    url = CellOpreationUrl.EXPORT_ALTERNATE_TO_EXCEL +"?scope=" + scope + "&keyWord=" + keyword+"&start=" + start + "&end=" + end;
     window.location.href = encodeURI(url);
 }
 

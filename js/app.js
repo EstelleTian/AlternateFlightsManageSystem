@@ -239,12 +239,9 @@ var app = function () {
                             title: "导出Excel",
                             buttonicon: "glyphicon-export",
                             onClickButton: function () {
-                                var d = $.getFullTime(new Date()).substring(0,8);
                                 var params = {
                                     scope : alternateObj.scope,
-                                    keyWord : alternateObj.keyword,
-                                    start : d,
-                                    end : d
+                                    keyWord : alternateObj.keyword
                                 }
                                 table.exportAlternateToExcel( 'alternate', params);
                             },
@@ -309,10 +306,12 @@ var app = function () {
                             buttonicon: "glyphicon-export",
                             onClickButton: function () {
                                 var params = {
+                                    scope : '',
+                                    keyWord : '',
                                     start : alternateHistoryObj.start,
                                     end : alternateHistoryObj.end
                                 }
-                                table.exportAlternateToExcel( 'history', params);
+                                table.exportAlternateHistoryToExcel( 'history', params);
                             },
                             position: "first"
                         }) .navButtonAdd('#' + pagerId, {

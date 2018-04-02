@@ -29,8 +29,10 @@ var CellOpreationUrl = {
     PRE_ALTERNATE_DEP :ipHost+'airport/preSelectAlternateDep',
     // 出港确认备降
     CONFIRM_ALTERNATE_DEP :ipHost+'airport/confirmAlternateDep',
-    //备降计划、备降历史 导出
-    EXPORT_ALTERNATE_TO_EXCEL :ipHost+'airport/exportAlternateToExcel',
+    //备降计划
+    EXPORT_ALTERNATE_TO_EXCEL :ipHost+'airport/exportAlternate',
+    //备降历史 导出
+    EXPORT_ALTERNATE_HISTORY_TO_EXCEL :ipHost+'airport/exportAlternateHistory',
 
 
 };

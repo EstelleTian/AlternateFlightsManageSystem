@@ -39,7 +39,7 @@ var app = function () {
 
 
     // 定时器时间,用于设置每个模块定时间隔时间 ms
-    var interval = 1000*60*0.2;
+    var interval = 1000*60*3;
     // 活动模块所在模块下标
     var index = 0;
 

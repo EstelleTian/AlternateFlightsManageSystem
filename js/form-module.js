@@ -246,7 +246,11 @@ FormModule.prototype.changeWeatherModel = function (bool) {
         thisProxy.enableCustomeIntervalFlag = false;
     }
     thisProxy.abortRequest(true);
-    thisProxy.openRequest(false);
+    // 若当前模块为活动模块
+    var active = thisProxy.canvas.hasClass('active');
+    if(active){
+        thisProxy.openRequest(false);
+    }
 };
 
 /**

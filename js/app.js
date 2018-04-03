@@ -145,6 +145,8 @@ var app = function () {
                 url : DataUrl.OVER,
                 // 定时器时间
                 interval : interval,
+                // 自定义定时器时间 (用于开启复杂天气模式),数字 毫秒
+                customeInterval: 1000 * 60 * 1,
                 // 默认选中的范围值
                 defaultScope : '2',
                 initGridTable : function (table) {

@@ -38,6 +38,9 @@ var HistoryFormModule = function (params) {
      * */
     this.url = params.url;
 
+    /*
+     * 初始化表格
+     * */
     this.initGridTable = params.initGridTable;
 
     /**
@@ -49,6 +52,17 @@ var HistoryFormModule = function (params) {
      *  终止日期
      * */
     this.end = '';
+
+    /**
+     *  范围标识码
+     * */
+    this.scope = '';
+
+
+    /**
+     *  关键字
+     * */
+    this.keyword = '';
 
     /**
      * 布尔－是否开启过滤条件 默认为false
@@ -74,9 +88,26 @@ var HistoryFormModule = function (params) {
     this.interval = params.interval;
 
     /**
+     *  自定义定时器时间
+     * */
+    this.customeInterval = params.customeInterval;
+
+
+    /**
+     *  是否启用自定义定时器时间
+     *  默认不开启
+     * */
+    this.enableCustomeIntervalFlag = false;
+
+    /**
      * ajax请求
      * */
     this.xhr = null;
+
+    /**
+     * 默认选中的范围值
+     * */
+    this.defaultScope  = params.defaultScope
 
 };
 
@@ -97,6 +128,15 @@ HistoryFormModule.prototype.initHistoryFormModuleObject = function () {
     // 绑定输入框数值变更监听
     thisProxy.changeDate();
 
+    // 绑定范围选择切换
+    // thisProxy.changeScope();
+
+    // 绑定关键字录入
+    // thisProxy.changeKeyword();
+
+    //  切换复杂天气模式
+    // thisProxy.changeWeatherModel();
+
     // 切换过滤条件开关
     thisProxy.changeFilter();
 
@@ -110,7 +150,80 @@ HistoryFormModule.prototype.initHistoryFormModuleObject = function () {
     // thisProxy.table = thisProxy.initGridTable(thisProxy.table);
 };
 
+/**
+ *  绑定范围选择切换
+ * */
+HistoryFormModule.prototype.changeScope = function () {
+    // 当前对象this代理
+    var thisProxy = this;
+    // 范围列表容器
+    var $menu = $('.form-panel .dropdown-menu', thisProxy.canvas);
+    // 取得范围按钮
+    var $btn =  $('.form-panel .dropdown-toggle', thisProxy.canvas);
+    // 范围列表容器绑定点击事件(因为范围列表动态追加的，所有要用事件委托，把事件绑定在范围列表容器上)
+    $menu.on('click','a.scope-item',function (e) {
+        // 取得当前点击目标源
+        var $that = $(this);
+        // 取当前点击选中的范围列表项的自定义属性data-val的值,用于记录范围标识码
+        var val = $that.attr('data-val');
+        // 取得当前点击选中的范围列表项的节点内容,用于更新到范围按钮
+        var valCN = $that.html();
+        // 更新范围按钮内容
+        $btn.html( valCN +'<span class="caret"></span>');
+        // 更新范围标识码
+        thisProxy.scope = val;
+        thisProxy.abortRequest(true);
+        thisProxy.openRequest(true);
+    })
+};
 
+/**
+ * 绑定关键字录入
+ *
+ * */
+HistoryFormModule.prototype.changeKeyword = function () {
+    // 当前对象this代理
+    var thisProxy = this;
+    var $input = $('.form-panel .key', thisProxy.canvas);
+
+    $input.on('keyup', function (event) {
+        // 当前输入框值
+        var val = $(this).val();
+        // 转换为大写
+        var upperCaseVal = val.toUpperCase();
+        // 设置值为大写值
+        $(this).val(upperCaseVal);
+        // 保存到关键字标识
+        thisProxy.keyword = upperCaseVal;
+        // 回车键
+        if(event.keyCode == 13){
+            // 保存到关键字标识
+            thisProxy.keyword = upperCaseVal;
+            thisProxy.abortRequest(true);
+            thisProxy.openRequest(true);
+        }
+
+    });
+};
+
+/**
+ * 切换复杂天气模式
+ * */
+HistoryFormModule.prototype.changeWeatherModel = function (bool) {
+    // 当前对象this代理
+    var thisProxy = this;
+
+    // 若勾选
+    if(bool){
+        // 启用自定义定时器时间
+        thisProxy.enableCustomeIntervalFlag = true;
+    }else {
+        // 关闭自定义定时器时间
+        thisProxy.enableCustomeIntervalFlag = false;
+    }
+    thisProxy.abortRequest(true);
+    thisProxy.openRequest(false);
+};
 
 /**
  * 设置默认选中的范围选项:范围列表项自定义居属性值为1的项为默认选中项
@@ -214,7 +327,13 @@ HistoryFormModule.prototype.initInquireData = function (refresh) {
 
     //定时刷新
     if (refresh) {
-        thisProxy.startTimer(thisProxy.initInquireData, true, thisProxy.interval);
+        // 若开启自定义定时刷新时间
+        if(thisProxy.enableCustomeIntervalFlag && $.isValidVariable(thisProxy.customeInterval)){
+            thisProxy.startTimer(thisProxy.initInquireData, true, thisProxy.customeInterval);
+        }else {
+
+            thisProxy.startTimer(thisProxy.initInquireData, true, thisProxy.interval);
+        }
     }
 
 
@@ -240,7 +359,7 @@ HistoryFormModule.prototype.validateForm = function () {
     var regexp = /(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})(((0[13578]|1[02])(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)(0[1-9]|[12][0-9]|30))|(02(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))0229)/;
     //起始日期
     var s = regexp.test(thisProxy.start);
-    // 若范围无效则提示
+    // 若时间范围无效则提示
     if(!s){
         // 清空相关数据信息
         thisProxy.clear();
@@ -574,7 +693,7 @@ HistoryFormModule.prototype.setActive = function (bool) {
     var thisProxy = this;
     if(bool){
         // 开启请求
-        thisProxy.openRequest();
+        thisProxy.openRequest(true);
     }else {
         // 关闭请求
         thisProxy.abortRequest();
@@ -583,15 +702,35 @@ HistoryFormModule.prototype.setActive = function (bool) {
 
 /**
  * 开启请求
- *
+ *  now  是否立即查询数据
+ *  true 立即查询数据查询数据并开启定时刷新
+ *  false 不立即查询数据查询数据,仅开启定时刷新
  * */
 HistoryFormModule.prototype.openRequest = function (now) {
     // 当前对象this代理
     var thisProxy = this;
+    // 开启表格数据刷新开关
+    if($.isValidVariable(thisProxy.table.fireDataFlag)){
+        thisProxy.table.fireDataFlag = true;
+    }
     // 开启定时总开关
     thisProxy.timerValve = true;
-    // 初始化数据查询
-    thisProxy.initInquireData(true);
+
+    // 查询数据并开启定时刷新
+    if(now){
+        thisProxy.initInquireData(true);
+    }else {
+        var time = '';
+        // 若开启自定义定时刷新时间
+        if(thisProxy.enableCustomeIntervalFlag && $.isValidVariable(thisProxy.customeInterval)){
+            time = thisProxy.customeInterval;
+        }else {
+            time = thisProxy.interval;
+        }
+        setTimeout(function () {
+            thisProxy.initInquireData(true);
+        }, time)
+    }
 
 };
 
@@ -604,6 +743,14 @@ HistoryFormModule.prototype.abortRequest = function (clearCollaborate) {
     // 当前对象this代理
     var thisProxy = this;
 
+    if($.isValidVariable(thisProxy.table.fireDataFlag)){
+        // 关闭该模块下表格的数据刷新开关
+        thisProxy.table.fireDataFlag = false;
+    }
+    if($.isValidVariable(thisProxy.table.clearCollaborateContainer) && clearCollaborate){
+        // 清除协调窗口
+        thisProxy.table.clearCollaborateContainer();
+    }
     if($.isValidVariable(thisProxy.xhr)){
         // 取消掉已经发出的ajax请求
         thisProxy.xhr.abort();

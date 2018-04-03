@@ -39,7 +39,7 @@ var app = function () {
 
 
     // 定时器时间,用于设置每个模块定时间隔时间 ms
-    var interval = 1000*60*3;
+    var interval = 1000*60*0.2;
     // 活动模块所在模块下标
     var index = 0;
 
@@ -280,9 +280,12 @@ var app = function () {
                 url: DataUrl.ALTERNATE_HISTORY,
                 // 定时器时间
                 interval : interval,
+                // 默认选中的范围值
+                defaultScope : '',
                 initGridTable: function (table) {
                     var pagerId = 'alternate-history-table-pager';
                     var opt = {
+                        moduleObj : alternateHistoryObj, // 表格所在模块对象
                         tableId: 'alternate-history-table',
                         pagerId: pagerId,
                         colNames: GridTableConfig.alertnateHistory.colName,

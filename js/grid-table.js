@@ -420,20 +420,8 @@ GridTable.prototype.onCellSelect = function (rowid, iCol, cellcontent, e) {
     // 代理
     var thisProxy = this;
 
-    // thisProxy.activeFlight = rowid;
     // 清除单元格样式
-    thisProxy.clearCollaborateContainer();
-    // 获取当前表格的协调窗口
-    var $conatainer = $('#gbox_' + thisProxy.tableId);
-    // 若协调窗口无效则开启定时刷新数据开关
-    var $Collaborate =  $('.' + GridTable.SELECTED_CELL_CLASS, $conatainer);
-    if(!$.isValidVariable($Collaborate) || $Collaborate.length < 1){
-        // 若表格数据刷新开关为关闭，则开启开关,下次定时器更新数据会重新绘制到表格
-        if(!thisProxy.fireDataFlag){
-
-            thisProxy.fireDataFlag = true;
-        }
-    }
+    thisProxy.clearCollaborateContainer(true);
 };
 
 
@@ -505,6 +493,9 @@ GridTable.prototype.onRightClickRow = function ( rowid, iRow, iCol, e) {
     }else if(tableId == 'alternate-table'){
         // 备降计划模块
         thisProxy.collaborateAlternate(opt);
+    }else if(tableId == 'alternate-history-table'){
+        // 备降计划历史模块
+        thisProxy.collaborateAlternateHistory(opt);
     }
 
 };
@@ -536,31 +527,34 @@ GridTable.prototype.scrollToFixForzen = function (index, iCol, sortorder) {
 
 /**
  * 清除协调窗口
+ *
  */
-GridTable.prototype.clearCollaborateContainer = function () {
+GridTable.prototype.clearCollaborateContainer = function (timer) {
     // 代理
     var thisProxy = this;
-    // 清理
+    // 表格容器
+    var $conatainer = $('#gbox_' + thisProxy.tableId);
+    // 获取当前表格的协调窗口
+    var $Collaborate =  $('.' + GridTable.COLLABORATE_DOM_CLASS, $conatainer);
+    var $cell =  $('.' + GridTable.SELECTED_CELL_CLASS, $conatainer);
+    // 若当前表格的协调窗口存在
+    if($.isValidVariable($Collaborate) && $Collaborate.length > 0 ){
+        // 移除表格中被选中单元格的特殊class
+        $cell.removeClass(GridTable.SELECTED_CELL_CLASS);
+        // 移除表格中的协调窗口
+        $Collaborate.remove();
+        // 若timer为true
+        if(timer && $.isValidObject(thisProxy.moduleObj)){
+            // 开启定时查询
+            thisProxy.moduleObj.openRequest(false);
+        }
+    }
     // 将协调窗口的被选菜单的class名 hover 去掉
     $('.grid-table-collaborate-container li.hover', thisProxy.canvas).removeClass('hover');
-    // var $conatainer = $('#gbox_' + thisProxy.tableId);
-    var $conatainer = thisProxy.canvas;
-
-    // 取得对应表格的冻结列表格
-    var $frozenTable  = $('#'+thisProxy.tableId+'_frozen', thisProxy.canvas);
-    // 移除表格中被选中单元格的特殊class
-    $('.' + GridTable.SELECTED_CELL_CLASS, $conatainer).removeClass(GridTable.SELECTED_CELL_CLASS);
-    // 移除表格中的协调窗口
-    $('.' + GridTable.COLLABORATE_DOM_CLASS, $conatainer).remove();
-    // 移除冻结列表格中被选中单元格的特殊class
-    $('.' + GridTable.SELECTED_CELL_CLASS, $frozenTable).removeClass(GridTable.SELECTED_CELL_CLASS);
-    // 移除冻结列表格中的协调窗口
-    $('.' + GridTable.COLLABORATE_DOM_CLASS, $frozenTable).remove();
     if ('auto' == thisProxy.canvas.css('overflow')) {
         thisProxy.canvas.css('overflow', 'hidden');
     }
-    /*// 清理popover窗口
-    $('.popover').popover("hide");*/
+
 };
 
 /**
@@ -1117,6 +1111,64 @@ GridTable.prototype.collaborateAlternate = function (opt) {
 
     }
 };
+
+/**
+ * 备降计划历史模块协调
+ */
+GridTable.prototype.collaborateAlternateHistory = function (opt) {
+    // 代理
+    var thisProxy = this;
+    //权限校验
+    if(!$.isValidObject(userProperty.id_4600)){
+        return;
+    }
+
+    //航班
+    var flight = opt.flight;
+
+    //无备降状态 或 无机位状态
+    if( !$.isValidObject(flight)){
+        return ;
+    }else{
+        // 获取协调DOM元素
+        var  collaboratorDom = GridTableCollaborateDom.collaborateContainer;
+
+        //协调记录
+        var collaborateRecordLi = GridTableCollaborateDom.collaborateRecordLi;
+        var childrenStr = collaborateRecordLi;
+        //将协调内容添加进容器
+        if(childrenStr == ''){
+            return ;
+        }
+        collaboratorDom = collaboratorDom.replace( /{child}/,  childrenStr);
+        // 追加协调DOM至容器
+        collaboratorDom = $(collaboratorDom);
+        $('#gbox_' + thisProxy.tableId).append(collaboratorDom);
+        // 校验是否关闭定时请求
+        thisProxy.isAbortRequest(collaboratorDom);
+
+        // 定位协调DOM
+        collaboratorDom.position({
+            of: opt.cellObj,
+            my: 'left top',
+            at: 'right top'
+        });
+
+        thisProxy.followTargetPosition(collaboratorDom, opt.cellObj);
+
+        //查看协调记录
+        var $collaborateRecord = $('.collaborate-record', collaboratorDom);
+        // 菜单绑定事件
+        if($collaborateRecord.length > 0 ){
+            $collaborateRecord.on('click', function (event) {
+                // 阻止事件冒泡
+                event.stopPropagation();
+                //查看协调记录方法  如果参数不需要可以修改
+                thisProxy.collaborateRecordRequest.call(thisProxy, opt);
+            });
+        }
+    }
+};
 /**
  * TODO 查看协调记录
  */
@@ -1137,7 +1189,8 @@ GridTable.prototype.collaborateRecordRequest = function(opt){
     var param ='moduleName=record'+'&flightDataId='+ flightDataId +'&flightId='+flightId;
 
     thisProxy.openModule('查看协调记录',param);
-    thisProxy.clearCollaborateContainer();
+    // 清除协调窗口并开启定时查询数据
+    thisProxy.clearCollaborateContainer(true);
 }
 /**
  * 预选备降请求

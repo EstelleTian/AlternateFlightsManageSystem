@@ -220,7 +220,7 @@ var app = function () {
                         pagerId: pagerId,
                         colNames: GridTableConfig.alertnate.colName,
                         colModel: GridTableConfig.alertnate.colModel,
-                        cmTemplate: GridTableConfig.colModelTemplate,
+                        cmTemplate: GridTableConfig.alertnate.colModelTemplate,
                         colTitle: GridTableConfig.alertnate.colTitle,
                         colCollaborateUrl: CellOpreationUrl,
                         params: {

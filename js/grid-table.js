@@ -2770,7 +2770,7 @@ GridTable.prototype.exportAlternateHistoryToExcel = function ( name, params ) {
     var keyword = params.keyword || '';
     var start = params.start || '';
     var end = params.end || '';
-    url = CellOpreationUrl.EXPORT_ALTERNATE_TO_EXCEL +"?scope=" + scope + "&keyWord=" + keyword+"&start=" + start + "&end=" + end;
+    url = CellOpreationUrl.EXPORT_ALTERNATE_HISTORY_TO_EXCEL +"?scope=" + scope + "&keyWord=" + keyword+"&start=" + start + "&end=" + end;
     window.location.href = encodeURI(url);
 }
 

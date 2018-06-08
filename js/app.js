@@ -113,14 +113,6 @@ var app = function () {
                             },
                             position: "first"
                         }) .navButtonAdd('#' + pagerId, {
-                        caption: "高级查询",
-                        title: "高级查询",
-                        buttonicon: "glyphicon-search",
-                        onClickButton: function () {
-                            table.showAdvanceFilter();
-                        },
-                        position: "first"
-                    }).navButtonAdd('#' + pagerId, {
                             caption: "快速过滤",
                             title: "快速过滤",
                             buttonicon: "glyphicon-filter",
@@ -178,15 +170,7 @@ var app = function () {
                                 table.export('over-table');
                             },
                             position: "first"
-                        }) .navButtonAdd('#' + pagerId, {
-                        caption: "高级查询",
-                        title: "高级查询",
-                        buttonicon: "glyphicon-search",
-                        onClickButton: function () {
-                            table.showAdvanceFilter();
-                        },
-                        position: "first"
-                    }).navButtonAdd('#' + pagerId, {
+                        }).navButtonAdd('#' + pagerId, {
                         caption: "快速过滤",
                         title: "快速过滤",
                         buttonicon: "glyphicon-filter",
@@ -249,14 +233,6 @@ var app = function () {
                             },
                             position: "first"
                         }) .navButtonAdd('#' + pagerId, {
-                        caption: "高级查询",
-                        title: "高级查询",
-                        buttonicon: "glyphicon-search",
-                        onClickButton: function () {
-                            table.showAdvanceFilter();
-                        },
-                        position: "first"
-                    }).navButtonAdd('#' + pagerId, {
                         caption: "快速过滤",
                         title: "快速过滤",
                         buttonicon: "glyphicon-filter",
@@ -314,20 +290,13 @@ var app = function () {
                                     scope : '',
                                     keyWord : '',
                                     start : alternateHistoryObj.start,
-                                    end : alternateHistoryObj.end
+                                    end : alternateHistoryObj.end,
+                                    alternateStatus:alternateHistoryObj.scope
                                 }
                                 table.exportAlternateHistoryToExcel( 'history', params);
                             },
                             position: "first"
                         }) .navButtonAdd('#' + pagerId, {
-                        caption: "高级查询",
-                        title: "高级查询",
-                        buttonicon: "glyphicon-search",
-                        onClickButton: function () {
-                            table.showAdvanceFilter();
-                        },
-                        position: "first"
-                    }).navButtonAdd('#' + pagerId, {
                         caption: "快速过滤",
                         title: "快速过滤",
                         buttonicon: "glyphicon-filter",
@@ -569,6 +538,10 @@ var app = function () {
                 var alternateFlightsScope = basicData.alternateAirport;
                 alternateObj.setScope(alternateFlightsScope);
             }
+        }
+        if($.isValidObject(basicData.airportConfig)){
+            var alternateStatus = basicData.airportConfig.alternateStatus;
+            alternateHistoryObj.setScope(alternateStatus)
         }
 
         // 出港计划模块

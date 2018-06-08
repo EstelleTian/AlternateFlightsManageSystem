@@ -56,10 +56,8 @@ var alternateAirport = function () {
    * @param tableConfig
    * @param isRefresh
    */
-  var getTableData = function () {
-
+  var getTableData = function (isRefresh) {
     // 开启定时器总开关
-    isRefresh = true;
     var url = ipHost + 'airport/retrieveAirport'
       xhr = $.ajax({
       type: "GET",
@@ -132,7 +130,7 @@ var alternateAirport = function () {
                 //定时器                if (isRefresh) {
 
                 if (isRefresh) {
-                    startTimer(getTableData, originAirportConfig, isRefresh, refreshTime);
+                    startTimer(getTableData, isRefresh, refreshTime);
                 }
             }
 
@@ -142,11 +140,61 @@ var alternateAirport = function () {
       },
       error: function (xhr, status, error) {
         $('.error_tip').show();
-        setTimeout(getTableData(tableConfig, isRefresh), 1000 * 30 * 5);
+        $('.error_tip').text('访问接口失败，请等待.....');
+        setTimeout(getTableData(false), 1000 * 30 * 5);
         console.warn(error)
       }
     });
   }
+    /**
+     * 校准数据
+     */
+  var correctData = function () {
+        //校验码
+      if($.isValidObject(userProperty.id_4320)){
+          $('.correct').show();
+          $('.correct').find('.ladda-label').html(userProperty.id_4320.name)
+      }
+        //绑定点击事件
+      $('.correct').on('click',function () {
+          //提示信息显示
+          if($('.error_tip').is(":visible")){
+              $('.error_tip').hide();
+          }
+          //加载动画
+          var correctLoading = Ladda.create($('.correct')[0]);
+          correctLoading.start();
+          var url = ipHost + 'airport/checkPositionCapacity';
+          //在次验证校验码
+          if($.isValidObject(userProperty.id_4320)){
+              $.ajax({
+                  type: "POST",
+                  url: url,
+                  data: "",
+                  dataType: "JSON",
+                  success: function (data) {
+                      if ($.isValidObject(data) && data.status == 200) {
+                          correctLoading.stop();
+                          getTableData(false);
+                      } else if (data.status == 500) {
+                          correctLoading.stop();
+                          $('.error_tip').show();
+                          $('.error_tip').html(data.error.message);
+                          console.warn(data.error.message)
+                      }
+                  },
+                  error: function (xhr, status, error) {
+                      $('.error_tip').show();
+                      correctLoading.stop();
+                      setTimeout(getTableData(false), 1000 * 30 * 5);
+                      console.warn(error)
+                  }
+              });
+          }else{
+              correctLoading.stop();
+          }
+      })
+  }  
   /**
    * 修改机场容量qtip提示
    * @param opt
@@ -317,8 +365,6 @@ var alternateAirport = function () {
         obj['total'] = e.available;
         obj['remark'] = e.remark;
         $.each(e.positionCapInfo, function (index, ele) {
-
-
           $.each(config.typeArr, function (j, m) {
             if (m == ele.positionType) {
               obj[m + 'total'] = ele.capacity;
@@ -413,7 +459,6 @@ var alternateAirport = function () {
    * @param opt
    */
   var onRightClickRow = function (opt) {
-
     // 清除协调窗口
     clearCollaborateContainer();
     // 记录当前选中的单元格对象
@@ -422,7 +467,6 @@ var alternateAirport = function () {
       if(!$.isValidObject(userProperty.id_4310)){
         return
       }
-
     //修改容量值
     if ($('.alter_volume').is(":visible")) {
       collaborateAlter(opt);
@@ -661,12 +705,12 @@ var alternateAirport = function () {
    * @param isNext
    * @param time
    */
-  var startTimer = function (func, instance, isNext, time) {
+  var startTimer = function (func,isNext, time) {
       // 清除定时器
       clearTimeout(timer);
     if (typeof func == "function") {
       timer = setTimeout(function () {
-        func(instance, isNext);
+        func(isNext);
       }, time);
     }
   };
@@ -765,7 +809,7 @@ var alternateAirport = function () {
     var setActive = function (bool) {
         if(bool){
             // 开启请求,获取表格数据
-            getTableData();
+            getTableData(isRefresh);
         }else {
             // 中止请求
             abortRequest();
@@ -791,6 +835,8 @@ var alternateAirport = function () {
     init: function () {
         //阻止右键点击默认事件
         preventDefaultEvent();
+        //校验数据绑定
+        correctData();
         return {
             setActive : setActive
         }

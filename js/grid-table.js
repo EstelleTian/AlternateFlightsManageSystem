@@ -2530,12 +2530,23 @@ GridTable.prototype.convertData = function (flight) {
     var atdStyle = this.addStyleToCol('atd', "background-color:#6FFFFF;color:#000000;");
     //ATA 实际着陆时间 "background-color:#6FFFFF;color:#000000;"
     var ataStyle = this.addStyleToCol('ata', "background-color:#6FFFFF;color:#000000;");
-
     //ETD 目标撤轮挡时间 EOBT "background-color:#3399FF;color:#000000;"
     var etdStyle = this.addStyleToCol('petd', "background-color:#3399FF;color:#000000;");
-
+    //备降状态样式
+    var statusStyle = '';
+    if($.isValidObject(app.statusCode)){
+        //样式取值
+        var alternateStatus = app.statusCode;
+        //遍历状态值
+        for(var i in alternateStatus ){
+            if(flight.status == alternateStatus[i].value){
+                //添加备降计划备降状态样式
+                statusStyle = this.addStyleToCol('status', alternateStatus[i].colDisplay);
+            }
+        }
+    }
     // flight = Object.assign( flight, atdStyle, ataStyle, etdStyle );
-    flight = $.extend( flight, atdStyle, ataStyle, etdStyle );
+    flight = $.extend( flight, atdStyle, ataStyle, etdStyle ,statusStyle);
 
     // 航班数据无id且有flightDataId
     if($.isValidVariable(flight.flightDataId) && !$.isValidVariable(flight.id)){
@@ -2720,31 +2731,31 @@ GridTable.prototype.showQuickFilter = function () {
 /**
  * 显示高级查询对话框
  */
-GridTable.prototype.showAdvanceFilter = function () {
-    // 代理
-    var thisProxy = this;
-    // 给表格对象绑定查询操作
-    thisProxy.gridTableObject.jqGrid("searchGrid", {
-        sopt: ['cn', 'nc', 'eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en'],
-        caption: "高级查询",
-        multipleSearch: true,
-        multipleGroup: true,
-        searchOnEnter: true,
-        closeOnEscape: true,
-        resize: false,
-        zIndex: 1004,
-        width: 600
-    });
-    if (!thisProxy.advanceFilterFlag) {
-        var callback = function () {
-            thisProxy.gridTableObject.jqGrid('setGridParam', {data: thisProxy.tableData}).trigger('reloadGrid');
-
-        }
-        $("#fbox_" + thisProxy.tableId + "_reset").off("click", callback).on("click", callback);
-        $("#fbox_" + thisProxy.tableId + "_search").off("click", callback).on("click", callback);
-        thisProxy.advanceFilterFlag = true;
-    }
-};
+// GridTable.prototype.showAdvanceFilter = function () {
+//     // 代理
+//     var thisProxy = this;
+//     // 给表格对象绑定查询操作
+//     thisProxy.gridTableObject.jqGrid("searchGrid", {
+//         sopt: ['cn', 'nc', 'eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en'],
+//         caption: "高级查询",
+//         multipleSearch: true,
+//         multipleGroup: true,
+//         searchOnEnter: true,
+//         closeOnEscape: true,
+//         resize: false,
+//         zIndex: 1004,
+//         width: 600
+//     });
+//     if (!thisProxy.advanceFilterFlag) {
+//         var callback = function () {
+//             thisProxy.gridTableObject.jqGrid('setGridParam', {data: thisProxy.tableData}).trigger('reloadGrid');
+//
+//         }
+//         $("#fbox_" + thisProxy.tableId + "_reset").off("click", callback).on("click", callback);
+//         $("#fbox_" + thisProxy.tableId + "_search").off("click", callback).on("click", callback);
+//         thisProxy.advanceFilterFlag = true;
+//     }
+// };
 
 /**
  * dhx弹框
@@ -2823,7 +2834,8 @@ GridTable.prototype.exportAlternateHistoryToExcel = function ( name, params ) {
     var keyword = params.keyword || '';
     var start = params.start || '';
     var end = params.end || '';
-    url = CellOpreationUrl.EXPORT_ALTERNATE_HISTORY_TO_EXCEL +"?scope=" + scope + "&keyWord=" + keyword+"&start=" + start + "&end=" + end;
+    var alternateStatus = params.alternateStatus
+    url = CellOpreationUrl.EXPORT_ALTERNATE_HISTORY_TO_EXCEL +"?scope=" + scope + "&keyWord=" + keyword+"&start=" + start + "&end=" + end + "&alternateStatus="+ alternateStatus;
     window.location.href = encodeURI(url);
 }
 

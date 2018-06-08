@@ -43,14 +43,6 @@ var FlightCoordinationRecordObj = function () {
             },
             position: "first"
         }).navButtonAdd('#' + pagerId, {
-            caption: "高级查询",
-            title: "高级查询",
-            buttonicon: "glyphicon-search",
-            onClickButton: function () {
-                table.showAdvanceFilter();
-            },
-            position: "first"
-        }).navButtonAdd('#' + pagerId, {
             caption: "快速过滤",
             title: "快速过滤",
             buttonicon: "glyphicon-filter",

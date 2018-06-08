@@ -129,7 +129,7 @@ HistoryFormModule.prototype.initHistoryFormModuleObject = function () {
     thisProxy.changeDate();
 
     // 绑定范围选择切换
-    // thisProxy.changeScope();
+    thisProxy.changeScope();
 
     // 绑定关键字录入
     // thisProxy.changeKeyword();
@@ -149,6 +149,35 @@ HistoryFormModule.prototype.initHistoryFormModuleObject = function () {
     // 调用initGridTable方法,初始化表格
     // thisProxy.table = thisProxy.initGridTable(thisProxy.table);
 };
+
+/**
+ * 设置多选菜单
+ */
+HistoryFormModule.prototype.setScope = function (data) {
+    // 当前对象this代理
+    var thisProxy = this;
+    // 获取列表容器
+    var $menu = $('.form-panel .dropdown-menu', thisProxy.canvas);
+    // 创建一个空串
+    var con = '';
+    data.map(function (item, index, arr) {
+        // 拼接html结构串
+        var node = "" ;
+        if(item.value != 5){
+             node = '<li><a href="javascript:;" class="scope-item" '+ 'data-val="'+ item.value + '"' + '>' + item.text +'</a></li>';
+            // 追加串
+            con += node;
+        }else{
+             node = '<li><a href="javascript:;" class="scope-item" '+ 'data-val="'+ 0 + '"' + '>' + '全部' +'</a></li>';
+            // 追加串
+            con += node;
+        }
+    });
+    // 清空列表容器并把新列表html串追加到列表容器
+    $menu.empty().append(con);
+    // 设置默认选中项
+    thisProxy.setDefaultScope();
+}
 
 /**
  *  绑定范围选择切换
@@ -236,7 +265,7 @@ HistoryFormModule.prototype.setDefaultScope = function () {
     // 当前对象this代理
     var thisProxy = this;
     // 取得范围列表项自定义居属性值为1的项
-    var $default = $('.form-panel .dropdown-menu a[data-val="1"]', thisProxy.canvas);
+    var $default = $('.form-panel .dropdown-menu a[data-val="0"]', thisProxy.canvas);
     // 取得范围按钮
     var $btn = $('.form-panel .dropdown-toggle', thisProxy.canvas);
     // 取得默认选项的自定义属性data-val的值,用于记录范围标识码
@@ -400,7 +429,7 @@ HistoryFormModule.prototype.inquireData = function () {
         return;
     }
     // 拼接参数,拼接完整的请求地址
-    var url = thisProxy.url + '?start='+ thisProxy.start +'&end='+ thisProxy.end;
+    var url = thisProxy.url + '?start='+ thisProxy.start +'&end='+ thisProxy.end+'&alternateStatus='+thisProxy.scope;
     // 请求获取数据
     $.ajax({
         url:url,

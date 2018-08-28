@@ -808,6 +808,8 @@ var alternateAirport = function () {
      * */
     var setActive = function (bool) {
         if(bool){
+            // 开启定时器总
+            isRefresh = true;
             // 开启请求,获取表格数据
             getTableData(isRefresh);
         }else {

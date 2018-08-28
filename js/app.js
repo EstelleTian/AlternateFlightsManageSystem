@@ -539,10 +539,14 @@ var app = function () {
                 alternateObj.setScope(alternateFlightsScope);
             }
         }
-        if($.isValidObject(basicData.airportConfig)){
-            var alternateStatus = basicData.airportConfig.alternateStatus;
-            alternateHistoryObj.setScope(alternateStatus)
+        if($.isValidObject(userProperty.id_4210)){
+            // 备降计划历史查询模块
+            if($.isValidObject(basicData.airportConfig)){
+                var alternateStatus = basicData.airportConfig.alternateStatus;
+                alternateHistoryObj.setScope(alternateStatus)
+            }
         }
+
 
         // 出港计划模块
         /* var depFlightsScope = scopeListData.depFlightsScope;

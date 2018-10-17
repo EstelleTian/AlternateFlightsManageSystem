@@ -495,6 +495,7 @@ var app = function () {
                 ) {
                     basicData = data;
                     scopeListData = basicData.airportConfig;
+                    app.airportConfig = scopeListData;
                     subCollaborateDomData = basicData.alternateAirport;
                 } else if (data.status == 500) {
                     console.warn(data.error.message);
@@ -880,6 +881,7 @@ var app = function () {
         statusCode : statusCode,// 航班状态码
         positionStatus : positionStatus, // 机位状态码
         collaborateFlag : collaborateFlag,
+        airportConfig : scopeListData,
         init : function () {
             // 阻止右键点击默认事件
             preventContextmenu();

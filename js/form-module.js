@@ -249,7 +249,8 @@ FormModule.prototype.changeWeatherModel = function (bool) {
     // 若当前模块为活动模块
     var active = thisProxy.canvas.hasClass('active');
     if(active){
-        thisProxy.openRequest(false);
+        // 立即发送请求
+        thisProxy.openRequest(true);
     }
 };
 

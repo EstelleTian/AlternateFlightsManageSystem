@@ -39,7 +39,9 @@ var app = function () {
 
 
     // 定时器时间,用于设置每个模块定时间隔时间 ms
-    var interval = 1000*60*3;
+    var interval = 1000*30;
+    // 自定义定时器时间 (用于开启复杂天气模式) ms
+    var customeInterval = 1000*15;
     // 活动模块所在模块下标
     var index = 0;
 
@@ -70,7 +72,7 @@ var app = function () {
                 // 定时器时间
                 interval: interval,
                 // 自定义定时器时间 (用于开启复杂天气模式),数字 毫秒
-                customeInterval: 1000 * 60 * 1,
+                customeInterval: customeInterval,
                 // 默认选中的范围值
                 defaultScope: '2',
                 // 初始化表格
@@ -138,7 +140,7 @@ var app = function () {
                 // 定时器时间
                 interval : interval,
                 // 自定义定时器时间 (用于开启复杂天气模式),数字 毫秒
-                customeInterval: 1000 * 60 * 1,
+                customeInterval: customeInterval,
                 // 默认选中的范围值
                 defaultScope : '2',
                 initGridTable : function (table) {
@@ -449,7 +451,6 @@ var app = function () {
                         initModule();
                         // 绑定菜单栏事件，切换模块显隐及活动模块
                         initActiveModule();
-                        initChangeWeatherModel();
                         // 绑定开启复杂天气模式按钮点击事件
                         initChangeWeatherModel();
                         // 初始化显示用户信息
@@ -675,6 +676,31 @@ var app = function () {
         }
     };
 
+    /**
+     * 触发开启复杂天气模式勾选状态
+     * */
+    var triggerChangeWeatherModel = function () {
+        if($.isValidObject(basicData.airportConfig) && $.isValidObject(basicData.airportConfig.functionProperty)){
+            var functionProperty = basicData.airportConfig.functionProperty;
+            var len = functionProperty.length;
+            // 开启复杂天气模式勾选状态
+            var status = null;
+            for(var i=0; i < len; i++){
+                // 取complexWeather 值
+                if( functionProperty[i].key == 'complexWeather'){
+                    status = functionProperty[i].value; // 更新
+                    break;
+                }
+            }
+            // 复选框
+            var $box = $('.menu-bar input#change-weather-model');
+            // 复选框状态
+            $box.prop('checked',status);
+            // 切换复杂天气模式开启/关闭
+            changeWeatherModelSuccess(status);
+        }
+    };
+
 
     /**
      * 设置colModel指定项是否隐藏
@@ -866,6 +892,8 @@ var app = function () {
             setStatusCode();
             // 更新机位状态列数值参数
             setPositionStatusCode();
+            // 触发开启复杂天气模式勾选状态
+            triggerChangeWeatherModel();
             // 获取活动模块下标
             index = $('.main-area section.active').index();
             // 切换活动模块

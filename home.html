@@ -456,13 +456,24 @@
                     <ul class="sub_title" >
                         <span class="total_count">合计可用</span>（不含敦煌）：
                         <span class="total_count available_capacity"> </span>
+                        <label class="title airport-type">分类 </label>
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    全部 <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+
+                                </ul>
+                            </div>
+                        </div>
                         <button class="atfm-btn atfm-btn-blue ladda-button correct " data-style="zoom-out">
                             <span class="ladda-label">容量校准</span>
                         </button>
                         <span class="alert-danger error_tip"></span>
 
                     </ul>
-                    <div class="table-contianer">
+                    <div class="table-contianer" id="alernate_gird_container">
                         <table id="alernate_flight_grid_table" class="alernate_flight_grid_table" ></table>
                         <div id="ale-datas-pager"></div>
                     </div>

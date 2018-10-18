@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>协调记录</title>
+</head>
+<body>
+<div class="record-table-container">
+    <table id="record-table"></table>
+    <div id="record-table-pager"></div>
+</div>
+
+
+</body>
+<script>
+
+    var urlsObj = {
+        record:{
+            script: ['plugins/jquery/js/jquery.min.js',
+                'js/iphost.js',
+                'plugins/jquery/js/jquery-custom-util.js',
+                'plugins/jqgrid/js/jquery.jqGrid.5.2.0.js',
+                'plugins/jqgrid/js/jquery.jqGrid.util.js',
+                'plugins/jqgrid/js/jquery.jqGrid.extendsFunc.js',
+                'plugins/jqgrid/i18n/grid.locale-cn.js',
+                'plugins/jszip/jszip.min.js',
+                'js/grid-table.js',
+                'js/flight-coordination-record-config.js',
+                'js/airport-coordination-record.js'
+            ],
+            link: ['plugins/bootstrap/dist/css/bootstrap.min.css',
+                'plugins/dialog-factory/css/bootstrap-dialog-factory.css',
+                'plugins/jqgrid/css/ui.jqgrid-bootstrap.css',
+                'plugins/jqgrid/css/ui.jqgrid-bootstrap-custom.css',
+                'css/flight-coordination-record.css'
+            ]
+        }
+    }
+</script>
+
+<script src="plugins/jquery/js/jquery.min.js"></script>
+<script src="plugins/iframe_dialog/module-loader.js"></script>
+</html>

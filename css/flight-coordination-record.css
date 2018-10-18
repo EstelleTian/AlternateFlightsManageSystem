@@ -6,3 +6,6 @@ html,body, .record-table-container {
 .ui-jqgrid-bdiv div:first-child{
     overflow-x: hidden;
 }
+.mt200{
+    margin-top: 200px;
+}

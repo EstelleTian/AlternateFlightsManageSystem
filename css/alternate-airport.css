@@ -29,6 +29,13 @@ body .sub_title {
 body .error_tip {
   display: none;
 }
+body .airport-type {
+  font-weight: normal;
+  padding: 0 10px;
+}
+body .btn-group {
+  margin-top: -1px;
+}
 body .total_count {
   font-weight: 700;
   margin-right: 10px;

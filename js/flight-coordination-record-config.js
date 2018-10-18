@@ -230,3 +230,122 @@ var FlightCoordinationRecordConfig = {
     }
 
 };
+
+/**
+ * 机场协调记录列表配置
+ */
+var AirportCoordinationRecordConfig = {
+
+
+    /**
+     * 表格列模式模板（通用效果）
+     */
+    colModelTemplate : {
+        align : 'center',
+        sortable : true,
+        search : true,
+        searchoptions : {
+            sopt : ['cn','nc','eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en'],
+            dataEvents:[{type: 'keyup', fn: FlightCoordinationRecordCell.searchToUpperCase}]},
+        cellattr : FlightCoordinationRecordCell.cellattrCustom,
+        sortfunc : function(a, b, direction) {
+            // 若为升序排序，空值转换为最大的字符串进行比较
+            // 保证排序过程中，空值始终在最下方
+            var maxStr = 'ZZZZZZZZZZZZ';
+            if (!$.isValidVariable(a)) {
+                if (direction > 0) {
+                    a = maxStr;
+                } else {
+                    a = '';
+                }
+            }
+            if (!$.isValidVariable(b)) {
+                if (direction > 0) {
+                    b = maxStr;
+                } else {
+                    b = '';
+                }
+            }
+            return a.localeCompare(b) * direction;
+        }
+    },
+    colName : ['id','机场', '机位类型', '协调类型','协调前','协调后','协调时间','协调用户','协调用户名','用户IP','协调机位容量',],
+    colModel: [
+        // 协调记录主键
+        {
+            name: 'id',
+            index: 'id',
+            hidden : true
+        },
+        // 机场
+        {
+            name: 'airport',
+            index: 'airport'
+        },
+        // 机位类型
+        {
+            name: 'category',
+            index: 'category'
+        },
+        // 协调类型
+        {
+            name : 'type',
+            index : 'type',
+            hidden : true
+        },
+        //协调前
+        {
+            name : 'originalValue',
+            index : 'originalValue'
+        },
+        //协调后
+        {
+            name : 'value',
+            index : 'value'
+        },
+        //协调时间
+        {
+            name : 'coordinateTime',
+            index : 'coordinateTime',
+            formatter : FlightCoordinationRecordCell.formatterDateTime
+        },
+        //协调用户
+        {
+            name : 'userName',
+            index : 'userName'
+        },
+        //协调用户
+        {
+            name : 'userDescription',
+            index : 'userDescription'
+        },
+        //用户IP
+        {
+            name : 'ipAddress',
+            index : 'ipAddress'
+        },
+        //协调备降
+        {
+            name : 'comments',
+            index : 'comments',
+            hidden : true
+        },
+
+
+
+    ],
+    colTitle: {
+        id:'协调记录主键',
+        airport:'机场',
+        category:'机位类型',
+        type:'协调类型',
+        originalValue:'协调前',
+        value:'协调后',
+        coordinateTime:'协调时间',
+        userName:'协调用户',
+        userDescription:'协调用户名',
+        ipAddress:'用户IP',
+        comments: '协调机位容量'
+    }
+
+};

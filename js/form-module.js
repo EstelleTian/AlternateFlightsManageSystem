@@ -245,7 +245,7 @@ FormModule.prototype.changeWeatherModel = function (bool) {
         // 关闭自定义定时器时间
         thisProxy.enableCustomeIntervalFlag = false;
     }
-    thisProxy.abortRequest(true);
+    // thisProxy.abortRequest(false);
     // 若当前模块为活动模块
     var active = thisProxy.canvas.hasClass('active');
     if(active){

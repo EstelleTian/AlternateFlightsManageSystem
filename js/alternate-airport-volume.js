@@ -58,7 +58,7 @@ var alternateAirport = function () {
    */
   var getTableData = function (isRefresh) {
     // 开启定时器总开关
-    var url = ipHost + 'airport/retrieveAirport'
+    var url = ipHost + 'airport/retrieveAirport?type=0'
       xhr = $.ajax({
       type: "GET",
       url: url,

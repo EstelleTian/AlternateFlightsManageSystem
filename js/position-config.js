@@ -1,5 +1,10 @@
 
-
+/**
+ * 机位分类配置模块
+ *
+ *
+ *
+ * */
 var positionConfig = function () {
 
     var xhr = null;

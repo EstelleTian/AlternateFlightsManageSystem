@@ -469,7 +469,7 @@ var app = function () {
             },
             error: function (xhr, status, error) {
                 console.error(error);
-                Common.timeoutCallback(initUserAuthority,time);
+                Common.timeoutCallback(initUserAuthority,1000*60);
             }
         });
 
@@ -508,7 +508,7 @@ var app = function () {
             },
             error: function (xhr, status, error) {
                 console.error(error);
-                Common.timeoutCallback(initBasicData,time);
+                Common.timeoutCallback(initBasicData,1000*60);
             }
         });
 
@@ -694,10 +694,15 @@ var app = function () {
             }
             // 复选框
             var $box = $('.menu-bar input#change-weather-model');
+            if(status == 'true'){
+                status = true
+            }else if(status == 'false'){
+                status = false
+            }
             // 复选框状态
             $box.prop('checked',status);
-            // 切换复杂天气模式开启/关闭
-            changeWeatherModelSuccess(status);
+            // 更新各模块切换复杂天气模式开启/关闭
+            updateModulesWeatherModel(status);
         }
     };
 
@@ -737,51 +742,226 @@ var app = function () {
                 // 复选按钮勾选状态
                 var bool = $(this).prop('checked');
                 // 切换复杂天气模式开启/关闭
-                changeWeatherModel(bool);
+                changeWeatherModelDialog(bool);
             })
         }
 
     };
+
+    /**
+     * 切换复杂天气模式提示
+     * @param status 杂天气模式状态 true:开启  false:关闭
+     *
+     * */
+    var changeWeatherModelDialog = function (status) {
+
+        var title = status ? '开启复杂天气模式' : '关闭复杂天气模式';
+        var options = {
+            title : title,
+            content : '<p class="modal-text">确定'+title+'?</p>',
+            status: 1,// 1:正常 2:警告 3:危险 不填:默认情况
+            width : 400,
+            mtop: 200,
+            showCancelBtn: false,
+            buttons: [
+                {
+                    name : "确认",
+                    status :1 ,
+                    isHidden : false,
+                    callback : function(){
+                        var btn = this;
+                        // 切换复杂天气模式开启/关闭
+                        changeWeatherModel(status,btn);
+                    }
+                },{
+                    name : "取消",
+                    status :-1 ,
+                    callback : function(){
+                    }
+                }
+            ]
+        };
+        BootstrapDialogFactory.dialog(options);
+    };
+
     /**
      * 切换复杂天气模式开启/关闭
+     *
+     * @param modelstatus 杂天气模式状态 true:开启  false:关闭
+     *
+     * @param btn 模态框确认按钮
      * */
-    var changeWeatherModel = function (bool) {
-        // bool true 开启  false 取消天启
-        // 清除提示信息
-        $('.option .alert').removeClass('alert-danger active').html('');
+    var changeWeatherModel = function (modelStatus, btn) {
+
+        // 启用loading动画
+        var loading = Ladda.create(btn);
+        loading.start();
+        //禁用头部关闭按钮
+        $('#bootstrap-modal-dialog .close').attr('disabled',true);
+        //禁用底部所有操作按钮
+        $('#bootstrap-modal-dialog #bootstrap-modal-dialog-footer button').attr('disabled',true);
+        // 提示信息绑定对象
+        var $selector = $('.weather-model-option');
         // 向后端提交此次天气模式的切换
         var url = DataUrl.WEATHER_MODEL;
-        url = url + '?isCheck='+ bool;
+        url = url + '?isCheck='+ modelStatus;
         $.ajax({
             url:url,
             type: 'POST',
             dataType: 'json',
-            success: function (data) {
-
-                if (!$.isValidObject(data)) { // 数据无效
-                    changeWeatherModelFail(bool);
-                }else {
-                    if(data.status == 200){ // 成功
-                        changeWeatherModelSuccess(bool);
-
-                    }else { // 失败
-                        changeWeatherModelFail(bool);
-
-                    }
-                }
+            success: function (data) { // 成功
+                destroyDialog();
+                handleChangeWeatherModel($selector,modelStatus,data);
             },
             error: function ( status, error) { // 失败
-                changeWeatherModelFail(bool);
+                destroyDialog();
+                var content = modelStatus ? '开启复杂天气模式' : '关闭复杂天气模式';
+                showTipMessage($selector,'FAIL', content+'失败');
                 console.error('ajax requset  fail, error:');
-                console.error(error);
             }
         });
     };
 
     /**
-     * 提交成功
+     * 切换复杂天气模式 回调方法
+     *
+     * @param selector 提示信息绑定对象
+     * @param modelStatus 杂天气模式状态 true:开启  false:关闭
+     * @param data 结果数据
+     *
      * */
-    var changeWeatherModelSuccess = function (bool) {
+    var handleChangeWeatherModel = function (selector, modelStatus, data) {
+        // 取得开启复杂天气模式复选框
+        var $box = $('.menu-bar input#change-weather-model');
+        var content = modelStatus ? '开启复杂天气模式' : '关闭复杂天气模式';
+
+        if (!$.isValidObject(data)) { // 数据无效
+
+            showTipMessage(selector,'FAIL', content+'失败');
+            // 反选复选框状态
+            $box.prop('checked', !modelStatus);
+        } else {
+            if (data.status == 200 && $.isValidObject(data.configs)) { // 成功
+                // 结果数据配置信息
+                var configs = data.configs;
+                var len = configs.length;
+                // 结果数据开启复杂天气模式勾选状态
+                var status = null;
+                for(var i=0; i < len; i++){
+                    // 取complexWeather 值
+                    if( configs[i].key == 'complexWeather'){
+                        status = configs[i].value; // 更新
+                        break;
+                    }
+                }
+                // 结果数据开启复杂天气模式勾选状态转换为布尔值
+                if(status == 'true'){
+                    status = true
+                }else if(status == 'false'){
+                    status = false
+                }
+                // 若指定的复杂天气模式状态与结果数据的复杂天气模式状态相同，则切换成功
+                if(modelStatus === status){
+                    showTipMessage(selector,'SUCCESS', content+'成功');
+                    updateModulesWeatherModel(modelStatus);
+                }else {
+                    showTipMessage(selector,'FAIL', content+'失败');
+                    // 反选复选框状态
+                    $box.prop('checked', !modelStatus);
+                }
+
+            } else { // 失败
+                showTipMessage(selector,'FAIL', content+'失败');
+                // 反选复选框状态
+                $box.prop('checked', !modelStatus);
+            }
+        }
+    };
+
+    /**
+     * 注销模态框
+     *
+     * */
+    var destroyDialog = function () {
+        $('#bootstrap-modal-dialog').remove();
+        $('.modal-backdrop').remove();
+    }
+
+    /**
+     *
+     * 显示qtip信息
+     *
+     * @param obj 选择器对象
+     * @param type 信息类型
+     * @param content 信息内容
+     */
+
+    var showTipMessage = function(obj, type, content) {
+
+        // 确定样式设置
+        var styleClasses = 'qtip-green';
+        if (type == 'SUCCESS') {
+            styleClasses = 'qtip-green-custom qtip-rounded';
+        } else if (type == 'FAIL') {
+            styleClasses = 'qtip-red-custom qtip-rounded';
+        } else if (type == 'WARN') {
+            styleClasses = 'qtip-default-custom qtip-rounded';
+        }
+        // 显示提示信息
+        obj.qtip({
+            // 内容
+            content: {
+                text: content // 显示的文本信息
+            },
+            // 显示配置
+            show: {
+                delay: 0,
+                target: $('body'),
+                ready: true, // 初始化完成后马上显示
+                effect: function () {
+                    $(this).fadeIn(); // 显示动画
+                }
+            },
+            // 隐藏配置
+            hide: {
+                target: $('body'), // 指定对象
+                event: 'unfocus click', // 失去焦点时隐藏
+                effect: function () {
+                    $(this).fadeOut(); // 隐藏动画
+                }
+            },
+            // 显示位置配置
+            position: {
+                my: 'bottom center', // 同jQueryUI Position
+                at: 'top center',
+                viewport: true, // 显示区域
+                container: $('body'), // 限制显示容器，以此容器为边界
+                adjust: {
+                    resize: true, // 窗口改变时，重置位置
+                    method: 'shift shift',  //flipinvert/flip(页面变化时，任意位置翻转)  shift(转变) none(无)
+                }
+            },
+            // 样式配置
+            style: {
+                classes: styleClasses //
+            },
+            // 事件配置
+            events: {
+                hide: function (event, api) {
+                    api.destroy(true); // 销毁提示信息
+                }
+            }
+        });
+    }
+
+    /**
+     *
+     * 更新各模块切换复杂天气模式
+     *
+     *  @param modelStatus
+     * */
+
+    var updateModulesWeatherModel = function (modelStatus) {
         // 进港计划
         if($.isValidObject(arrObj)){
             // 若表格未初始化
@@ -791,12 +971,12 @@ var app = function () {
             }
 
             // 切换复杂天气模式
-            arrObj.changeWeatherModel(bool);
+            arrObj.changeWeatherModel(modelStatus);
             // 更新进港计划表格右键可交互标记
             if($.isValidObject(arrObj.table)){
-                arrObj.table.collaborateFlag = bool;
+                arrObj.table.collaborateFlag = modelStatus;
                 // 清除进港表格协调菜单
-                if(!bool && $.isValidVariable(arrObj.table.clearCollaborateContainer)){
+                if(!modelStatus && $.isValidVariable(arrObj.table.clearCollaborateContainer)){
                     arrObj.table.clearCollaborateContainer();
                 }
             }
@@ -809,31 +989,17 @@ var app = function () {
                 overObj.table = overObj.initGridTable(overObj.table);
             }
             // 切换复杂天气模式
-            overObj.changeWeatherModel(bool);
+            overObj.changeWeatherModel(modelStatus);
             // 更新飞越计划表格右键可交互标记
             if($.isValidObject(overObj.table)){
-                overObj.table.collaborateFlag = bool;
+                overObj.table.collaborateFlag = modelStatus;
                 // 清除飞越表格协调菜单
-                if(!bool && $.isValidVariable(overObj.table.clearCollaborateContainer)){
+                if(!modelStatus && $.isValidVariable(overObj.table.clearCollaborateContainer)){
                     overObj.table.clearCollaborateContainer();
                 }
             }
         }
-    }
-    /**
-     * 提交失败
-     *
-     * */
-    var changeWeatherModelFail = function (bool) {
-        var txt = bool ? '开启复杂天气模式失败' :'取消开启复杂天气模式失败';
-        // 取得checkbox
-        var $box = $('.menu-bar input#change-weather-model');
-        // 反选复选框状态
-        $box.prop('checked',!bool);
-        // 显示提示内容
-        $('.option .alert').html(txt).addClass('active alert-danger');
-    }
-
+    };
 
     /**
      * 转换用户权限数据
@@ -892,12 +1058,13 @@ var app = function () {
             setStatusCode();
             // 更新机位状态列数值参数
             setPositionStatusCode();
-            // 触发开启复杂天气模式勾选状态
-            triggerChangeWeatherModel();
+
             // 获取活动模块下标
             index = $('.main-area section.active').index();
             // 切换活动模块
             activeModuleToggle(index);
+            // 触发开启复杂天气模式勾选状态
+            triggerChangeWeatherModel();
         }else {
             Common.timeoutCallback(initComponents,time)
         }

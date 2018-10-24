@@ -1081,7 +1081,8 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             $releasePostion.on('click', function (event) {
                 // 阻止事件冒泡
                 event.stopPropagation();
-                thisProxy.releasePositionRequest.call(thisProxy, opt );
+                thisProxy.showDialog('释放停机位',thisProxy.releasePositionRequest,opt)
+                // thisProxy.releasePositionRequest.call(thisProxy, opt );
             });
         }
 
@@ -1092,7 +1093,8 @@ GridTable.prototype.collaborateAlternate = function (opt) {
             $cancelAlternate.on('click', function (event) {
                 // 阻止事件冒泡
                 event.stopPropagation();
-                thisProxy.cancleAlternateRequest.call(thisProxy, opt );
+                thisProxy.showDialog('取消备降',thisProxy.cancleAlternateRequest,opt)
+                // thisProxy.cancleAlternateRequest.call(thisProxy, opt );
             });
         }
 
@@ -1637,6 +1639,8 @@ GridTable.prototype.releasePositionRequest = function(opt){
             };
         },
         error: function ( status, error) {
+            // 销毁模态框
+            thisProxy.destroyDialog();
             console.error('ajax requset  fail, error:');
             console.error(error);
             // 开启定时请求但不立刻发起请求
@@ -1689,6 +1693,8 @@ GridTable.prototype.cancleAlternateRequest = function(opt){
                 if($.isValidObject(altfAlternate)){
                     thisProxy.deleteSingleData(altfAlternate);
                     var flightDataId = altfAlternate.flightDataId;
+                    // 销毁模态框
+                    thisProxy.destroyDialog();
                     thisProxy.showMsg('success',''+'计划航班('+ flightDataId +')取消备降成功', 1000*5);
                     // 开启定时请求但不立刻发起请求
                     thisProxy.request();
@@ -1700,6 +1706,8 @@ GridTable.prototype.cancleAlternateRequest = function(opt){
             }
         },
         error: function ( status, error) {
+            // 销毁模态框
+            thisProxy.destroyDialog();
             console.error('ajax requset  fail, error:');
             console.error(error);
             // 开启定时请求但不立刻发起请求
@@ -2280,6 +2288,8 @@ GridTable.prototype.cancleAlternateRequest = function(opt){
  */
 GridTable.prototype.showTableCellTipMessage = function (opts, type, content) {
     var thisProxy = this;
+    // 销毁模态框
+    thisProxy.destroyDialog();
     // 获取单元格对象
     // var cellObj =  opts.cellObj;
     var cellObj = null;
@@ -2858,4 +2868,51 @@ GridTable.prototype.hasAnyoneProperty = function (codes) {
         }
     }
     return false;
+};
+
+/**
+ * 模态框提示
+ * title 标题
+ * fn 回调函数
+ * opt 回调函数参数
+ *
+ * */
+GridTable.prototype.showDialog  = function (title, fn, opt) {
+    // 代理
+    var thisProxy = this;
+
+    var options = {
+        title : title,
+        content : '<p class="modal-text">确定'+title+'?</p>',
+        status: 1,// 1:正常 2:警告 3:危险 不填:默认情况
+        width : 400,
+        mtop: 200,
+        showCancelBtn: false,
+        buttons: [
+            {
+                name : "确认",
+                status :1 ,
+                isHidden : false,
+                callback : function(){
+                    fn.call(thisProxy,opt);
+                }
+            },{
+                name : "取消",
+                status :-1 ,
+                callback : function(){ }
+            }
+        ]
+    };
+    BootstrapDialogFactory.dialog(options);
+};
+
+/**
+ * 销毁模态框
+ *
+ * */
+GridTable.prototype.destroyDialog  = function () {
+    // 代理
+    var thisProxy = this;
+    $('#bootstrap-modal-dialog').remove();
+    $('.modal-backdrop').remove();
 };

@@ -115,16 +115,16 @@ var app = function () {
                             },
                             position: "first"
                         }) .navButtonAdd('#' + pagerId, {
-                            caption: "快速过滤",
-                            title: "快速过滤",
-                            buttonicon: "glyphicon-filter",
-                            onClickButton: function () {
-                                //清理协调窗口
-                                table.clearCollaborateContainer();
-                                table.showQuickFilter();
-                            },
-                            position: "first"
-                        });
+                        caption: "快速过滤",
+                        title: "快速过滤",
+                        buttonicon: "glyphicon-filter",
+                        onClickButton: function () {
+                            //清理协调窗口
+                            table.clearCollaborateContainer();
+                            table.showQuickFilter();
+                        },
+                        position: "first"
+                    });
                     return table;
                 }
             });
@@ -330,38 +330,38 @@ var app = function () {
 
 
         /*// 出港计划模块
-        depObj = new FormModule({
-            canvasId: 'dep-module',
-            tableId: 'dep-table',
-            url : DataUrl.DEP,
-            // 定时器时间
-            interval : interval,
-            // 默认选中的范围值
-            defaultScope : '2',
-            initGridTable : function (table) {
-                var opt = {
-                    tableId: 'dep-table',
-                    pagerId: 'dep-table-pager',
-                    colNames: GridTableConfig.common.colName,
-                    colModel: isHiddenCol(GridTableConfig.common.colModel,['position'], false) ,
-                    cmTemplate: GridTableConfig.colModelTemplate,
-                    colTitle: GridTableConfig.common.colTitle,
-                    colCollaborateUrl: CellOpreationUrl,
-                    params: {
-                        sortname: 'detd',
-                        shrinkToFit: true,
-                        sortorder: 'asc'
-                    }
+         depObj = new FormModule({
+         canvasId: 'dep-module',
+         tableId: 'dep-table',
+         url : DataUrl.DEP,
+         // 定时器时间
+         interval : interval,
+         // 默认选中的范围值
+         defaultScope : '2',
+         initGridTable : function (table) {
+         var opt = {
+         tableId: 'dep-table',
+         pagerId: 'dep-table-pager',
+         colNames: GridTableConfig.common.colName,
+         colModel: isHiddenCol(GridTableConfig.common.colModel,['position'], false) ,
+         cmTemplate: GridTableConfig.colModelTemplate,
+         colTitle: GridTableConfig.common.colTitle,
+         colCollaborateUrl: CellOpreationUrl,
+         params: {
+         sortname: 'detd',
+         shrinkToFit: true,
+         sortorder: 'asc'
+         }
 
-                };
-                table = new GridTable(opt);
-                table.initGridTableObject();
-                table.gridTableObject.jqGrid("destroyFrozenColumns");
-                return table;
-            }
-        });
-        depObj.initFormModuleObject();
-        moduleObjs.push(depObj);*/
+         };
+         table = new GridTable(opt);
+         table.initGridTableObject();
+         table.gridTableObject.jqGrid("destroyFrozenColumns");
+         return table;
+         }
+         });
+         depObj.initFormModuleObject();
+         moduleObjs.push(depObj);*/
     };
 
 
@@ -563,9 +563,9 @@ var app = function () {
      * */
     var concatCollaborateDom = function () {
         /*
-        * 1 = 民用机场  2= 军民合用 3=其他
-        *
-        * */
+         * 1 = 民用机场  2= 军民合用 3=其他
+         *
+         * */
         var data = subCollaborateDomData;
 
         // 其它
@@ -738,11 +738,14 @@ var app = function () {
         // 若有权限
         if($.isValidObject(userProperty.id_4560)){
             // 绑定点击事件
-            $('.menu-bar .limit-option').off('click').on('click','#change-weather-model',function () {
+            $('.menu-bar .limit-option').off('click').on('click',function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var $checkbox = $('#change-weather-model');
                 // 复选按钮勾选状态
-                var bool = $(this).prop('checked');
+                var bool = $checkbox.prop('checked');
                 // 切换复杂天气模式开启/关闭
-                changeWeatherModelDialog(bool);
+                changeWeatherModelDialog(!bool);
             })
         }
 
@@ -776,8 +779,7 @@ var app = function () {
                 },{
                     name : "取消",
                     status :-1 ,
-                    callback : function(){
-                    }
+                    callback : function(){ }
                 }
             ]
         };
@@ -838,8 +840,7 @@ var app = function () {
         if (!$.isValidObject(data)) { // 数据无效
 
             showTipMessage(selector,'FAIL', content+'失败');
-            // 反选复选框状态
-            $box.prop('checked', !modelStatus);
+
         } else {
             if (data.status == 200 && $.isValidObject(data.configs)) { // 成功
                 // 结果数据配置信息
@@ -862,18 +863,16 @@ var app = function () {
                 }
                 // 若指定的复杂天气模式状态与结果数据的复杂天气模式状态相同，则切换成功
                 if(modelStatus === status){
+                    // 更新复选框状态
+                    $box.prop('checked', modelStatus);
                     showTipMessage(selector,'SUCCESS', content+'成功');
                     updateModulesWeatherModel(modelStatus);
                 }else {
                     showTipMessage(selector,'FAIL', content+'失败');
-                    // 反选复选框状态
-                    $box.prop('checked', !modelStatus);
                 }
 
             } else { // 失败
                 showTipMessage(selector,'FAIL', content+'失败');
-                // 反选复选框状态
-                $box.prop('checked', !modelStatus);
             }
         }
     };

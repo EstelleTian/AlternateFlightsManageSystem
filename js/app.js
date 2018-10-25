@@ -383,7 +383,7 @@ var app = function () {
             $('.menu-list li').removeClass('active');
             $('.main-area section').removeClass('active');
             $that.addClass('active');
-            $('.main-area section').eq(index).addClass('active');
+            $('.main-area > section').eq(index).addClass('active');
             // 切换活动模块
             activeModuleToggle(index);
         });

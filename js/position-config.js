@@ -131,9 +131,9 @@ var positionConfig = function () {
         var sort = new SortablePart({
             data : obj,
             selector : $('#position-box'),
-            addBtn : $('.add-btn'),
-            revertBtn : $('.revert-btn'),
-            saveBtn : $('.save-btn'),
+            addBtn : $('.position-module .add-btn'),
+            revertBtn : $('.position-module .revert-btn'),
+            saveBtn : $('.position-module .save-btn'),
             handle: ".position-header", //限制排序开始点击指定的元素
             placeholder : 'sortable-placeholder position'
         });

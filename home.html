@@ -140,6 +140,11 @@
         <a href="javascript:;" >机位分类配置</a>
     </li>
     {{/if}}
+    {{#if this.id_4700}}
+    <li class="airport-config">
+        <a href="javascript:;" >备降机场管理</a>
+    </li>
+    {{/if}}
 
 </script>
 <!--模块内容模板-->
@@ -205,7 +210,7 @@
     </section>
     {{/if}}
     {{#if this.id_4100}}
-    <!--模块4 疆内飞越-->
+    <!--模块2 疆内飞越-->
     <section class="over-module">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -272,7 +277,7 @@
     </section>
     {{/if}}
     {{#if this.id_4200}}
-    <!--模块2 备降计划-->
+    <!--模块3 备降计划-->
     <section class="alternate-module">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -330,7 +335,7 @@
     </section>
     {{/if}}
     {{#if this.id_4210}}
-    <!--模块3 备降历史-->
+    <!--模块4 备降历史-->
     <section class="alternate-history-module">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -385,8 +390,7 @@
     {{/if}}
 
 
-
-    <!--模块4-->
+    <!--模块4 -->
     <!-- <section class="dep-module">
          <div class="panel panel-default">
              <div class="panel-heading">
@@ -443,7 +447,7 @@
          </div>
      </section>-->
     {{#if this.id_4300}}
-    <!--模块5-->
+    <!--模块5 备降场容量-->
     <section class="alter_volume">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -493,7 +497,7 @@
     </section>
     {{/if}}
     {{#if this.id_4400}}
-    <!--模块6-->
+    <!--模块6 机位分类配置-->
     <section class="position-module">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -544,6 +548,45 @@
     </section>
     {{/if}}
 
+    {{#if this.id_4700}}
+    <!--模块7 备降机场管理-->
+    <section class="airport-module">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="poster">备降机场管理</div>
+                <div class="time"></div>
+            </div>
+            <div class="panel-body">
+                <ul class="form-panel flex-end" >
+                    {{#if this.id_4410}}
+                    <li class="form-item">
+                        <button class="atfm-btn atfm-btn-blue ladda-button add-btn">
+                            添加备降机场
+                        </button>
+                    </li>
+                    {{/if}}
+
+                    <!--提示信息-->
+                    <li class="form-item">
+                        <span class="alert"></span>
+                    </li>
+
+
+                </ul>
+
+
+                <!-- 数据可视化区(图表,表格)-->
+                <div class="result-panel " id="airport-panel">
+                    <!--机位列表-->
+                    <ul class="position-box" id="airport-box">
+
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    {{/if}}
 </script>
 
 <!--机位列表模模板-->

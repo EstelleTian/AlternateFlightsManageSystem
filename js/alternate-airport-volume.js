@@ -39,15 +39,35 @@ var alternateAirport = function () {
     var refreshTime = 1000 * 60;
     //机场分类
     var airportType = 0;
+    //是否开启修改容量
+    var isOpenChangeCapacity = false;
     //初始化机场分类
     var initConpoments = function () {
+        // 表格绑定清除右键协调操作
+        $('.alter_volume').on('click', function (event) {
+            if ($('.flight-grid-table-collaborate-container').is(':visible')) {
+                clearCollaborateContainer()
+            }
+        })
+        //开启修改容量模式点击事件绑定
+        if($.isValidObject(userProperty.id_4340)){
+            $('.change-capacity-label').html(userProperty.id_4340.name);
+        }else{
+            setTimeout(function () {
+                $('.change-capacity-label').html(userProperty.id_4340.name);
+            },500)
+        }
+        $('.capacity-model-option').on('click',function () {
+            var isCheck = $('.capacity-model-option').find('input').prop("checked");
+            changeCapacityModelDialog(isCheck)
+        })
+    }
+    var initCapacityTypeConpoments = function (apType) {
         //获取容量分类container
         var $menu = $('.sub_title').find('.dropdown-menu');
-        //获取机场分类值
-        var airportTypes = app.airportConfig.airportType;
         // 创建一个空串
         var con = '<li><a href="javascript:;" class="scope-item" '+ 'data-val="0"' + '>全部</a></li>';
-        $.each(airportTypes,function (key,value) {
+        $.each(apType,function (key,value) {
             var node = '<li><a href="javascript:;" class="scope-item" '+ 'data-val="'+ value.value + '"' + '>' + value.text +'</a></li>';
             // 追加串
             con += node;
@@ -70,14 +90,41 @@ var alternateAirport = function () {
             //重新获取数据
             getTableData()
         })
-        // 表格绑定清除右键协调操作
-        $('.alter_volume').on('click', function (event) {
-            event.stopPropagation();
-            if ($('.flight-grid-table-collaborate-container').is(':visible')) {
-                clearCollaborateContainer()
-            }
-        })
     }
+    /**
+     * 切换修改模式提示
+     * @param status 容量修改模式状态 true:开启  false:关闭
+     *
+     * */
+    var changeCapacityModelDialog = function (status) {
+
+        var title = status ? '开启修改容量模式' : '关闭修改容量模式';
+        var options = {
+            title : title,
+            content : '<p class="modal-text">确定'+title+'?</p>',
+            status: 1,// 1:正常 2:警告 3:危险 不填:默认情况
+            width : 400,
+            mtop: 200,
+            showCancelBtn: false,
+            buttons: [
+                {
+                    name : "确认",
+                    status :1 ,
+                    isHidden : false,
+                    callback : function(){
+                        var btn = this;
+                        // 切换容量修改模式开启/关闭
+                        getChangeCapacityAuthority(status,btn);
+                    }
+                },{
+                    name : "取消",
+                    status :-1 ,
+                    callback : function(){ }
+                }
+            ]
+        };
+        BootstrapDialogFactory.dialog(options);
+    };
     /**
      *设置表格下方文本
      * @param textObj
@@ -129,6 +176,14 @@ var alternateAirport = function () {
                     }
                     //复制配置数据
                     originAirportConfig = data;
+                    //是否开启机位容量维护
+                    isOpenChangeCapacity = data.capacityJurisdiction;
+                    //初始化机位容量
+                    if(isOpenChangeCapacity){
+                        $('.capacity-model-option').find('input').attr('checked',"checked");
+                    }else{
+                        $('.capacity-model-option').find('input').removeAttr("checked");
+                    }
                     //列配置转换
                     tableConfig = colConfigConvert(originAirportConfig.airportConfig)
                     if ($.isValidObject(originAirportConfig.airportConfig)) {
@@ -344,7 +399,7 @@ var alternateAirport = function () {
                     var rowData = airVolumeTable.tableData[ rowid - 1 ];
                     var currentVal = rowData[colName];
                     //修改容量
-                    if (colName.indexOf('total') > 0) {
+                    if (colName.indexOf('total') > 0 ) {
                         // 获取触发事件的单元格对象
                         var type = colName.split('total');
                         var opt = {
@@ -514,6 +569,10 @@ var alternateAirport = function () {
         if (!$.isValidObject(userProperty.id_4310)) {
             return
         }
+        //是否开启容量修改
+        if(!isOpenChangeCapacity){
+            return
+        }
         //修改容量值
         if ($('.alter_volume').is(":visible")) {
             collaborateAlter(opt);
@@ -646,7 +705,10 @@ var alternateAirport = function () {
         });
         followTargetPosition(collaboratorDom, opt.cellObj)
     }
-
+    /**
+     * 获取机场协调记录
+     * @param airport
+     */
     var getRecordByAirport = function (airport) {
         var winTitle = airport + "备降场容量协调记录";
         var dialogId = 'detail' + new Date().getTime();
@@ -908,6 +970,74 @@ var alternateAirport = function () {
     };
 
     /**
+     * 切换修改容量权限
+     * @param isCheck
+     */
+    var getChangeCapacityAuthority = function (isCheck,btn){
+        // 启用loading动画
+        var loading = Ladda.create(btn);
+        loading.start();
+        //禁用头部关闭按钮
+        $('#bootstrap-modal-dialog .close').attr('disabled',true);
+        //禁用底部所有操作按钮
+        $('#bootstrap-modal-dialog #bootstrap-modal-dialog-footer button').attr('disabled',true);
+        // 提示信息绑定对象
+        var $selector = $('.capacity-model-option');
+        var url = ipHost + 'airport/changeCapacityModel';
+        var param = {
+            isCheck:isCheck
+        }
+        $.ajax({
+            type: "POST",
+            url: url,
+            data:param,
+            dataType: "JSON",
+            success: function (data) {
+                destroyDialog();
+                isOpenChangeCapacity = isCheck;
+                handleChangeWeatherModel($selector,isCheck,data);
+
+            },
+            error: function (xhr, status, error) {
+                destroyDialog();
+                var content = isCheck ? '开启修改容量模式' : '关闭修改容量模式';
+                var opt ={
+                    cellObj:$selector
+                }
+                showQtip(opt,'FAIL', content+'失败');
+                console.error('ajax requset  fail, error:');
+
+            }
+        })
+    }
+
+    /**
+     * 切换复杂天气模式 回调方法
+     *
+     * @param selector 提示信息绑定对象
+     * @param modelStatus 杂天气模式状态 true:开启  false:关闭
+     * @param data 结果数据
+     *
+     * */
+    var handleChangeWeatherModel = function (selector, modelStatus, data) {
+        var content = modelStatus ? '开启修改容量模式' : '关闭修改容量模式';
+        var opt = {
+            cellObj:selector
+        }
+
+        if (!$.isValidObject(data)) { // 数据无效
+            showQtip(opt,'FAIL', content+'失败');
+
+        } else {
+            if (data.status == 200 && $.isValidObject(data.configs)) { // 成功
+                showQtip(opt,'SUCCESS', content+'成功');
+            } else { // 失败
+                showQtip(opt,'FAIL', content+'失败');
+            }
+        }
+    };
+
+    /**
      *  设置当前模块为活动模块
      *  bool true 设置为活动模块 fale 取消当前模块为活动模块
      *
@@ -938,6 +1068,14 @@ var alternateAirport = function () {
         // 开启定时器总关闭
         isRefresh = false;
     };
+    /**
+     * 注销模态框
+     *
+     * */
+    var destroyDialog = function () {
+        $('#bootstrap-modal-dialog').remove();
+        $('.modal-backdrop').remove();
+    }
 
     return {
         init: function () {
@@ -947,9 +1085,10 @@ var alternateAirport = function () {
             //校验数据绑定
             correctData();
             return {
-                setActive: setActive
+                setActive: setActive,
             }
-        }
+        },
+        initCapacityTypeConpoments:initCapacityTypeConpoments
     }
 
 }();

@@ -19,6 +19,10 @@ body .available_capacity {
   font-weight: bold;
   font-size: 18px;
 }
+body .change-capacity-label {
+  height: 33px;
+  margin-left: 10px;
+}
 body .sub_title {
   margin: 10px 0;
   height: 30px;

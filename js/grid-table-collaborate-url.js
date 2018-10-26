@@ -62,4 +62,16 @@ var DataUrl = {
     POSTION_UPDATE : ipHost + 'airport/updatePostionType',
     // 协调记录
     COORDINATION_RECORD : ipHost + 'airport/retrieveCoordinationRecords',
+
+    // 获取备降机场数据
+    AIRPORT_LIST : ipHost + 'airport/retrieveAirports?type=1',
+    // 备降机场排序
+    AIRPORT_ORDER : ipHost + 'airport/orderAirportType',
+    // 备降机场添加
+    AIRPORT_ADD : ipHost + 'airport/addAirportType',
+    // 备降机场删除
+    AIRPORT_DEL : ipHost + 'airport/deleteAirportType',
+    // 备降机场修改
+    AIRPORT_UPDATE : ipHost + 'airport/updateAirportType',
+
 }

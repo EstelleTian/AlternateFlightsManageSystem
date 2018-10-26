@@ -89,6 +89,7 @@
 <script type="text/javascript" src="js/layout-event.js"></script>
 
 <script type="text/javascript" src="js/position-config.js"></script>
+<script type="text/javascript" src="js/airport-config.js"></script>
 <script type="text/javascript" src="js/alternate-airport-volume.js"></script>
 
 <!--复杂天气切换模板-->
@@ -536,9 +537,9 @@
 
 
                 <!-- 数据可视化区(图表,表格)-->
-                <div class="result-panel " id="ddd">
+                <div class="result-panel " id="position-panel">
                     <!--机位列表-->
-                    <ul class="position-box" id="position-box">
+                    <ul class="list-box position-box" id="position-box">
 
                     </ul>
 
@@ -577,10 +578,27 @@
 
                 <!-- 数据可视化区(图表,表格)-->
                 <div class="result-panel " id="airport-panel">
+                    <div class="placeholder"></div>
                     <!--机位列表-->
-                    <ul class="position-box" id="airport-box">
-
+                    <ul class=" airport-box flex-fill" id="airport-box">
+                        <!--<li class="item">-->
+                            <!--<div class="content">-->
+                                <!--<ul class="info">-->
+                                    <!--<li class="code">ZWWW</li>-->
+                                    <!--<li class="name">ZWWW</li>-->
+                                    <!--<li class="type">ZWWW</li>-->
+                                    <!--<li class="total">200</li>-->
+                                    <!--<li class="occupy">17</li>-->
+                                    <!--<li class="available">100</li>-->
+                                <!--</ul>-->
+                                <!--<div class="operate">-->
+                                    <!--<a class="icon glyphicon glyphicon-trash trash" pos-id="300" pos-key="cc" data-event="delete"></a>-->
+                                    <!--<a class="icon glyphicon glyphicon-edit edit" pos-id="300" pos-key="cc" data-event="edit"></a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</li>-->
                     </ul>
+
 
                 </div>
             </div>
@@ -601,7 +619,7 @@
                     {{key}}
                 </div>
                 {{#if ../code.id_4420}}
-                <a class="icon glyphicon glyphicon-edit" pos-id="{{id}}" pos-key="{{key}}" data-event="edit" ></a>
+                <a class="icon glyphicon glyphicon-edit edit" pos-id="{{id}}" pos-key="{{key}}" data-event="edit" title="修改" ></a>
                 {{/if}}
                 {{#if ../code.id_4430}}
                 <!--若数据的creator值等于'SYSTEM',则不绘制删除按钮-->
@@ -609,7 +627,7 @@
 
                 {{else}}
                 <!--若数据的creator值不等于'SYSTEM',则绘制删除按钮-->
-                <a class="icon glyphicon glyphicon-trash" pos-id="{{id}}" pos-key="{{key}}" data-event="delete" ></a>
+                <a class="icon glyphicon glyphicon-trash trash " pos-id="{{id}}" pos-key="{{key}}" data-event="delete" title="删除" ></a>
 
                 {{/compare}}
                 {{/if}}
@@ -683,6 +701,34 @@
 
 </form>
 </script>
+
+
+<!--机位列表模模板-->
+<script id="airport-template" type="text/x-handlebars-template">
+
+    {{#each airports}}
+    <!--机场-->
+    <li class="item" data-id={{id}}>
+        <div class="content">
+            <ul class="info">
+                <li class="code">{{code}}</li>
+                <li class="name">{{name}}</li>
+                <li class="place">{{place}}</li>
+                <li class="total">总可用量:{{totalPostdigit}}</li>
+                <li class="occupy">占用数:{{occupyPostdigit}}</li>
+                <li class="available">可用数:{{availablePostdigit}}</li>
+            </ul>
+            <div class="operate">
+                <a class="icon glyphicon glyphicon-trash trash" pos-id="300" pos-key="cc" data-event="delete" title="删除"></a>
+                <a class="icon glyphicon glyphicon-edit edit" pos-id="300" pos-key="cc" data-event="edit" title="修改"></a>
+            </div>
+        </div>
+    </li>
+
+    {{/each}}
+</script>
+
+
 </body>
 
 </html>

@@ -5,7 +5,7 @@
  *
  *
  * */
-var positionConfig = function () {
+var positionModule = function () {
 
     var xhr = null;
 

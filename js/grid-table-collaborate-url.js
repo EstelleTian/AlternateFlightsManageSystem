@@ -38,6 +38,11 @@ var CellOpreationUrl = {
 };
 
 var DataUrl = {
+    // 用户权限
+    USER_AUTHORITY : ipHost + 'airport/retrieveUserAuthority?userId=',
+    // 备降机场配置数据
+    AIRPORT_CONFIG: ipHost + 'airport/retrieveAirportConfig',
+
     // 进港
     ARR : ipHost+'airport/retrieveArrFlights',
     // 备降

@@ -478,7 +478,7 @@ ul, li {
     background-color: #e5e5e5;
     border-radius: 3px
 }
-.position-box .position-header {
+.position-box .position-header, .airport-box .airport-header {
     cursor: move;
     webkit-flex: 0 0 auto;
     -ms-flex: 0 0 auto;
@@ -515,7 +515,7 @@ ul, li {
 .position-box .add-position .position-header .position-name {
     margin-left: 0.5rem;
 }
-.position-box .position-header .position-name{
+.position-box .position-header .position-name, .airport-box .airport-header .airport-code{
     -webkit-flex: 1 1 auto;
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
@@ -735,10 +735,10 @@ ul, li {
 .airport-box .item {
     display: flex;
     margin: 8px;
-    width: 368px;
+    width: 200px;
 }
 .airport-box .item .content {
-    padding: 8px;
+    /*padding: 8px;*/
     background: #eee;
     border-radius: 4px;
     width: 100%;
@@ -752,11 +752,12 @@ ul, li {
     flex-wrap: wrap;
     margin-bottom: 8px;
     justify-content: space-between;
+    padding: 0 18px;
 }
 
 .airport-box .item .content .info > li {
-    width: 33.3%;
-    text-align: center;
+    width: 100%;
+    /*text-align: left;*/
     overflow: hidden;
     white-space: normal;
     text-overflow: ellipsis;
@@ -764,6 +765,7 @@ ul, li {
 .airport-box .item .content .operate {
     display: flex;
     flex-direction: row-reverse;
+    z-index: 1;
 }
 
 

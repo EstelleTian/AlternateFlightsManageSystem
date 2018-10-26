@@ -5,7 +5,7 @@
  *
  *
  * */
-var airportConfig = function () {
+var airportModule = function () {
 
     var xhr = null;
 
@@ -51,8 +51,9 @@ var airportConfig = function () {
                         $('.airport-module .time').text(time)
                     }
 
+
                     // 绘制出机场列表
-                    drawPostion(data);
+                    drawList(data);
                     // 绑定拖动排序
                     bindSortable(data);
                 }
@@ -79,13 +80,13 @@ var airportConfig = function () {
     /**
      * 绘制出机场列表
      * */
-    var drawPostion = function (data) {
+    var drawList = function (dataset) {
         //检测数据是否有效
-        if(!$.isValidObject(data.airports)) {
+        if(!$.isValidObject(dataset.airports)) {
             return;
         }
         //取得机场数据
-        var  airports = data.airports;
+        var  airports = dataset.airports;
 
         // 封装数据
         var data = {
@@ -111,26 +112,24 @@ var airportConfig = function () {
     /**
      * 绑定拖动排序
      * */
-    var bindSortable = function (data) {
-        // 对应数据集合
-        var obj = {};
-        if($.isValidObject(data.configs)){
-            //取得机场配置数据
-            var  config = data.configs;
-            // 将机场内部的机型字段值转为数组
-            config.map(function (item, index, arr) {
-                obj[item.id] = $.extend(true,{},item)
-            });
+    var bindSortable = function (dataset) {
+
+        //检测数据是否有效
+        if(!$.isValidObject(dataset.airports)) {
+            return;
         }
+        //取得机场数据
+        var  airports = dataset.airports;
 
         // 配置初始化参数
-        var sort = new SortablePart({
-            data : obj,
-            selector : $('#position-box'),
+        var sort = new AirportSortable({
+            data : airports,
+            selector : $('#airport-box'),
             addBtn : $('.airport-module .add-btn'),
             revertBtn : $('.airport-module .revert-btn'),
             saveBtn : $('.airport-module .save-btn'),
-            handle: ".position-header", //限制排序开始点击指定的元素
+            items:"> li.airport",
+            handle:  ".airport-header", //限制排序开始点击指定的元素
             placeholder : 'sortable-placeholder position'
         });
         //初始化

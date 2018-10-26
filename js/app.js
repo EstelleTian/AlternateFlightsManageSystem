@@ -21,6 +21,9 @@ var app = function () {
     var statusCode = {};
     // 机位状态码
     var positionStatus = {};
+
+    // 机场类型
+    var airportType = {};
     // 表格右键可交互标记（进港和疆内飞越表格右键是否可交的限制条件依据）
     var collaborateFlag = false;
 
@@ -324,14 +327,21 @@ var app = function () {
         }
         if($.isValidObject(userProperty.id_4400)){
             //机位分类配置模块
-            var positionObj = positionConfig.init();
+            var positionObj = positionModule.init();
             moduleObjs.push(positionObj);
         }
         if($.isValidObject(userProperty.id_4700)){
-            //机位分类配置模块
-            var airportObj = airportConfig.init();
+            //备降场管理模块
+            var airportObj = airportModule.init();
             moduleObjs.push(airportObj);
         }
+        //容量模块
+        if($.isValidObject(scopeListData.airportType)){
+            alternateAirport.initCapacityTypeConpoments(scopeListData.airportType)
+        }
+
+
+
 
 
         /*// 出港计划模块
@@ -428,9 +438,8 @@ var app = function () {
      *
      * */
     var initUserAuthority = function (time) {
-        userId = sessionStorage.getItem('userId'); // 本地测试专用
-        var url = ipHost + 'airport/retrieveUserAuthority?userId=' + userId; // 本地测试专用
-        // var url = ipHost + 'airport/retrieveUserAuthority';
+        userId = sessionStorage.getItem('userId');
+        var url = DataUrl.USER_AUTHORITY + userId;
         $.ajax({
             type: "GET",
             url: url,
@@ -487,7 +496,7 @@ var app = function () {
      *  定时刷新校验数据有效性
      * */
     var initBasicData = function (time) {
-        var url = ipHost + 'airport/retrieveAirportConfig'
+        var url = DataUrl.AIRPORT_CONFIG;
         $.ajax({
             type: "GET",
             url: url,
@@ -553,6 +562,8 @@ var app = function () {
                 alternateHistoryObj.setScope(alternateStatus)
             }
         }
+        // 更新容量模块
+        alternateAirport.initCapacityTypeConpoments(scopeListData.airportType)
 
 
         // 出港计划模块
@@ -680,6 +691,21 @@ var app = function () {
             app.positionStatus = statusCode;
         }
     };
+    /**
+     * 更新机场类型参数
+     *
+     * */
+    var setAirportType = function () {
+        if($.isValidObject(basicData.airportConfig) && $.isValidObject(basicData.airportConfig.positionStatus)){
+            var type = basicData.airportConfig.airportType;
+            airportType = {};
+            type.map(function (item, index, arr) {
+                var val = item.value;
+                airportType[val] = item;
+            });
+            app.airportType = airportType;
+        }
+    }
 
     /**
      * 触发开启复杂天气模式勾选状态
@@ -1062,6 +1088,8 @@ var app = function () {
             setStatusCode();
             // 更新机位状态列数值参数
             setPositionStatusCode();
+            // 更新机场类型参数
+            setAirportType();
 
             // 获取活动模块下标
             index = $('.main-area section.active').index();

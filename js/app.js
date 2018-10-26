@@ -336,13 +336,7 @@ var app = function () {
             moduleObjs.push(airportObj);
         }
         //容量模块
-        if($.isValidObject(scopeListData.airportType)){
-            alternateAirport.initCapacityTypeConpoments(scopeListData.airportType)
-        }
-
-
-
-
+        initCapacityModule(1000*1);
 
         /*// 出港计划模块
          depObj = new FormModule({
@@ -377,6 +371,18 @@ var app = function () {
          });
          depObj.initFormModuleObject();
          moduleObjs.push(depObj);*/
+    };
+    // 初始化容量模块
+    var initCapacityModule = function (time) {
+        // 若机场类型参数有效(即成功获取到)
+        if($.isValidObject(basicData) &&
+            $.isValidObject(basicData.airportConfig) &&
+            $.isValidObject(basicData.airportConfig.airportType)){
+            // 调用容量模块初始化方法
+            alternateAirport.initCapacityTypeConpoments(scopeListData.airportType)
+        }else {
+            Common.timeoutCallback(initCapacityModule,time);
+        }
     };
 
 
@@ -1107,6 +1113,7 @@ var app = function () {
     return {
         statusCode : statusCode,// 航班状态码
         positionStatus : positionStatus, // 机位状态码
+        airportType : airportType, // 机场类型
         collaborateFlag : collaborateFlag,
         airportConfig : scopeListData,
         init : function () {

@@ -478,6 +478,12 @@
                         <button class="atfm-btn atfm-btn-blue ladda-button correct " data-style="zoom-out">
                             <span class="ladda-label">容量校准</span>
                         </button>
+                        {{#if this.id_4340}}
+                        <a href="javascript:;" class="limit-option capacity-model-option">
+                            <input class="magic-checkbox" type="checkbox"  id="change-capacity-model">
+                            <label for="change-capacity-model" class="change-capacity-label"></label>
+                        </a>
+                        {{/if}}
                         <span class="alert-danger error_tip"></span>
 
                     </ul>

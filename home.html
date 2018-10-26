@@ -89,6 +89,7 @@
 <script type="text/javascript" src="js/layout-event.js"></script>
 
 <script type="text/javascript" src="js/position-config.js"></script>
+<script type="text/javascript" src="js/airport-config.js"></script>
 <script type="text/javascript" src="js/alternate-airport-volume.js"></script>
 
 <!--复杂天气切换模板-->
@@ -138,6 +139,11 @@
     {{#if this.id_4400}}
     <li class="position-config">
         <a href="javascript:;" >机位分类配置</a>
+    </li>
+    {{/if}}
+    {{#if this.id_4700}}
+    <li class="airport-config">
+        <a href="javascript:;" >备降机场管理</a>
     </li>
     {{/if}}
 
@@ -205,7 +211,7 @@
     </section>
     {{/if}}
     {{#if this.id_4100}}
-    <!--模块4 疆内飞越-->
+    <!--模块2 疆内飞越-->
     <section class="over-module">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -272,7 +278,7 @@
     </section>
     {{/if}}
     {{#if this.id_4200}}
-    <!--模块2 备降计划-->
+    <!--模块3 备降计划-->
     <section class="alternate-module">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -330,7 +336,7 @@
     </section>
     {{/if}}
     {{#if this.id_4210}}
-    <!--模块3 备降历史-->
+    <!--模块4 备降历史-->
     <section class="alternate-history-module">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -385,8 +391,7 @@
     {{/if}}
 
 
-
-    <!--模块4-->
+    <!--模块4 -->
     <!-- <section class="dep-module">
          <div class="panel panel-default">
              <div class="panel-heading">
@@ -443,7 +448,7 @@
          </div>
      </section>-->
     {{#if this.id_4300}}
-    <!--模块5-->
+    <!--模块5 备降场容量-->
     <section class="alter_volume">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -499,7 +504,7 @@
     </section>
     {{/if}}
     {{#if this.id_4400}}
-    <!--模块6-->
+    <!--模块6 机位分类配置-->
     <section class="position-module">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -538,9 +543,9 @@
 
 
                 <!-- 数据可视化区(图表,表格)-->
-                <div class="result-panel " id="ddd">
+                <div class="result-panel " id="position-panel">
                     <!--机位列表-->
-                    <ul class="position-box" id="position-box">
+                    <ul class="list-box position-box" id="position-box">
 
                     </ul>
 
@@ -550,6 +555,62 @@
     </section>
     {{/if}}
 
+    {{#if this.id_4700}}
+    <!--模块7 备降机场管理-->
+    <section class="airport-module">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="poster">备降机场管理</div>
+                <div class="time"></div>
+            </div>
+            <div class="panel-body">
+                <ul class="form-panel flex-end" >
+                    {{#if this.id_4410}}
+                    <li class="form-item">
+                        <button class="atfm-btn atfm-btn-blue ladda-button add-btn">
+                            添加备降机场
+                        </button>
+                    </li>
+                    {{/if}}
+
+                    <!--提示信息-->
+                    <li class="form-item">
+                        <span class="alert"></span>
+                    </li>
+
+
+                </ul>
+
+
+                <!-- 数据可视化区(图表,表格)-->
+                <div class="result-panel " id="airport-panel">
+                    <div class="placeholder"></div>
+                    <!--机位列表-->
+                    <ul class=" airport-box flex-fill" id="airport-box">
+                        <!--<li class="item">-->
+                            <!--<div class="content">-->
+                                <!--<ul class="info">-->
+                                    <!--<li class="code">ZWWW</li>-->
+                                    <!--<li class="name">ZWWW</li>-->
+                                    <!--<li class="type">ZWWW</li>-->
+                                    <!--<li class="total">200</li>-->
+                                    <!--<li class="occupy">17</li>-->
+                                    <!--<li class="available">100</li>-->
+                                <!--</ul>-->
+                                <!--<div class="operate">-->
+                                    <!--<a class="icon glyphicon glyphicon-trash trash" pos-id="300" pos-key="cc" data-event="delete"></a>-->
+                                    <!--<a class="icon glyphicon glyphicon-edit edit" pos-id="300" pos-key="cc" data-event="edit"></a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</li>-->
+                    </ul>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+    {{/if}}
 </script>
 
 <!--机位列表模模板-->
@@ -564,7 +625,7 @@
                     {{key}}
                 </div>
                 {{#if ../code.id_4420}}
-                <a class="icon glyphicon glyphicon-edit" pos-id="{{id}}" pos-key="{{key}}" data-event="edit" ></a>
+                <a class="icon glyphicon glyphicon-edit edit" pos-id="{{id}}" pos-key="{{key}}" data-event="edit" title="修改" ></a>
                 {{/if}}
                 {{#if ../code.id_4430}}
                 <!--若数据的creator值等于'SYSTEM',则不绘制删除按钮-->
@@ -572,7 +633,7 @@
 
                 {{else}}
                 <!--若数据的creator值不等于'SYSTEM',则绘制删除按钮-->
-                <a class="icon glyphicon glyphicon-trash" pos-id="{{id}}" pos-key="{{key}}" data-event="delete" ></a>
+                <a class="icon glyphicon glyphicon-trash trash " pos-id="{{id}}" pos-key="{{key}}" data-event="delete" title="删除" ></a>
 
                 {{/compare}}
                 {{/if}}
@@ -646,6 +707,34 @@
 
 </form>
 </script>
+
+
+<!--机位列表模模板-->
+<script id="airport-template" type="text/x-handlebars-template">
+
+    {{#each airports}}
+    <!--机场-->
+    <li class="item" data-id={{id}}>
+        <div class="content">
+            <ul class="info">
+                <li class="code">{{code}}</li>
+                <li class="name">{{name}}</li>
+                <li class="place">{{place}}</li>
+                <li class="total">总可用量:{{totalPostdigit}}</li>
+                <li class="occupy">占用数:{{occupyPostdigit}}</li>
+                <li class="available">可用数:{{availablePostdigit}}</li>
+            </ul>
+            <div class="operate">
+                <a class="icon glyphicon glyphicon-trash trash" pos-id="300" pos-key="cc" data-event="delete" title="删除"></a>
+                <a class="icon glyphicon glyphicon-edit edit" pos-id="300" pos-key="cc" data-event="edit" title="修改"></a>
+            </div>
+        </div>
+    </li>
+
+    {{/each}}
+</script>
+
+
 </body>
 
 </html>

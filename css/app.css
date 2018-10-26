@@ -411,7 +411,7 @@ ul, li {
     padding: 4px 0;
 }
 
-.position-box {
+.list-box {
     position: relative;
     padding: 10px;
     white-space: nowrap;
@@ -525,7 +525,7 @@ ul, li {
     font-size: 2rem;
 }
 
-.position-box .icon {
+.list-box .icon, .airport-box .icon {
     transition: all .2s;
     cursor: pointer;
     font-style: normal;
@@ -534,8 +534,12 @@ ul, li {
     padding-right: 8px;
     text-decoration: none;
 }
-.position-box .icon:hover {
+.position-box .edit:hover, .airport-box .edit:hover {
     color: #3da8f5;
+    text-decoration: none;
+}
+.position-box .trash:hover, .airport-box .trash:hover {
+    color: #f53a2b;
     text-decoration: none;
 }
 
@@ -709,6 +713,57 @@ ul, li {
 }
 #position-value :host{
     outline: none;
+}
+.flex-fill {
+    webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+}
+#airport-box {
+    position: relative;
+    min-height: 1px;
+    min-width: 1px;
+    height: 1px;
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    overflow-y: auto;
+}
+.airport-box .item {
+    display: flex;
+    margin: 8px;
+    width: 368px;
+}
+.airport-box .item .content {
+    padding: 8px;
+    background: #eee;
+    border-radius: 4px;
+    width: 100%;
+    height: 100%;
+    font-size: 15px;
+    color: #808080;
+    line-height: 3rem;
+}
+.airport-box .item .content .info {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    justify-content: space-between;
+}
+
+.airport-box .item .content .info > li {
+    width: 33.3%;
+    text-align: center;
+    overflow: hidden;
+    white-space: normal;
+    text-overflow: ellipsis;
+}
+.airport-box .item .content .operate {
+    display: flex;
+    flex-direction: row-reverse;
 }
 
 

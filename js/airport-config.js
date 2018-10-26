@@ -1,11 +1,11 @@
 
 /**
- * 机位分类配置模块
+ * 备降机场管理模块
  *
  *
  *
  * */
-var positionConfig = function () {
+var airportConfig = function () {
 
     var xhr = null;
 
@@ -29,18 +29,17 @@ var positionConfig = function () {
      * */
     var openRequest = function () {
         // 清除提示信息
-        $('.position-module .alert').html('').removeClass('alert-danger active');
+        $('.airport-module .alert').html('').removeClass('alert-danger active');
         //ajax请求获取数据
         xhr = $.ajax({
-            url: DataUrl.POSTION_LIST,
+            url: DataUrl.AIRPORT_LIST,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
-
                 // 数据无效
                 if (!data) {
                     // 显示提示信息
-                    $('.position-module .alert').html('暂无数据').addClass('alert-danger active');
+                    $('.airport-module .alert').html('暂无数据').addClass('alert-danger active');
                     return;
                 }
                 ;
@@ -49,10 +48,10 @@ var positionConfig = function () {
                     // 更新数据生成时间
                     if ($.isValidVariable(data.generateTime)) {
                         var time = '数据生成时间: ' + Common.formatterTime(data.generateTime);
-                        $('.position-module .time').text(time)
+                        $('.airport-module .time').text(time)
                     }
 
-                    // 绘制出机位列表
+                    // 绘制出机场列表
                     drawPostion(data);
                     // 绑定拖动排序
                     bindSortable(data);
@@ -78,26 +77,23 @@ var positionConfig = function () {
     };
 
     /**
-     * 绘制出机位列表
+     * 绘制出机场列表
      * */
     var drawPostion = function (data) {
         //检测数据是否有效
-        if(!$.isValidObject(data.configs)) {
+        if(!$.isValidObject(data.airports)) {
             return;
         }
-        //取得机位配置数据
-        var  config = data.configs;
-        // 将机位内部的机型字段值转为数组
-        config.map(function (item, index, arr) {
-            item.value = item.value.split(',');
-        });
+        //取得机场数据
+        var  airports = data.airports;
+
         // 封装数据
         var data = {
             code : userProperty, // 用户权限
-            config : config
+            airports : airports
         };
         // 利用Handlebars模版生成对应HTML结构
-        var myTemplate = Handlebars.compile($("#template").html());
+        var myTemplate = Handlebars.compile($("#airport-template").html());
         // 注册一个比较是否相等的Helper,判断v1是否等于v2
         Handlebars.registerHelper("compare",function(v1,v2,options){
             if(v1 == v2){
@@ -109,7 +105,7 @@ var positionConfig = function () {
             }
         });
 
-        $('#position-box').html(myTemplate(data));
+        $('#airport-box').html(myTemplate(data));
     };
 
     /**
@@ -119,9 +115,9 @@ var positionConfig = function () {
         // 对应数据集合
         var obj = {};
         if($.isValidObject(data.configs)){
-            //取得机位配置数据
+            //取得机场配置数据
             var  config = data.configs;
-            // 将机位内部的机型字段值转为数组
+            // 将机场内部的机型字段值转为数组
             config.map(function (item, index, arr) {
                 obj[item.id] = $.extend(true,{},item)
             });
@@ -131,9 +127,9 @@ var positionConfig = function () {
         var sort = new SortablePart({
             data : obj,
             selector : $('#position-box'),
-            addBtn : $('.position-module .add-btn'),
-            revertBtn : $('.position-module .revert-btn'),
-            saveBtn : $('.position-module .save-btn'),
+            addBtn : $('.airport-module .add-btn'),
+            revertBtn : $('.airport-module .revert-btn'),
+            saveBtn : $('.airport-module .save-btn'),
             handle: ".position-header", //限制排序开始点击指定的元素
             placeholder : 'sortable-placeholder position'
         });

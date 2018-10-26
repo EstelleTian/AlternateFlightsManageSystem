@@ -327,6 +327,11 @@ var app = function () {
             var positionObj = positionConfig.init();
             moduleObjs.push(positionObj);
         }
+        if($.isValidObject(userProperty.id_4700)){
+            //机位分类配置模块
+            var airportObj = airportConfig.init();
+            moduleObjs.push(airportObj);
+        }
 
 
         /*// 出港计划模块
@@ -383,7 +388,7 @@ var app = function () {
             $('.menu-list li').removeClass('active');
             $('.main-area section').removeClass('active');
             $that.addClass('active');
-            $('.main-area section').eq(index).addClass('active');
+            $('.main-area > section').eq(index).addClass('active');
             // 切换活动模块
             activeModuleToggle(index);
         });

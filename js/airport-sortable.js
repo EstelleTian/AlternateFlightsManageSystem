@@ -30,6 +30,8 @@ function AirportSortable(params) {
     this.placeholder = params.placeholder //'sortable-placeholder position',
 
     this.items = params.items //"> li.airport",
+    // 选中的类型
+    this.selectedTpye = '';
 }
 
 /**
@@ -55,7 +57,7 @@ AirportSortable.prototype.init = function () {
             // 更新保存按钮是否可用
             thisProxy.toggleButtonEnable();
         },
-        // disabled: true // 初始化设置为不可用
+        disabled: true // 初始化设置为不可用
     }).disableSelection();
     // 记录初始化时的id顺序，即原始id集合
     thisProxy.ids = thisProxy.selector.sortable('toArray',{attribute :'data-id'});
@@ -72,18 +74,18 @@ AirportSortable.prototype.init = function () {
 AirportSortable.prototype.initEvent = function () {
     var thisProxy = this;
 
-    // 添加机位分类
+    // 添加机场
     thisProxy.addBtn.on('click',function () {
         // 是否有权限
         if(!$.isValidObject(userProperty.id_4410)){
             return;
         }
         if(thisProxy.sorted){
-            var text = '排序有变更,请先保存排序后再添加机位分类';
+            var text = '排序有变更,请先保存排序后再添加机场';
             thisProxy.alertDialog(text)
         }else {
             // todo
-            // 添加机位分类
+            // 添加机场
             thisProxy.addPosition()
         }
     });
@@ -112,8 +114,8 @@ AirportSortable.prototype.initEvent = function () {
         }
     })
 
-    // 删除/修改机位分类
-    $(thisProxy.selector).on('click','.position .position-header',function (e) {
+    // 删除/修改机场
+    $(thisProxy.selector).on('click','.airport .airport-header',function (e) {
         var event = e || event;
         // 事件源jQ对象
         var $target = $(e.target);
@@ -121,15 +123,15 @@ AirportSortable.prototype.initEvent = function () {
         var mark = $target.attr('data-event');
         // 获取事件源自定义属性，用于操作时获取对应数据
         var opt = {
-            id : $target.attr('pos-id'),
-            key : $target.attr('pos-key')
+            id : $target.attr('airport-id'),
+            code : $target.attr('airport-code')
         }
-        // 删除机位分类
+        // 删除机场
         if(mark== 'delete'){
             // todo
             thisProxy.deletePosition(opt);
 
-        }else if(mark == 'edit'){ // 修改机位分类
+        }else if(mark == 'edit'){ // 修改机场
             thisProxy.updatePosition(opt);
         }
     });
@@ -335,16 +337,16 @@ AirportSortable.prototype.saveSort = function (btn) {
     });
 };
 /**
- * 添加机位分类
+ * 添加机场
  *
  * */
 AirportSortable.prototype.addPosition = function () {
     var thisProxy = this;
-    // 添加机位分类表单框
+    // 添加机场表单框
     thisProxy.addPositionDialog();
 };
 /**
- * 添加机位分类表单弹框
+ * 添加机场表单弹框
  *
  *
  * */
@@ -353,10 +355,10 @@ AirportSortable.prototype.addPositionDialog = function () {
     // 创建一个空数据
     var data = {};
     // 利用Handlebars模版生成对应HTML结构
-    var myTemplate = Handlebars.compile($("#form-template").html());
+    var myTemplate = Handlebars.compile($("#airport-form-template").html());
     var content = myTemplate(data);
     var options = {
-        title : "添加机位分类",
+        title : "添加机场",
         content : content,
         status: 1,// 1:正常 2:警告 3:危险 不填:默认情况
         width : 500,
@@ -377,7 +379,7 @@ AirportSortable.prototype.addPositionDialog = function () {
                         var dialog = $('#bootstrap-modal-dialog');
                         // 禁用弹框关闭
                         thisProxy.disabledCloseDialog(dialog,btn);
-                        // 添加机位分类表单提交
+                        // 添加机场表单提交
                         thisProxy.addPositionSubmit();
                     }
                 }
@@ -394,54 +396,55 @@ AirportSortable.prototype.addPositionDialog = function () {
     BootstrapDialogFactory.dialog(options);
     // 初始化表单相关处理
     thisProxy.initForm()
+
 }
 
 /**
- * 添加机位分类表单提交
+ * 添加机场表单提交
  *
  * */
 AirportSortable.prototype.addPositionSubmit = function () {
     var thisProxy = this;
     var newData = thisProxy.getSinglePositionData();
+
     $.ajax({
-        url:DataUrl.POSTION_ADD,
+        url:DataUrl.AIRPORT_ADD,
         type: 'POST',
         dataType: 'json',
         traditional: true,
         data :newData,
         success: function (data) {
-
             // 数据无效
             if (!data) {
-                thisProxy.alertDialog('添加机位分类失败');
+                thisProxy.alertDialog('添加机场失败');
                 return;
             };
             // 成功
             if (data.status == 200) {
-                // 追加单个新的机位分类列表
+                // 追加单个新的机场列表
                 thisProxy.appendSinglePositin(data);
                 // 刷新
                 thisProxy.refresh();
                 // 弹框提示成功
-                thisProxy.tipDialog('添加机位分类成功');
+                thisProxy.tipDialog('添加机场成功');
             }else if(data.status == 203){ //  无权限
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
                     var mess = data.error.message
                     thisProxy.alertDialog(mess)
                 }else {
-                    thisProxy.alertDialog('添加机位分类失败');
+                    thisProxy.alertDialog('添加机场失败');
                 }
             }else if(data.status == 500){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
                     var mess = data.error.message
                     thisProxy.alertDialog(mess)
                 }else {
-                    thisProxy.alertDialog('添加机位分类失败');
+                    thisProxy.alertDialog('添加机场失败');
                 }
             }
         },
         error: function ( status, error) {
-            thisProxy.alertDialog('添加机位分类失败');
+            thisProxy.alertDialog('添加机场失败');
             console.error('ajax requset  fail, error:');
             console.error(error);
         }
@@ -449,33 +452,39 @@ AirportSortable.prototype.addPositionSubmit = function () {
 };
 
 /**
- * 追加单个新的机位分类列表
+ * 追加单个新的机场列表
  *
  * */
-AirportSortable.prototype.appendSinglePositin = function(data){
+AirportSortable.prototype.appendSinglePositin = function(datas){
     var thisProxy = this;
     //检测数据是否有效
-    if(!$.isValidObject(data.configs)) {
+    if(!$.isValidObject(datas.airports)) {
         return;
     }
-    //取得机位分类配置数据
-    var  config = data.configs;
-    // 将机位分类内部的机型字段值转为数组
-    config.map(function (item, index, arr) {
-        item.value = item.value.split(',');
-        // 拷贝
-        var obj = $.extend(true,{},item);
-        // 更新到数据集合
-        thisProxy.data[obj.id] = obj;
-    });
+    // 机场数据
+    var airports = datas.airports;
+    // 拷贝数据
+    var result = JSON.parse(JSON.stringify(airports));
+    var len = result.length;
+    // 机场类型参数集合
+    var airportType = app.airportType;
+
+    for(var j=0; j<len; j++) {
+        var airport = result[j];
+        var type = airport.type;
+        if($.isValidObject(airportType[type])){
+            result[j].typeZh = airportType[type].text || ''; // 取对应text字段值
+        }
+    }
+
     // 封装数据
     var data = {
         code : userProperty, // 用户权限
-        config : config
+        airports : result
     };
 
     // 利用Handlebars模版生成对应HTML结构
-    var myTemplate = Handlebars.compile($("#template").html());
+    var myTemplate = Handlebars.compile($("#airport-template").html());
     // 注册一个比较是否相等的Helper,判断v1是否等于v2
     Handlebars.registerHelper("compare",function(v1,v2,options){
         if(v1 == v2){
@@ -492,9 +501,9 @@ AirportSortable.prototype.appendSinglePositin = function(data){
 };
 
 /**
- * 删除机位分类列表
+ * 删除机场列表
  *
- * opt 机位分类列表参数
+ * opt 机场列表参数
  *
  * */
 
@@ -506,23 +515,23 @@ AirportSortable.prototype.deletePosition  = function (opt) {
     }
     // 若当前发生排序了
     if(thisProxy.sorted){
-        var text = '排序有变更,请先保存排序后再删除机位分类';
+        var text = '排序有变更,请先保存排序后再删除机场';
         thisProxy.alertDialog(text)
     }else {
         // todo
-        // 删除机位分类弹框
+        // 删除机场弹框
         thisProxy.deletePositionDialog(opt);
     }
 };
 /**
- * 删除机位分类列表确认框
- * opt 机位分类列表参数
+ * 删除机场列表确认框
+ * opt 机场列表参数
  * */
 AirportSortable.prototype.deletePositionDialog = function (opt) {
     var thisProxy = this;
     var options = {
-        title : "删除机位分类",
-        content : '<p class="modal-text">确定删除'+ opt.key +'机位分类吗？</p>',
+        title : "删除机场",
+        content : '<p class="modal-text">确定删除'+ opt.code +'机场吗？</p>',
         status: 3,// 1:正常 2:警告 3:危险 不填:默认情况
         width : 400,
         mtop: 200,
@@ -552,8 +561,8 @@ AirportSortable.prototype.deletePositionDialog = function (opt) {
 };
 
 /**
- * 删除机位分类列表提交
- * opt 机位分类列表参数
+ * 删除机场列表提交
+ * opt 机场列表参数
  *  
  * */
 
@@ -561,8 +570,8 @@ AirportSortable.prototype.deletePositionSubmit = function (opt) {
     var thisProxy = this;
     var id = opt.id;
     $.ajax({
-        url:DataUrl.POSTION_DEL,
-        type: 'POST',
+        url:DataUrl.AIRPORT_DEL,
+        type: 'GET',
         dataType: 'json',
         traditional: true,
         data : {
@@ -571,7 +580,7 @@ AirportSortable.prototype.deletePositionSubmit = function (opt) {
         success: function (data) {
             // 数据无效
             if (!data) {
-                thisProxy.alertDialog('删除机位分类'+ opt.key+'失败');
+                thisProxy.alertDialog('删除机场'+ opt.code+'失败');
                 return;
             };
             // 成功
@@ -582,48 +591,48 @@ AirportSortable.prototype.deletePositionSubmit = function (opt) {
                 // 刷新
                 thisProxy.refresh();
 
-                thisProxy.tipDialog('删除机位分类'+ opt.key+'成功')
+                thisProxy.tipDialog('删除机场'+ opt.code+'成功')
             }else if(data.status == 500){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    thisProxy.alertDialog('删除机位分类'+ opt.key+'失败:'+data.error.message);
+                    thisProxy.alertDialog('删除机场'+ opt.code+'失败:'+data.error.message);
                 }else {
-                    thisProxy.alertDialog('删除机位分类'+ opt.key+'失败')
+                    thisProxy.alertDialog('删除机场'+ opt.code+'失败')
                 }
             }else if(data.status == 202){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    thisProxy.alertDialog('删除机位分类'+ opt.key+'失败:' +data.error.message);
+                    thisProxy.alertDialog('删除机场'+ opt.code+'失败:' +data.error.message);
                 }else {
-                    thisProxy.alertDialog('删除机位分类'+ opt.key+'失败')
+                    thisProxy.alertDialog('删除机场'+ opt.code+'失败')
                 }
 
             }else if(data.status == 203){ //  无权限
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    thisProxy.alertDialog('删除机位分类'+ opt.key+'失败:' +data.error.message);
+                    thisProxy.alertDialog('删除机场'+ opt.code+'失败:' +data.error.message);
                 }else {
-                    thisProxy.alertDialog('删除机位分类'+ opt.key+'失败');
+                    thisProxy.alertDialog('删除机场'+ opt.code+'失败');
                 }
             }
         },
         error: function ( status, error) {
-            thisProxy.alertDialog('删除机位分类'+ opt.key+'失败')
+            thisProxy.alertDialog('删除机场'+ opt.code+'失败')
             console.error('ajax requset  fail, error:');
             console.error(error);
         }
     });
 };
 /**
- * 删除机位分类列表节点
- * opt 机位分类列表参数
+ * 删除机场列表节点
+ * opt 机场列表参数
  * */
 
 AirportSortable.prototype.deleteSinglePositin = function(opt){
     var thisProxy = this;
     var id = opt.id
-    // 删除机位分类html节点
-    $('.position[data-id="'+ id+'"]',thisProxy.selector).remove();
+    // 删除机场html节点
+    $('.airport[data-id="'+ id+'"]',thisProxy.selector).remove();
 };
 /**
- *  修改机位分类列表
+ *  修改机场列表
  *
  * */
 AirportSortable.prototype.updatePosition  = function (opt) {
@@ -634,17 +643,17 @@ AirportSortable.prototype.updatePosition  = function (opt) {
         return;
     }
     if(thisProxy.sorted){
-        var text = '排序有变更,请先保存排序后再修改机位分类';
+        var text = '排序有变更,请先保存排序后再修改机场';
         thisProxy.alertDialog(text)
     }else {
         // todo
-        // 修改机位分类表单弹框
+        // 修改机场表单弹框
         thisProxy.updatePositionDialog(opt);
     }
 };
 /**
- * 修改机位分类列表
- * opt 所选机位分类列表相关参数
+ * 修改机场列表
+ * opt 所选机场列表相关参数
  * */
 AirportSortable.prototype.updatePositionDialog = function (opt) {
     var thisProxy = this;
@@ -652,11 +661,11 @@ AirportSortable.prototype.updatePositionDialog = function (opt) {
     // 取相应数据
     var data = thisProxy.data[id];
     // 利用Handlebars模版生成对应HTML结构
-    var myTemplate = Handlebars.compile($("#form-template").html());
+    var myTemplate = Handlebars.compile($("#airport-form-template").html());
     var content = myTemplate(data);
 
     var options = {
-        title : "修改机位分类",
+        title : "修改机场",
         content : content,
         status: 1,// 1:正常 2:警告 3:危险 不填:默认情况
         width : 500,
@@ -677,7 +686,7 @@ AirportSortable.prototype.updatePositionDialog = function (opt) {
                         // 禁用弹框关闭
                         thisProxy.disabledCloseDialog(dialog,btn);
                         // 提交修改
-                        thisProxy.updatePositionSubmit();
+                        thisProxy.updatePositionSubmit(data);
                     }
 
                 }
@@ -692,16 +701,16 @@ AirportSortable.prototype.updatePositionDialog = function (opt) {
         ]
     };
      BootstrapDialogFactory.dialog(options);
-    thisProxy.initForm()
+    thisProxy.initForm(data);
 };
 /**
  * 提交修改
  * */
-AirportSortable.prototype.updatePositionSubmit = function () {
+AirportSortable.prototype.updatePositionSubmit = function (oldData) {
     var thisProxy = this;
     var newData = thisProxy.getSinglePositionData();
     $.ajax({
-        url:DataUrl.POSTION_UPDATE,
+        url:DataUrl.AIRPORT_UPDATE,
         type: 'POST',
         dataType: 'json',
         traditional: true,
@@ -710,73 +719,60 @@ AirportSortable.prototype.updatePositionSubmit = function () {
 
             // 数据无效
             if (!data) {
-                thisProxy.alertDialog('修改机位分类'+ opt.key+'失败');
+                thisProxy.alertDialog('修改机场'+ oldData.code+'失败');
                 return;
             };
             // 成功
             if (data.status == 200) {
-                //更新单个机位分类列表
+                //更新单个机场列表
                 thisProxy.updateSinglePositin(data);
                 // 刷新
                 thisProxy.refresh();
-                thisProxy.tipDialog('修改机位分类'+newData.key+'成功');
+                thisProxy.tipDialog('修改机场'+oldData.code+'成功');
             }else if(data.status == 500){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败:'+data.error.message);
+                    thisProxy.alertDialog('修改机场'+ oldData.code+'失败:'+data.error.message);
                 }else {
-                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败')
+                    thisProxy.alertDialog('修改机场'+ oldData.code+'失败')
                 }
             }else if(data.status == 202){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败:' +data.error.message);
+                    thisProxy.alertDialog('修改机场'+ oldData.code+'失败:' +data.error.message);
                 }else {
-                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败')
+                    thisProxy.alertDialog('修改机场'+ oldData.code+'失败')
                 }
 
             }else if(data.status == 203){ // 无权限
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败:' +data.error.message);
+                    thisProxy.alertDialog('修改机场'+ oldData.code+'失败:' +data.error.message);
                 }else {
-                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败')
+                    thisProxy.alertDialog('修改机场'+ oldData.code+'失败')
                 }
             }
         },
         error: function ( status, error) {
-            thisProxy.alertDialog('修改机位分类'+ opt.key+'失败')
+            thisProxy.alertDialog('修改机场'+ oldData.code+'失败')
             console.error('ajax requset  fail, error:');
             console.error(error);
         }
     });
 };
 /**
- * 更新单个机位分类列表
+ * 更新单个机场列表
  *
  * */
-AirportSortable.prototype.updateSinglePositin = function(data){
+AirportSortable.prototype.updateSinglePositin = function(datas){
     var thisProxy = this;
-    // 追加新机位分类html节点
-    //检测数据是否有效
-    if(!$.isValidObject(data.configs)) {
-        return;
-    }
-    //取得机位分类配置数据
-    var  config = data.configs;
-    // 将机位分类内部的机型字段值转为数组
-    config.map(function (item, index, arr) {
-        item.value = item.value.split(',');
-        // 拷贝
-        var obj = $.extend(true,{},item);
-        // 更新到数据集合
-        thisProxy.data[obj.id] = obj;
-    });
+    // 追加新机场html节点
+   var airport = thisProxy.converData(datas);
     // 封装数据
     var data = {
         code : userProperty, // 用户权限
-        config : config
+        airports : airport
     };
 
     // 利用Handlebars模版生成对应HTML结构
-    var myTemplate = Handlebars.compile($("#template").html());
+    var myTemplate = Handlebars.compile($("#airport-template").html());
     // 注册一个比较是否相等的Helper,判断v1是否等于v2
     Handlebars.registerHelper("compare",function(v1,v2,options){
         if(v1 == v2){
@@ -788,11 +784,11 @@ AirportSortable.prototype.updateSinglePositin = function(data){
         }
     });
     var nodes = myTemplate(data);
-    var oldNodes = $('.position[data-id="'+ config[0].id+'"]',thisProxy.selector);
+    var oldNodes = $('.airport[data-id="'+ airport[0].id+'"]',thisProxy.selector);
     // 追加到列表
     $(nodes).insertBefore(oldNodes);
 
-    // 删除旧机位分类html节点
+    // 删除旧机场html节点
     oldNodes.remove();
 };
 
@@ -893,16 +889,22 @@ AirportSortable.prototype.refresh = function (text) {
 
 /**
  * 初始化处理表单
- *
+ * data 当前操作的机场数据
  *
  * */
-AirportSortable.prototype.initForm = function () {
+AirportSortable.prototype.initForm = function (data) {
     var thisProxy = this;
-    var $form = $('#bootstrap-modal-dialog #form-position');
+    var $form = $('#bootstrap-modal-dialog #form-airport');
     // 校验初始化
     thisProxy.initValidator($form);
     // 多值输入初始化
     thisProxy.initManifest($form);
+    // 填充类型列表
+    thisProxy.setTypeList(app.airportType);
+    // 设置选中项
+    thisProxy.setSelected(data);
+    // 绑定列表切换事件
+    thisProxy.changeSelected();
 }
 
 /**
@@ -918,28 +920,21 @@ AirportSortable.prototype.initValidator = function ($form) {
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            'position-key': {// 机位分类名称
+            'airport-code': {// 机场四字码
                 validators: {
-                    // 以字母开头，长度为1~3位的全字母或字母与数字组合
-                    wordAndDigit1_3: {}
+                    word4: {}
                 }
             },
-            'position-text': {// 描述
+            'airport-name': {// 机场名称
                 validators: {
                     notEmpty: {}
                 }
             },
-            'position-value': {
+            'airport-place': {// 区域
                 validators: {
-                    wordOrDigit1_6 : {},
-                    leastOneItem: {// 最少有一个值
-                        len: function () {
-                            return thisProxy.items.length;
-                        }
-                    },
+                    notEmpty: {}
                 }
-
-            }
+            },
         }
     })
 }
@@ -999,7 +994,7 @@ AirportSortable.prototype.initManifest = function ($form) {
  * */
 AirportSortable.prototype.isValid = function () {
     var thisProxy = this;
-    var $form = $('#bootstrap-modal-dialog #form-position');
+    var $form = $('#bootstrap-modal-dialog #form-airport');
     // 全局校验
     $form.bootstrapValidator("validate");
     var valid = $form.data('bootstrapValidator').isValid();
@@ -1012,16 +1007,129 @@ AirportSortable.prototype.isValid = function () {
 AirportSortable.prototype.getSinglePositionData = function () {
     var thisProxy = this;
     var opt = {};
-    var $from = $('#form-position');
+    var $from = $('#form-airport');
     var id = $from.attr('data-id');
-    var key = $('.position-key',$from).val();
-    var text = $('.position-text',$from).val();
-    var value = thisProxy.items;
+    var code = $('.airport-code',$from).val().toUpperCase();
+    var name = $('.airport-name',$from).val();
+    var place = $('.airport-place',$from).val();
+    var type = thisProxy.selectedTpye;
     if($.isValidVariable(id)){
         opt.id = id;
     }
-    opt.key = key;
-    opt.text = text;
-    opt.value = value;
+    if(!$.isValidVariable(id)){
+        opt.code = code;
+    }else {
+        opt.id = id;
+    }
+    opt.name = name;
+    opt.place = place;
+    opt.type = type;
     return opt;
-}
+};
+/**
+ * 填充类型下拉列表项
+ *
+ * */
+AirportSortable.prototype.setTypeList = function (data) {
+    // 当前对象this代理
+    var thisProxy = this;
+    // 获取列表容器
+    var $menu = $('.type-list .dropdown-menu');
+    // 创建一个空串
+    var con = '';
+
+    for(var i in data){
+        var item = data[i];
+        // 拼接html结构串
+        var node = '<li><a href="javascript:;" class="type-item" ' + 'data-val="' + item.value + '"' + '>' + item.text + '</a></li>';
+        // 追加串
+        con += node;
+    }
+
+    // 清空列表容器并把新列表html串追加到列表容器
+    $menu.empty().append(con);
+};
+
+/**
+ * 填充类型下拉列表项
+ *
+ * */
+AirportSortable.prototype.setSelected = function (data) {
+    thisProxy = this;
+    var type = '';
+    if($.isValidObject(data)){
+        type = data.type;
+    }else {
+        type = $('.type-list .dropdown-menu a.type-item:first').attr('data-val');
+    }
+
+    // 取得默认选中范围选项
+    var $default = $('.type-list .dropdown-menu a[data-val="'+ type +'"]');
+
+    // 取得范围按钮
+    var $btn = $('.type-list .dropdown-toggle');
+    // 取得默认选项的自定义属性data-val的值,用于记录范围标识码
+    var val = $default.attr('data-val');
+    // 取得默认选项的节点内容,用于更新到范围按钮
+    var valCN = $default.html();
+    // 更新范围按钮内容
+    $btn.html( valCN +'<span class="caret"></span>');
+    // 更新选中类型
+    thisProxy.selectedTpye = val;
+};
+
+/**
+ * 机场类型切换选择
+ *
+ * */
+AirportSortable.prototype.changeSelected = function () {
+    thisProxy = this;
+    // 当前对象this代理
+    var thisProxy = this;
+    // 范围列表容器
+    var $menu = $('.type-list .dropdown-menu');
+    // 取得范围按钮
+    var $btn = $('.type-list .dropdown-toggle');
+    // 范围列表容器绑定点击事件(因为范围列表动态追加的，所有要用事件委托，把事件绑定在范围列表容器上)
+    $menu.on('click','a.type-item',function (e) {
+        // 取得当前点击目标源
+        var $that = $(this);
+        // 取当前点击选中的范围列表项的自定义属性data-val的值,用于记录范围标识码
+        var val = $that.attr('data-val');
+        // 取得当前点击选中的范围列表项的节点内容,用于更新到范围按钮
+        var valCN = $that.html();
+        // 更新范围按钮内容
+        $btn.html( valCN +'<span class="caret"></span>');
+        // 更新范围标识码
+        thisProxy.selectedTpye= val;
+    })
+
+};
+
+/**
+ * 转换数据格式
+ *
+ *
+ *
+ * */
+AirportSortable.prototype.converData = function (data) {
+    //检测数据是否有效
+    if (!$.isValidObject(data.airport)) {
+        return;
+    }
+    // 机场数据
+    var airports = data.airport;
+    // 拷贝数据
+    var result = JSON.parse(JSON.stringify(airports));
+    // 机场类型参数集合
+    var airportType = app.airportType;
+    if ($.isValidVariable(result.type)) {
+        var type = result.type;
+        result.typeZh = airportType[type].text || ''; // 取对应text字段值
+    }
+    // 放入数组中
+    var arr = [];
+    arr.push(result);
+    return arr;
+};
+

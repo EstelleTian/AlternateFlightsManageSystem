@@ -51,11 +51,12 @@ var airportModule = function () {
                         $('.airport-module .time').text(time)
                     }
 
-
+                    //转换数据
+                    var dataset = converData(data);
                     // 绘制出机场列表
-                    drawList(data);
+                    drawList(dataset);
                     // 绑定拖动排序
-                    bindSortable(data);
+                    bindSortable(dataset);
                 }
             },
             error: function (status, error) {
@@ -77,21 +78,44 @@ var airportModule = function () {
         }
     };
 
+    var converData = function (data) {
+        //检测数据是否有效
+        if(!$.isValidObject(data.airports)) {
+            return;
+        }
+        // 机场数据
+        var airports = data.airports;
+        // 拷贝数据
+        var result = JSON.parse(JSON.stringify(airports));
+        var len = result.length;
+        // 机场类型参数集合
+        var airportType = app.airportType;
+
+        for(var j=0; j<len; j++) {
+            var airport = result[j];
+            var type = airport.type;
+            if($.isValidObject(airportType[type])){
+                result[j].typeZh = airportType[type].text || ''; // 取对应text字段值
+            }
+        }
+
+
+        return result;
+    };
+
     /**
      * 绘制出机场列表
      * */
     var drawList = function (dataset) {
         //检测数据是否有效
-        if(!$.isValidObject(dataset.airports)) {
+        if(!$.isValidObject(dataset)) {
             return;
         }
-        //取得机场数据
-        var  airports = dataset.airports;
 
         // 封装数据
         var data = {
             code : userProperty, // 用户权限
-            airports : airports
+            airports : dataset
         };
         // 利用Handlebars模版生成对应HTML结构
         var myTemplate = Handlebars.compile($("#airport-template").html());
@@ -114,16 +138,22 @@ var airportModule = function () {
      * */
     var bindSortable = function (dataset) {
 
-        //检测数据是否有效
-        if(!$.isValidObject(dataset.airports)) {
+        //检测机场数据是否有效
+        if(!$.isValidObject(dataset)) {
             return;
         }
-        //取得机场数据
-        var  airports = dataset.airports;
+
+        var datas = {};
+        var len = dataset.length;
+        for(var i=0; i<len; i++){
+            var d = dataset[i];
+            var id = d.id;
+            datas[id] = d;
+        }
 
         // 配置初始化参数
         var sort = new AirportSortable({
-            data : airports,
+            data : datas,
             selector : $('#airport-box'),
             addBtn : $('.airport-module .add-btn'),
             revertBtn : $('.airport-module .revert-btn'),

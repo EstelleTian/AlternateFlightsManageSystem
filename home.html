@@ -568,7 +568,7 @@
             </div>
             <div class="panel-body">
                 <ul class="form-panel flex-end" >
-                    {{#if this.id_4410}}
+                    {{#if this.id_4710}}
                     <li class="form-item">
                         <button class="atfm-btn atfm-btn-blue ladda-button add-btn">
                             添加备降机场
@@ -693,7 +693,7 @@
 </script>
 
 
-<!--机位列表模模板-->
+<!--机场列表模模板-->
 <script id="airport-template" type="text/x-handlebars-template">
 
     {{#each airports}}
@@ -704,27 +704,92 @@
                 <div class="airport-code">
                     {{code}}
                 </div>
-                <a class="icon glyphicon glyphicon-edit edit" pos-id={{id}} pos-key={{id}} data-event="edit" title="修改"></a>
-                <!--若数据的creator值等于'SYSTEM',则不绘制删除按钮-->
-                <a class="icon glyphicon glyphicon-trash trash" pos-id={{id}} pos-key={{id}} data-event="delete" title="删除"></a>
-
+                {{#if ../code.id_4720}}
+                <a class="icon glyphicon glyphicon-edit edit" airport-id={{id}} airport-code={{code}} data-event="edit" title="修改"></a>
+                {{/if}}
+                {{#if ../code.id_4730}}
+                <a class="icon glyphicon glyphicon-trash trash" airport-id={{id}} airport-code={{code}} data-event="delete" title="删除"></a>
+                {{/if}}
             </header>
             <ul class="info">
                 <li class="name">名称:{{name}}</li>
                 <li class="place">区域:{{place}}</li>
-                <li class="type">类型:{{type}}</li>
+                <li class="type">类型:{{typeZh}}</li>
                 <li class="total">总可用量:{{totalPostdigit}}</li>
                 <li class="occupy">占用数:{{occupyPostdigit}}</li>
                 <li class="available">可用数:{{availablePostdigit}}</li>
             </ul>
-            <!--<div class="operate">-->
-                <!--<a class="icon glyphicon glyphicon-trash trash" pos-id="300" pos-key="cc" data-event="delete" title="删除"></a>-->
-                <!--<a class="icon glyphicon glyphicon-edit edit" pos-id="300" pos-key="cc" data-event="edit" title="修改"></a>-->
-            <!--</div>-->
         </div>
     </li>
 
     {{/each}}
+</script>
+<!--机场表单模板-->
+<script id="airport-form-template" type="text/x-handlebars-template">
+    <form id="form-airport"  data-id="{{id}}" autocomplete="off">
+        <section class="form-section">
+            <ul class="list">
+                <li class="list-item">
+                    <div class="banner">
+                        <div class="header">
+                            机场码
+                        </div>
+                        <div class="form-group">
+                            {{#if this.id}}
+                            <input type="text" class="form-control airport-code" name="airport-code" placeholder="必填" value="{{code}}" readonly disabled>
+                            {{else }}
+                            <input type="text" class="form-control airport-code" name="airport-code" placeholder="必填" value="{{code}}" >
+                            {{/if}}
+                        </div>
+                        <div class="tip">
+                            机场四字码
+                        </div>
+                    </div>
+                </li>
+                <li class="list-item">
+                    <div class="banner">
+                        <div class="header">
+                            名称
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control airport-name" name="airport-name" placeholder="必填" value="{{name}}">
+                        </div>
+                    </div>
+                </li>
+                <li class="list-item">
+                    <div class="banner">
+                        <div class="header">
+                            区域
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control airport-place" name="airport-place" placeholder="必填" value="{{place}}">
+                        </div>
+                    </div>
+                </li>
+                <li class="list-item type">
+                    <div class="banner">
+                        <div class="header">
+                            类型
+                        </div>
+                        <div class="btn-group type-list" role="group" aria-label="Button group with nested dropdown">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu list-wrap" aria-labelledby="btnGroupDrop1">
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+
+        </section>
+
+    </form>
 </script>
 
 

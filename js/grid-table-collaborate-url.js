@@ -69,14 +69,14 @@ var DataUrl = {
     COORDINATION_RECORD : ipHost + 'airport/retrieveCoordinationRecords',
 
     // 获取备降机场数据
-    AIRPORT_LIST : ipHost + 'airport/retrieveAirports?type=1',
+    AIRPORT_LIST : ipHost + 'airport/retrieveAirports?type=0',
     // 备降机场排序
     AIRPORT_ORDER : ipHost + 'airport/orderAirportType',
     // 备降机场添加
-    AIRPORT_ADD : ipHost + 'airport/addAirportType',
+    AIRPORT_ADD : ipHost + 'airport/saveAltfAirport',
     // 备降机场删除
-    AIRPORT_DEL : ipHost + 'airport/deleteAirportType',
+    AIRPORT_DEL : ipHost + 'airport/deleteAltfAirport',
     // 备降机场修改
-    AIRPORT_UPDATE : ipHost + 'airport/updateAirportType',
+    AIRPORT_UPDATE : ipHost + 'airport/updateAltfAirport',
 
 }

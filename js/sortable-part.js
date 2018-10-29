@@ -717,27 +717,27 @@ SortablePart.prototype.updatePositionSubmit = function () {
                 thisProxy.tipDialog('修改机位分类'+newData.key+'成功');
             }else if(data.status == 500){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败:'+data.error.message);
+                    thisProxy.alertDialog('修改机位分类'+ newData.key+'失败:'+data.error.message);
                 }else {
-                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败')
+                    thisProxy.alertDialog('修改机位分类'+ newData.key+'失败')
                 }
             }else if(data.status == 202){
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败:' +data.error.message);
+                    thisProxy.alertDialog('修改机位分类'+ newData.key+'失败:' +data.error.message);
                 }else {
-                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败')
+                    thisProxy.alertDialog('修改机位分类'+ newData.key+'失败')
                 }
 
             }else if(data.status == 203){ // 无权限
                 if($.isValidObject(data.error) && $.isValidVariable(data.error.message)){
-                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败:' +data.error.message);
+                    thisProxy.alertDialog('修改机位分类'+ newData.key+'失败:' +data.error.message);
                 }else {
-                    thisProxy.alertDialog('修改机位分类'+ opt.key+'失败')
+                    thisProxy.alertDialog('修改机位分类'+ newData.key+'失败')
                 }
             }
         },
         error: function ( status, error) {
-            thisProxy.alertDialog('修改机位分类'+ opt.key+'失败')
+            thisProxy.alertDialog('修改机位分类'+ newData.key+'失败')
             console.error('ajax requset  fail, error:');
             console.error(error);
         }

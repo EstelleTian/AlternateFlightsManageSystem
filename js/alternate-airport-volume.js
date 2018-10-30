@@ -98,7 +98,7 @@ var alternateAirport = function () {
      * */
     var changeCapacityModelDialog = function (status) {
 
-        var title = status ? '开启修改容量模式' : '关闭修改容量模式';
+        var title = status ? '开启机位容量维护' : '关闭机位容量维护';
         var options = {
             title : title,
             content : '<p class="modal-text">确定'+title+'?</p>',

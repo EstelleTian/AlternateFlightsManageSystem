@@ -762,12 +762,31 @@ ul, li {
     white-space: normal;
     text-overflow: ellipsis;
 }
-.airport-box .item .content .operate {
-    display: flex;
-    flex-direction: row-reverse;
-    z-index: 1;
+
+.airport-box .item .content .airport-code {
+    color: #333;
 }
 
+
+#form-airport .list{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+#form-airport .list .list-item{
+    width: 45%;
+}
+#form-airport .type .type-list, .type-list .btn-group, .type-list .btn-group,
+.type-list .dropdown-toggle, .type-list .list-wrap {
+    width: 100%;
+}
+.dropdown-toggle .caret{
+    margin-left: 5px;
+}
+
+.airport-code {
+    text-transform: uppercase;
+}
 
 
 /*********************magic-checkbox 复选框美化**************************************/

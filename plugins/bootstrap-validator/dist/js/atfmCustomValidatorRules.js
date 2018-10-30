@@ -107,6 +107,10 @@
         // 长度为1~6位的字母、数字或字母与数字组合
         wordOrDigit1_6 : {
             'default':'长度为1~6位的字母、数字或字母与数字组合'
+        },
+
+        word4 : {
+            'default':'长度为4位的字母'
         }
 
 
@@ -685,7 +689,23 @@
                 return true;
             }
 
-        }
+        },
+        // 长度为1~6位的字母、数字或字母与数字组合
+        word4 : {
+            validate: function (validator, $field, options) {
+                var inputVal = $field.val().toUpperCase();
+
+                var regexp = /^[A-Z]{4}$/;
+                if (!regexp.test(inputVal)) {
+                    return {
+                        valid: false,
+                        message: '长度为4位的字母'
+                    }
+                }
+                return true;
+            }
+
+        },
 
 
 

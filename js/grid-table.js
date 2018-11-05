@@ -628,6 +628,8 @@ GridTable.prototype.collaborateArr = function (opt) {
                 // 没有则右键不可用
                 return;
             }
+            //更改预选
+            updatePreAlternateLi = $.isValidObject(userProperty.id_4530) ? updatePreAlternateLi.replace( /{level2}/,  LEVEL2) : '';
             //更改备降
             updateConfirmAlternateLi =$.isValidObject(userProperty.id_4540) ?  updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2) :'';
             // 正班占用
@@ -635,7 +637,7 @@ GridTable.prototype.collaborateArr = function (opt) {
             // 取消备降
             cancelAlternateLi = $.isValidObject(userProperty.id_4240) ? cancelAlternateLi : '';
 
-            childrenStr = updateConfirmAlternateLi + occupiedLi + cancelAlternateLi;
+            childrenStr = updatePreAlternateLi + updateConfirmAlternateLi + occupiedLi + cancelAlternateLi;
 
         }else if(status == 4){ // 状态为正班占用
             // 状态为备降所有右键操作项权限码
@@ -907,7 +909,7 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                 childrenStr = updatePreAlternateLi + updateConfirmAlternateLi + occupiedLi  + cancelAlternateLi + collaborateRecordLi;
             }
         }else if( status == 2 ){//备降状态：备降
-            //备降状态：预选  机位状态：已占用
+            //备降状态：备降  机位状态：已占用
             if( posstatus == 2 ){
                 //更改备降，正班占用，释放停机位，取消备降，查看协调记录
                 var codes_22 = ['4540','4550','4230','4240','4600'];
@@ -916,6 +918,8 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                     // 没有则右键不可用
                     return;
                 }
+                //更改预选
+                updatePreAlternateLi = $.isValidObject(userProperty.id_4530) ? updatePreAlternateLi.replace( /{level2}/,  LEVEL2) : '';
                 //更改备降
                 updateConfirmAlternateLi = $.isValidObject(userProperty.id_4540) ? updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2) : '';
                 //正班占用
@@ -926,8 +930,8 @@ GridTable.prototype.collaborateAlternate = function (opt) {
                 cancelAlternateLi = $.isValidObject(userProperty.id_4240) ? cancelAlternateLi : '';
                 // 查看协调记录
                 collaborateRecordLi = $.isValidObject(userProperty.id_4600) ? collaborateRecordLi : '';
-                childrenStr = updateConfirmAlternateLi + occupiedLi + releasePostionLi  + cancelAlternateLi + collaborateRecordLi;
-            }else if( posstatus == 3 ){ //备降状态：预选  机位状态：已释放
+                childrenStr = updatePreAlternateLi + updateConfirmAlternateLi + occupiedLi + releasePostionLi  + cancelAlternateLi + collaborateRecordLi;
+            }else if( posstatus == 3 ){ //备降状态：备降 机位状态：已释放
                 //更改预选，更改备降，正班占用，取消备降，查看协调记录
                 var codes_23 = ['4530','4540','4550','4230','4240','4600'];
                 // 校验当前用户是右键操作项权限码中任意一个

@@ -595,6 +595,8 @@ GridTable.prototype.collaborateArr = function (opt) {
     var updatePreAlternateLi = GridTableCollaborateDom.updatePreAlternateLi;
     //更改备降
     var updateConfirmAlternateLi = GridTableCollaborateDom.updateConfirmAlternateLi;
+    //取消备降
+    var cancelAlternateLi = GridTableCollaborateDom.cancelAlternateLi;
 
     var childrenStr = '';
     if($.isValidVariable(status)){
@@ -613,8 +615,10 @@ GridTable.prototype.collaborateArr = function (opt) {
             confirmAlternateLi =$.isValidObject(userProperty.id_4520) ? confirmAlternateLi.replace( /{level2}/,  '').replace('<span class="glyphicon glyphicon-play"></span>', '') : '';
             // 正班占用
             occupiedLi = $.isValidObject(userProperty.id_4550) ? occupiedLi : '';
+            // 取消备降
+            cancelAlternateLi = $.isValidObject(userProperty.id_4240) ? cancelAlternateLi : '';
 
-            childrenStr = updatePreAlternateLi + confirmAlternateLi + occupiedLi;
+            childrenStr = updatePreAlternateLi + confirmAlternateLi + occupiedLi + cancelAlternateLi;
 
         }else if(status == 2) {  // 状态为备降
             // 状态为备降所有右键操作项权限码
@@ -628,8 +632,10 @@ GridTable.prototype.collaborateArr = function (opt) {
             updateConfirmAlternateLi =$.isValidObject(userProperty.id_4540) ?  updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2) :'';
             // 正班占用
             occupiedLi = $.isValidObject(userProperty.id_4550) ? occupiedLi : '';
+            // 取消备降
+            cancelAlternateLi = $.isValidObject(userProperty.id_4240) ? cancelAlternateLi : '';
 
-            childrenStr = updateConfirmAlternateLi + occupiedLi;
+            childrenStr = updateConfirmAlternateLi + occupiedLi + cancelAlternateLi;
 
         }else if(status == 4){ // 状态为正班占用
             // 状态为备降所有右键操作项权限码
@@ -643,8 +649,10 @@ GridTable.prototype.collaborateArr = function (opt) {
             updatePreAlternateLi = $.isValidObject(userProperty.id_4530) ?  updatePreAlternateLi.replace( /{level2}/,  LEVEL2) : '';
             //更改备降
             updateConfirmAlternateLi =  $.isValidObject(userProperty.id_4540) ? updateConfirmAlternateLi.replace( /{level2}/,  LEVEL2) : '';
+            // 取消备降
+            cancelAlternateLi = $.isValidObject(userProperty.id_4240) ? cancelAlternateLi : '';
 
-            childrenStr = updatePreAlternateLi + updateConfirmAlternateLi;
+            childrenStr = updatePreAlternateLi + updateConfirmAlternateLi + cancelAlternateLi;
 
         }else { //状态为非空其他(除以上状态外的)
 
@@ -783,6 +791,17 @@ GridTable.prototype.collaborateArr = function (opt) {
                 return;
             }
             thisProxy.updateConfirmAlternateRequest.call(thisProxy, opt, altAirport, '' );
+        });
+    }
+    // 取消备降协调菜单
+    var $cancelAlternate = $('.cancel-alternate', collaboratorDom);
+    // 菜单绑定事件
+    if($cancelAlternate.length > 0 ){
+        $cancelAlternate.on('click', function (event) {
+            // 阻止事件冒泡
+            event.stopPropagation();
+            thisProxy.showDialog('取消备降',thisProxy.cancleAlternateRequest,opt)
+            // thisProxy.cancleAlternateRequest.call(thisProxy, opt );
         });
     }
 };

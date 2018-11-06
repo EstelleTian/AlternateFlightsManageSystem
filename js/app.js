@@ -596,6 +596,8 @@ var app = function () {
         var complex = '';
         // 民用
         var civil = '';
+        // 区外
+        var outside = '';
         data.map(function (item, index, arr) {
             var type = item.type;
             var value = item.value;
@@ -610,6 +612,8 @@ var app = function () {
 
             }else if(type ==3){
                 other += node;
+            }else if(type ==4){
+                outside += node;
             }
         });
 
@@ -620,8 +624,10 @@ var app = function () {
         LEVEL2 = LEVEL2.replace( /{airport}/g, civil );
 
         var COMPLEX = '<ul class="collaborate-menu collaborate-menu-complex">' + complex + '</ul>';
+        var OUTSIDE = '<ul class="collaborate-menu collaborate-menu-outside">' + outside + '</ul>';
 
         LEVEL2 = LEVEL2.replace( /{complex}/g, COMPLEX );
+        LEVEL2 = LEVEL2.replace( /{outside}/g, OUTSIDE );
 
         // 追加到二级菜单中的军民合用菜单项下
 

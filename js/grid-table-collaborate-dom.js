@@ -40,7 +40,7 @@ var GridTableCollaborateDom = function () {
     var LEVEL2 = '<ul class="collaborate-menu level-2">{airport}' +
         '<li class="other"><a>其它<span class="glyphicon glyphicon-play"></span></a>{other}</li>' +
         '<li class="complex"><a>军民合用<span class="glyphicon glyphicon-play"></span></a>{complex}</li>' +
-        // '<li data-val="outside" class="outside"><a>区外</a></li>' +
+        '<li data-val="outside" class="outside"><a>区外<span class="glyphicon glyphicon-play"></span></a>{outside}</li>' +
         '</ul>';
     // 备降容量
     var CAPACITY = '<div class="panel panel-info  flight-grid-table-collaborate-container"><div class="panel-heading">' +

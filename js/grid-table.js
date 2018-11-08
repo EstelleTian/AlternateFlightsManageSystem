@@ -2581,10 +2581,10 @@ GridTable.prototype.convertData = function (flight) {
     // flight = Object.assign( flight, atdStyle, ataStyle, etdStyle );
     flight = $.extend( flight, atdStyle, ataStyle, etdStyle ,statusStyle);
 
-    // 航班数据无id且有flightDataId
-    if($.isValidVariable(flight.flightDataId) && !$.isValidVariable(flight.id)){
-        // 设置航班id 为 flightDataId, 用于右键协调时获取对应航班数据(rowid值是以id属性值来定义的)
-        flight.id = flight.flightDataId
+    // 航班数据无id属性的
+    if(!$.isValidVariable(flight.id) ){
+        // 设置航班id 为 alternateId 或 flightDataId, 用于右键协调时获取对应航班数据(rowid值是以id属性值来定义的)
+        flight.id =  flight.alternateId || flight.flightDataId
     }
     return flight;
 

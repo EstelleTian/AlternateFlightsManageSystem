@@ -42,6 +42,8 @@ var DataUrl = {
     USER_AUTHORITY : ipHost + 'airport/retrieveUserAuthority?userId=',
     // 备降机场配置数据
     AIRPORT_CONFIG: ipHost + 'airport/retrieveAirportConfig',
+    // 备降机场动态配置数据
+    AIRPORT_DYNAMIC_CONFIG: ipHost + 'airport/retrieveDynamicConfig',
 
     // 进港
     ARR : ipHost+'airport/retrieveArrFlights',

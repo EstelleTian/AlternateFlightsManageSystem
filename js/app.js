@@ -534,6 +534,46 @@ var app = function () {
 
     };
 
+/**
+ * 获取机场动态配置数据
+ *
+ * */
+
+    var initDynamicConfig = function (time) {
+
+        var url = DataUrl.AIRPORT_DYNAMIC_CONFIG;
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: "",
+            dataType: "JSON",
+            // async: false,
+            success: function (data) {
+                if ($.isValidObject(data) && data.status == 200) {
+
+                    if($.isValidObject(basicData) && $.isValidObject(basicData.airportConfig)){
+                        basicData.airportConfig.functionProperty = data.airportConfig.functionProperty;
+                        triggerChangeWeatherModel();
+                    }else {
+                        Common.timeoutCallback(initDynamicConfig,time);
+                    }
+
+                } else if (data.status == 500) {
+                    console.warn(data.error.message);
+                    Common.timeoutCallback(initDynamicConfig,time);
+                } else {
+                    Common.timeoutCallback(initDynamicConfig,time);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+                Common.timeoutCallback(initDynamicConfig,1000*60);
+            }
+        });
+
+        Common.timeoutCallback(initDynamicConfig,time);
+    }
+
     /**
      * 更新各模块范围列表项
      *
@@ -737,15 +777,20 @@ var app = function () {
             }
             // 复选框
             var $box = $('.menu-bar input#change-weather-model');
+            var checked = $box.prop('checked');
             if(status == 'true'){
                 status = true
             }else if(status == 'false'){
                 status = false
             }
-            // 复选框状态
-            $box.prop('checked',status);
-            // 更新各模块切换复杂天气模式开启/关闭
-            updateModulesWeatherModel(status);
+
+            if(checked != status){
+                // 复选框状态
+                $box.prop('checked',status);
+                // 更新各模块切换复杂天气模式开启/关闭
+                updateModulesWeatherModel(status);
+            }
+
         }
     };
 
@@ -1129,6 +1174,8 @@ var app = function () {
             initUserAuthority(1000*2);
             // 初始化所需各项基本参数
             initBasicData(1000*2);
+            // 获取机场动态配置数据
+            initDynamicConfig(1000*30);
             // 初始化组件
             initComponents(1000*1);
         }

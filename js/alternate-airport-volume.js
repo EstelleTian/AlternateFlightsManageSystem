@@ -57,9 +57,11 @@ var alternateAirport = function () {
                 $('.change-capacity-label').html(userProperty.id_4340.name);
             },500)
         }
-        $('.capacity-model-option').on('click',function () {
+        $('.capacity-model-option').off('click').on('click',function (e) {
+            e.preventDefault();
+            e.stopPropagation();
             var isCheck = $('.capacity-model-option').find('input').prop("checked");
-            changeCapacityModelDialog(isCheck)
+            changeCapacityModelDialog(!isCheck)
         })
     }
     var initCapacityTypeConpoments = function (apType) {
@@ -1020,6 +1022,7 @@ var alternateAirport = function () {
      *
      * */
     var handleChangeWeatherModel = function (selector, modelStatus, data) {
+        var $box = $('.capacity-model-option input#change-capacity-model');
         var content = modelStatus ? '开启修改容量模式' : '关闭修改容量模式';
         var opt = {
             cellObj:selector
@@ -1031,6 +1034,18 @@ var alternateAirport = function () {
         } else {
             if (data.status == 200 && $.isValidObject(data.configs)) { // 成功
                 showQtip(opt,'SUCCESS', content+'成功');
+                $.each(data.configs,function (key,obj) {
+                    if(obj.key == 'complexCapacity'){
+                        if($.isValidVariable(obj.value)){
+                            if(obj.value =="true"){
+                                $box.prop('checked', modelStatus);
+                            }else{
+                                $box.prop('checked', modelStatus);
+                            }
+                        }
+                    }
+
+                })
             } else { // 失败
                 showQtip(opt,'FAIL', content+'失败');
             }

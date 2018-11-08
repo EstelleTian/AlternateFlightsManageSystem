@@ -1680,10 +1680,15 @@ GridTable.prototype.cancleAlternateRequest = function(opt){
     var thisProxy = this;
     // 清除协调窗口
     thisProxy.clearCollaborateContainer();
+
     // 备降计划ID
-    var id = opt.flight.id;
+    var altId = opt.flight.alternateId || '';
+    //区别进港和备降计划取参数不一样
+    if(altId == ''){
+        altId = opt.flight.id || '';
+    }
     // 备降计划ID，无效则不作任何操作
-    if(!$.isValidVariable(id)){
+    if(!$.isValidVariable(altId)){
         return;
     }
     // 操作请求地址
@@ -1699,7 +1704,7 @@ GridTable.prototype.cancleAlternateRequest = function(opt){
         type: 'POST',
         dataType: 'json',
         data: {
-            alternateId: id
+            alternateId: altId
         },
         success: function (data) {
             // 若数据无效

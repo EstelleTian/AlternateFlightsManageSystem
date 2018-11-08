@@ -1715,18 +1715,9 @@ GridTable.prototype.cancleAlternateRequest = function(opt){
             };
             //成功
             if (data.status == 200) {
-                // 取数据的altfAlternate值
-                var altfAlternate = data.altfAlternate;
-                // 数据有效则更新单个数据
-                if($.isValidObject(altfAlternate)){
-                    thisProxy.deleteSingleData(altfAlternate);
-                    var flightDataId = altfAlternate.flightDataId;
-                    // 销毁模态框
-                    thisProxy.destroyDialog();
-                    thisProxy.showMsg('success',''+'计划航班('+ flightDataId +')取消备降成功', 1000*5);
-                    // 开启定时请求但不立刻发起请求
-                    thisProxy.request();
-                }
+
+                thisProxy.handleCancleAlternate(data,opt);
+
             } else{ // 失败
                 thisProxy.showTableCellTipMessage(opt, "FAIL", data.error.message)
                 // 开启定时请求但不立刻发起请求
@@ -1742,6 +1733,40 @@ GridTable.prototype.cancleAlternateRequest = function(opt){
             thisProxy.request();
         }
     })
+};
+/**
+ *  取消备降操作回调方法
+ *  @ param data 返回的数据
+ *  @ opt 操作选项
+ * */
+GridTable.prototype.handleCancleAlternate = function(data,opt){
+    // 代理
+    var thisProxy = this;
+    // 获取表格id
+    var tableId = thisProxy.tableId;
+    // 备降计划
+    if('alternate' == tableId){
+        var altfAlternate = data.altfAlternate;
+        // 删除本条数据
+        thisProxy.deleteSingleData(altfAlternate);
+        var flightDataId = altfAlternate.flightDataId;
+        // 销毁模态框
+        thisProxy.destroyDialog();
+        thisProxy.showMsg('success',''+'计划航班('+ flightDataId +')取消备降成功', 1000*5);
+        // 开启定时请求但不立刻发起请求
+        thisProxy.request();
+    }else if('arr-table' == tableId || 'over-table' == tableId){ // 进港计划或疆内飞越
+        var altfFlights = data.altfFlights;
+        // 数据有效则更新单个数据
+        if($.isValidObject(altfFlights)){
+            thisProxy.fireSingleDataChange(altfFlights);
+            thisProxy.showTableCellTipMessage(opt, 'SUCCESS', '取消备降成功');
+            // 开启定时请求但不立刻发起请求
+            thisProxy.request();
+        }
+
+    }
+
 }
 
 /**
@@ -2588,8 +2613,8 @@ GridTable.prototype.convertData = function (flight) {
 
     // 航班数据无id属性的
     if(!$.isValidVariable(flight.id) ){
-        // 设置航班id 为 alternateId 或 flightDataId, 用于右键协调时获取对应航班数据(rowid值是以id属性值来定义的)
-        flight.id =  flight.alternateId || flight.flightDataId
+        // 设置航班id 为 flightDataId, 用于右键协调时获取对应航班数据(rowid值是以id属性值来定义的)
+        flight.id = flight.flightDataId
     }
     return flight;
 

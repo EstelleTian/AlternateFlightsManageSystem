@@ -36,7 +36,7 @@ var alternateAirport = function () {
     //当前选中单元格对象
     var cellObj = '';
     //定时刷新时间
-    var refreshTime = 1000 * 60;
+    var refreshTime = 1000 * 30;
     //机场分类
     var airportType = 0;
     //是否开启修改容量
@@ -181,11 +181,7 @@ var alternateAirport = function () {
                     //是否开启机位容量维护
                     isOpenChangeCapacity = data.capacityJurisdiction;
                     //初始化机位容量
-                    if(isOpenChangeCapacity){
-                        $('.capacity-model-option').find('input').attr('checked',"checked");
-                    }else{
-                        $('.capacity-model-option').find('input').removeAttr("checked");
-                    }
+                    $('.capacity-model-option').find('input').prop("checked",isOpenChangeCapacity);
                     //列配置转换
                     tableConfig = colConfigConvert(originAirportConfig.airportConfig)
                     if ($.isValidObject(originAirportConfig.airportConfig)) {

@@ -1745,7 +1745,7 @@ GridTable.prototype.handleCancleAlternate = function(data,opt){
     // 获取表格id
     var tableId = thisProxy.tableId;
     // 备降计划
-    if('alternate' == tableId){
+    if('alternate-table' == tableId){
         var altfAlternate = data.altfAlternate;
         // 删除本条数据
         thisProxy.deleteSingleData(altfAlternate);

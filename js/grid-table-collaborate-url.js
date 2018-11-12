@@ -71,7 +71,7 @@ var DataUrl = {
     COORDINATION_RECORD : ipHost + 'airport/retrieveCoordinationRecords',
 
     // 获取备降机场数据
-    AIRPORT_LIST : ipHost + 'airport/retrieveAirports?type=0',
+    AIRPORT_LIST : ipHost + 'airport/retrieveAirports',
     // 备降机场排序
     AIRPORT_ORDER : ipHost + 'airport/orderAirportType',
     // 备降机场添加

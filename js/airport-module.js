@@ -8,6 +8,8 @@
 var airportModule = function () {
 
     var xhr = null;
+    // 类型
+    var type = '';
 
     /**
      *  设置当前模块为活动模块
@@ -25,6 +27,82 @@ var airportModule = function () {
     };
 
     /**
+     * 初始化类型列表
+     *
+     * */
+    var initTypeList = function (data) {
+
+        var form  = $('.airport-module .form-panel');
+
+        // 获取列表容器
+        var $menu = $('.form-item .dropdown-menu', form);
+        // 创建一个空串
+        var con = '';
+        con += '<li><a href="javascript:;" class="type-item"  data-val="0" >全部</a></li>';
+        data.map(function (item, index, arr) {
+            // 拼接html结构串
+            var node = '<li><a href="javascript:;" class="type-item" '+ 'data-val="'+ item.value + '"' + '>' + item.text +'</a></li>';
+            // 追加串
+            con += node;
+        });
+        // 清空列表容器并把新列表html串追加到列表容器
+        $menu.empty().append(con);
+        // 设置默认选中项
+        setDefaultType();
+
+        // 绑定类型切换事件
+        changeType();
+    };
+
+    /**
+     * 设置默认选类型
+     * */
+    var setDefaultType = function () {
+        //
+        var form  = $('.airport-module .form-panel');
+        // 取得范围列表项自定义居属性值为1的项
+        var $default = $('.form-item .dropdown-menu a[data-val="0"]', form);
+        // 取得范围按钮
+        var $btn = $('.form-item .dropdown-toggle', form);
+        // 取得默认选项的自定义属性data-val的值,用于记录范围标识码
+        var val = $default.attr('data-val');
+        // 取得默认选项的节点内容,用于更新到范围按钮
+        var valCN = $default.html();
+        // 更新范围按钮内容
+        $btn.html( valCN +'<span class="caret"></span>');
+        // 更新范围标识码
+        type = val;
+    };
+
+    /**
+     *  绑定类型切换事件
+     * */
+    var changeType = function () {
+        //
+        var form  = $('.airport-module .form-panel');
+        // 获取列表容器
+        var $menu = $('.form-item .dropdown-menu', form);
+        // 取得范围按钮
+        var $btn = $('.form-item .dropdown-toggle', form);
+
+        // 范围列表容器绑定点击事件(因为范围列表动态追加的，所有要用事件委托，把事件绑定在范围列表容器上)
+        $menu.on('click','a.type-item',function (e) {
+            // 取得当前点击目标源
+            var $that = $(this);
+            // 取当前点击选中的范围列表项的自定义属性data-val的值,用于记录范围标识码
+            var val = $that.attr('data-val');
+            // 取得当前点击选中的范围列表项的节点内容,用于更新到范围按钮
+            var valCN = $that.html();
+            // 更新范围按钮内容
+            $btn.html( valCN +'<span class="caret"></span>');
+            // 更新范围标识码
+            type = val;
+            openRequest();
+        });
+    };
+
+
+    /**
      * 开启请求
      * */
     var openRequest = function () {
@@ -34,6 +112,9 @@ var airportModule = function () {
         xhr = $.ajax({
             url: DataUrl.AIRPORT_LIST,
             type: 'GET',
+            data: {
+                type: type // 类型码
+            },
             dataType: 'json',
             success: function (data) {
                 // 数据无效
@@ -175,7 +256,8 @@ var airportModule = function () {
     return {
         init : function () {
             return {
-                setActive : setActive
+                setActive : setActive,
+                initTypeList : initTypeList,
             }
         }
     }

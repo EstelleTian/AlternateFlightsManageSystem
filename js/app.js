@@ -37,6 +37,8 @@ var app = function () {
     var alternateHistoryObj= {};
     // 疆内飞越模块
     var overObj = {};
+    // 备降机场管理模块
+    var airportObj = {};
     // 出港计划模块
     var depObj = {};
 
@@ -332,7 +334,7 @@ var app = function () {
         }
         if($.isValidObject(userProperty.id_4700)){
             //备降场管理模块
-            var airportObj = airportModule.init();
+            airportObj = airportModule.init();
             moduleObjs.push(airportObj);
         }
         //容量模块
@@ -610,6 +612,14 @@ var app = function () {
         }
         // 更新容量模块
         alternateAirport.initCapacityTypeConpoments(scopeListData.airportType)
+
+        if($.isValidObject(userProperty.id_4210)){
+            // 备降机场管理模块
+            if($.isValidObject(basicData.airportConfig)){
+                var airportType = basicData.airportConfig.airportType;
+                airportObj.initTypeList(airportType)
+            }
+        }
 
 
         // 出港计划模块

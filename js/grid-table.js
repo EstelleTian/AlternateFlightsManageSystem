@@ -1551,11 +1551,16 @@ GridTable.prototype.occupiedRequest = function(opt, key){
     if(!$.isValidVariable(flightDataId)){
         return;
     }
-    // 备降计划
-    var altId = opt.flight.alternateId || '';
-    //区别进港和备降计划取参数不一样
-    if(altId == ''){
+
+    // 获取表格id
+    var tableId = thisProxy.tableId;
+    // 备降计划id
+    var altId = '';
+    // 备降计划取id
+    if('alternate-table' == tableId){
         altId = opt.flight.id || '';
+    }else if('arr-table' == tableId || 'over-table' == tableId){ // 进港计划或疆内飞越取alternateId
+        altId =  opt.flight.alternateId || '';
     }
     // 操作请求地址
     var submiturl = thisProxy.colCollaborateUrl.OCCUPIED;

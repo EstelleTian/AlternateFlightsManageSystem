@@ -51,11 +51,13 @@ var alternateAirport = function () {
         })
         //开启修改容量模式点击事件绑定
         if($.isValidObject(userProperty.id_4340)){
-            $('.change-capacity-label').html(userProperty.id_4340.name);
+            $('.capacity-model-option').find('.change-capacity-label').html(userProperty.id_4340.name);
         }else{
-            setTimeout(function () {
-                $('.change-capacity-label').html(userProperty.id_4340.name);
-            },500)
+            if($.isValidObject(userProperty.id_4340)) {
+                setTimeout(function () {
+                    $('.capacity-model-option').find('.change-capacity-label').html(userProperty.id_4340.name);
+                },500)
+            }
         }
         $('.capacity-model-option').off('click').on('click',function (e) {
             e.preventDefault();

@@ -613,7 +613,7 @@ var app = function () {
         // 更新容量模块
         alternateAirport.initCapacityTypeConpoments(scopeListData.airportType)
 
-        if($.isValidObject(userProperty.id_4210)){
+        if($.isValidObject(userProperty.id_4700)){
             // 备降机场管理模块
             if($.isValidObject(basicData.airportConfig)){
                 var airportType = basicData.airportConfig.airportType;
@@ -1181,13 +1181,13 @@ var app = function () {
             // 阻止右键点击默认事件
             preventContextmenu();
             // 获取用户权限
-            initUserAuthority(1000*2);
+            initUserAuthority(1000*30);
             // 初始化所需各项基本参数
-            initBasicData(1000*2);
+            initBasicData(1000*30);
             // 获取机场动态配置数据
             initDynamicConfig(1000*30);
             // 初始化组件
-            initComponents(1000*1);
+            initComponents(1000*2);
         }
     }
 }();

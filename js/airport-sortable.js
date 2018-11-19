@@ -472,9 +472,12 @@ AirportSortable.prototype.appendSinglePositin = function(datas){
     for(var j=0; j<len; j++) {
         var airport = result[j];
         var type = airport.type;
+        var id = airport.id;
         if($.isValidObject(airportType[type])){
             result[j].typeZh = airportType[type].text || ''; // 取对应text字段值
         }
+        // 更新到数据集合
+        thisProxy.data[id] = airport;
     }
 
     // 封装数据
